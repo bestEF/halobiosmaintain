@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.MonitorStationInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo">
+        <id column="station_id" property="stationId" />
+        <result column="station_name" property="stationName" />
+        <result column="station_location" property="stationLocation" />
+        <result column="plan_lon" property="planLon" />
+        <result column="plan_lat" property="planLat" />
+        <result column="real_lon" property="realLon" />
+        <result column="real_lat" property="realLat" />
+        <result column="water_class" property="waterClass" />
+        <result column="sediment_class" property="sedimentClass" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+        <result column="data_type" property="dataType" />
+        <result column="report_id" property="reportId" />
+    </resultMap>
+
+    <select id="queryStationInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.* from monitor_station_info a
+        left join monitor_data_report b on a.report_id=b.report_id
+        <where>
+            <if test="year!=null and year!=''">
+                <![CDATA[and b.year =#{year} ]]>
+            </if>
+            <if test="voyage!=null and voyage!=''">
+                <![CDATA[and b.voyage =#{voyage} ]]>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

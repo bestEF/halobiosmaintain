@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.main.UserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.main.UserInfo">
+        <id column="user_id" property="userId" />
+        <result column="role_id" property="roleId" />
+        <result column="user_name" property="userName" />
+        <result column="real_name" property="realName" />
+        <result column="password" property="password" />
+        <result column="depart" property="depart" />
+        <result column="tel" property="tel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, role_id, user_name, real_name, password, depart, tel
+    </sql>
+
+    <!--用于收集用户和用户对应的权限-->
+    <resultMap id="userMap" type="com.ltmap.halobiosmaintain.entity.main.UserInfo">
+        <id column="uid" property="userId"/>
+        <result column="username" property="userName"/>
+        <collection property="roles" javaType="list" ofType="com.ltmap.halobiosmaintain.entity.main.RoleInfo">
+            <id column="rid" property="roleId"/>
+            <result column="rname" property="roleName"/>
+        </collection>
+    </resultMap>
+
+    <select id="findRolesByUserName" resultMap="userMap">
+        SELECT u.role_id AS uid,u.user_name AS uname,r.role_id AS rid,r.role_name rname
+        FROM user_info AS u
+        LEFT JOIN role_info AS r ON u.role_id=r.role_id
+        WHERE u.user_name = #{userName}
+    </select>
+
+    <!--查询用户信息，带有角色名称-->
+    <select id="info_all" parameterType="java.lang.String" resultType="com.ltmap.halobiosmaintain.entity.main.UserInfo">
+        select a.user_id, a.role_id, a.user_name, a.real_name, a.password, a.depart, a.tel,b.role_name from user_info a
+        left join role_info b on a.role_id=b.role_id
+        <where>
+            <if test="userId!=null and userId!=''">
+                <![CDATA[and a.user_id =#{userId} ]]>
+            </if>
+            <if test="userName!=null and userName!=''">
+                <![CDATA[and a.user_name =#{userName} ]]>
+            </if>
+        </where>
+    </select>
+
+</mapper>

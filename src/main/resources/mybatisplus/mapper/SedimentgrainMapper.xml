@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.SedimentgrainMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.Sedimentgrain">
+        <id column="id" property="id" />
+        <result column="report_id" property="reportId" />
+        <result column="station_id" property="stationId" />
+        <result column="monitor_date" property="monitorDate" />
+        <result column="sampling_depth" property="samplingDepth" />
+        <result column="gravel_1" property="gravel1" />
+        <result column="gravel_2" property="gravel2" />
+        <result column="sand_1" property="sand1" />
+        <result column="sand_2" property="sand2" />
+        <result column="sand_3" property="sand3" />
+        <result column="sand_4" property="sand4" />
+        <result column="sand_5" property="sand5" />
+        <result column="pinksand_1" property="pinksand1" />
+        <result column="pinksand_2" property="pinksand2" />
+        <result column="clay_1" property="clay1" />
+        <result column="clay_2" property="clay2" />
+        <result column="granulecontent_1" property="granulecontent1" />
+        <result column="granulecontent_2" property="granulecontent2" />
+        <result column="granulecontent_3" property="granulecontent3" />
+        <result column="granulecontent_4" property="granulecontent4" />
+        <result column="name_and_code" property="nameAndCode" />
+        <result column="particlecoefficient_1" property="particlecoefficient1" />
+        <result column="particlecoefficient_2" property="particlecoefficient2" />
+        <result column="particlecoefficient_3" property="particlecoefficient3" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+</mapper>

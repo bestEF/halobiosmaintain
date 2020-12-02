@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.PhytoplanktonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.Phytoplankton">
+        <id column="id" property="id" />
+        <result column="report_id" property="reportId" />
+        <result column="station_id" property="stationId" />
+        <result column="monitor_date" property="monitorDate" />
+        <result column="water_depth" property="waterDepth" />
+        <result column="water_type" property="waterType" />
+        <result column="rope_length" property="ropeLength" />
+        <result column="water_filtration" property="waterFiltration" />
+        <result column="category" property="category" />
+        <result column="biological_chinese_name" property="biologicalChineseName" />
+        <result column="biological_latin_name" property="biologicalLatinName" />
+        <result column="cell_count" property="cellCount" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+</mapper>

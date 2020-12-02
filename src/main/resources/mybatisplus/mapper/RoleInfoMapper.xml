@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.main.RoleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.main.RoleInfo">
+        <id column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="description" property="description" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id, role_name, description, remark
+    </sql>
+
+    <!--根据角色Id获取权限信息-->
+    <select id="findPermsByRoleId" resultType="com.ltmap.halobiosmaintain.entity.main.PermissionInfo">
+        SELECT permission_info.permission_id,permission_info.permission_name
+        FROM role_info
+        LEFT JOIN role_permission ON role_info.role_id=role_permission.role_id
+        LEFT JOIN permission_info ON role_permission.permission_id=permission_info.permission_id
+        WHERE role_info.role_id=#{roleId}
+    </select>
+
+    <!--根据userId获取用户角色-->
+    <select id="queryRolesByUserId" resultMap="BaseResultMap">
+        SELECT *
+        FROM role_info JOIN user_info ON role_info.role_id=user_info.role_id
+        WHERE user_info.user_id=#{userId}
+    </select>
+
+</mapper>

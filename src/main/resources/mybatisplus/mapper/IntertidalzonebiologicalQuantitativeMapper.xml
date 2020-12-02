@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.IntertidalzonebiologicalQuantitativeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.IntertidalzonebiologicalQuantitative">
+        <id column="id" property="id" />
+        <result column="report_id" property="reportId" />
+        <result column="monitor_date" property="monitorDate" />
+        <result column="station_id" property="stationId" />
+        <result column="intertidal_zone" property="intertidalZone" />
+        <result column="sediment_type" property="sedimentType" />
+        <result column="sampling_times" property="samplingTimes" />
+        <result column="quadrat_area" property="quadratArea" />
+        <result column="sample_thickness" property="sampleThickness" />
+        <result column="biological_chinese_name" property="biologicalChineseName" />
+        <result column="biological_latin_name" property="biologicalLatinName" />
+        <result column="count" property="count" />
+        <result column="density" property="density" />
+        <result column="weight" property="weight" />
+        <result column="biomass" property="biomass" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.SwimminganimalIdentificationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.SwimminganimalIdentification">
+        <id column="id" property="id" />
+        <result column="report_id" property="reportId" />
+        <result column="station_id" property="stationId" />
+        <result column="monitor_date" property="monitorDate" />
+        <result column="specific_name" property="specificName" />
+        <result column="overall_length" property="overallLength" />
+        <result column="body_length" property="bodyLength" />
+        <result column="weight" property="weight" />
+        <result column="pure_weight" property="pureWeight" />
+        <result column="stomach_content" property="stomachContent" />
+        <result column="sex" property="sex" />
+        <result column="fishgonad_maturity" property="fishgonadMaturity" />
+        <result column="age" property="age" />
+        <result column="remark" property="remark" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+</mapper>

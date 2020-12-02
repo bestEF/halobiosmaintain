@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.main.SysLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.main.SysLog">
+        <id column="id" property="id" />
+        <result column="business_name" property="businessName" />
+        <result column="op_type" property="opType" />
+        <result column="user_id" property="userId" />
+        <result column="operat_time" property="operatTime" />
+        <result column="operat_content" property="operatContent" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, business_name, op_type, user_id, operat_time, operat_content, byzd1, byzd2, byzd3
+    </sql>
+
+    <!--查询日志-->
+    <select id="listSysLog" resultType="com.ltmap.halobiosmaintain.vo.resp.SysLogResp">
+        SELECT sys_log.*,user_info.user_name
+        FROM sys_log JOIN user_info ON sys_log.user_id=user_info.user_id
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userName)">
+                user_info.user_name LIKE #{userName}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startDate) and @org.apache.commons.lang3.StringUtils@isNotBlank(endDate)">
+                AND (sys_log.operat_time BETWEEN #{startDate} AND #{endDate})
+            </if>
+        </where>
+    </select>
+
+    <!--清空日志-->
+    <select id="clearSysLog" resultType="Integer">
+        truncate sys_log
+    </select>
+
+</mapper>

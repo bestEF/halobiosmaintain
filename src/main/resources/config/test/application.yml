@@ -1,0 +1,38 @@
+# 服务器配置
+server:
+  #端口号
+  port: 9092
+  #ip
+  ip: http://localhost:9092
+  #工程访问上下文名称
+  servlet:
+    context-path: /halobiosmaintain
+  # 设置session的有效时间
+  session:
+    timeout: 3600s
+
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=UTC
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      db-type: mysql
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java #重启目录
+      exclude: WEB-INF/**
+    freemarker:
+      cache: false    #页面不加载缓存，修改即时生效
+  profiles:
+    active: test
+
+
+mybatis-plus:
+  mapper-locations: classpath:mybatisplus/mapper/*.xml
+  type-aliases-package: com.ltmap.halobiosmaintain.entity
+  configuration:
+    map-underscore-to-camel-case: true
