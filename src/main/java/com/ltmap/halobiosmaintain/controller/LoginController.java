@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 登录相关Controller
@@ -108,7 +109,6 @@ public class LoginController {
             userRoles = new UserInfo();
             userRoles.setUserName(username);
         }
-
         Map<String, Serializable> authTokenMap = new HashMap<>();
         authTokenMap.put("authToken",tokenId);
         authTokenMap.put("userInfo",userRoles);
