@@ -3,6 +3,9 @@ package com.ltmap.halobiosmaintain.service;
 import com.ltmap.halobiosmaintain.entity.work.Hydrometeorological;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+
 /**
  * <p>
  * 水文气象表 服务类
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IHydrometeorologicalService extends IService<Hydrometeorological> {
 
+    HashMap<String, HashMap<String, BigDecimal>> hydrometeorologicalRangeOneYear(String year, String voyage, String element);
 }

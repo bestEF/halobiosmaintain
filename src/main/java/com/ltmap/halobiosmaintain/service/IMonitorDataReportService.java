@@ -2,6 +2,9 @@ package com.ltmap.halobiosmaintain.service;
 
 import com.ltmap.halobiosmaintain.entity.work.MonitorDataReport;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ltmap.halobiosmaintain.vo.req.FisheggQuantitativeReq;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IMonitorDataReportService extends IService<MonitorDataReport> {
 
+    /**
+     * 根据条件更新（即删除）这些条件信息下相同的数据
+     * @param monitorDataReport
+     * @param fisheggQuantitativeType
+     * @return
+     */
+    boolean updateData(MonitorDataReport monitorDataReport, int fisheggQuantitativeType);
+    List<MonitorDataReport> monitorDataReportInfo(String year);
 }

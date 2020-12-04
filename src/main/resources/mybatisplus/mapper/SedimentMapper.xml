@@ -29,4 +29,16 @@
         <result column="byzd3" property="byzd3" />
     </resultMap>
 
+    <select id="sedimentstatisticOneYear" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.* from sediment a
+        left join monitor_data_report b on a.report_id=b.report_id
+        <where>
+            <if test="year!=null and year!=''">
+                <![CDATA[and b.year =#{year} ]]>
+            </if>
+            <if test="voyage!=null and voyage!=''">
+                <![CDATA[and b.voyage =#{voyage} ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

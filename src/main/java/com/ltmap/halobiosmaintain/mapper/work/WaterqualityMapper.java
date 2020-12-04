@@ -2,6 +2,9 @@ package com.ltmap.halobiosmaintain.mapper.work;
 
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface WaterqualityMapper extends BaseMapper<Waterquality> {
 
+    List<Waterquality>  waterQualitystatisticOneYear(@Param("year") String year, @Param("voyage") String voyage);
 }

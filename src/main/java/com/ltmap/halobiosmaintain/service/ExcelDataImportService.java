@@ -1,5 +1,6 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.ltmap.halobiosmaintain.common.result.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,4 +30,14 @@ public interface ExcelDataImportService {
      * @return
      */
     Map<String, Object> getAbsolutePath(MultipartFile file, int i, String excelType, List<Map<String, Object>> allMapList) throws IOException;
+
+    /**
+     * 文件入库
+     * @param allMapList
+     * @param codes
+     * @param userId
+     * @param userName
+     * @return
+     */
+    Response<Object> fileInsert(List<Map<String, Object>> allMapList, String codes, String userId, String userName);
 }

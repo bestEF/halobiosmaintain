@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +17,11 @@ import java.io.Serializable;
  * @author fjh
  * @since 2020-11-27
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @TableName("monitor_data_report")
 public class MonitorDataReport extends Model<MonitorDataReport> {
 

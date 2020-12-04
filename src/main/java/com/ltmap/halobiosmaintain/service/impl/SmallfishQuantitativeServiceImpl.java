@@ -1,10 +1,22 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
+import com.ltmap.halobiosmaintain.entity.work.FisheggQualitative;
+import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
+import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
 import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.ltmap.halobiosmaintain.mapper.work.SmallfishQuantitativeMapper;
 import com.ltmap.halobiosmaintain.service.ISmallfishQuantitativeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +29,107 @@ import org.springframework.stereotype.Service;
 @Service
 public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuantitativeMapper, SmallfishQuantitative> implements ISmallfishQuantitativeService {
 
+    @Resource
+    private SmallfishQuantitativeMapper smallfishQuantitativeMapper;
+    /*
+     * @Description:查询生物种种类
+     * @Param year:
+     * @Param voyage:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/11/30 16:51
+     */
+    @Override
+    public List<SmallfishQuantitative> queryBiologicalType(String year, String voyage){
+        List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        //去重
+        List<SmallfishQuantitative> smallfishQuantitativeListNew= ListDistinctUtils.distinctSmallfishQuantitativeByMap(smallfishQuantitativeList);
+        return smallfishQuantitativeListNew;
+    }
+
+    /*
+     * @Description:生物组成
+     * @Param year:
+     * @Param voyage:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/2 10:14
+     */
+    @Override
+    public List<String> statisticTypeFromOneMap(String year, String voyage){
+        List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        List list = new ArrayList();
+        for (int i = 0; i <smallfishQuantitativeList.size() ; i++) {
+            list.add(smallfishQuantitativeList.get(i).getBiologicalChineseName());
+        }
+        return list;
+    }
+
+    /*
+     * @Description:密度
+     * @Param year:
+     * @Param voyage:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/2 13:57
+     */
+    @Override
+    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+        List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        BigDecimal density = new BigDecimal(0);
+        for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
+            density = density.add(smallfishQuantitativeList.get(i).getDensity());
+        }
+        density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
+        return density;
+    }
+
+    /*
+     * @Description:密度-一年内统计分析
+     * @Param year:
+     * @Param voyage:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/2 13:57
+     */
+    @Override
+    public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
+        HashMap<String,BigDecimal> resultMap=new HashMap<>();
+        List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        if(smallfishQuantitativeList.size()==0){
+            resultMap.put("max",new BigDecimal(0));
+            resultMap.put("min",new BigDecimal(0));
+            resultMap.put("ave",new BigDecimal(0));
+            return resultMap;
+        }
+        //求最大值
+        BigDecimal max = smallfishQuantitativeList.stream().map(SmallfishQuantitative::getDensity).max((x1, x2) -> x1.compareTo(x2)).get();
+        //求最小值
+        BigDecimal min = smallfishQuantitativeList.stream().map(SmallfishQuantitative::getDensity).min((x1, x2) -> x1.compareTo(x2)).get();
+        //求平均值
+        BigDecimal ave = smallfishQuantitativeList.stream().map(SmallfishQuantitative::getDensity).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(smallfishQuantitativeList.size()), 2, BigDecimal.ROUND_HALF_UP);
+        resultMap.put("max",max);
+        resultMap.put("min",min);
+        resultMap.put("ave",ave);
+        return resultMap;
+    }
+    /*
+     * @Description:站位的生物密度
+     * @Param year:
+     * @Param voyage:
+     * @Param stationId:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/2 16:04
+     */
+    @Override
+    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+        List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
+        BigDecimal density = new BigDecimal(0);
+        for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
+            density = density.add(smallfishQuantitativeList.get(i).getDensity());
+        }
+        density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
+        return density;
+    }
 }

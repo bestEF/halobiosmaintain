@@ -2,6 +2,10 @@ package com.ltmap.halobiosmaintain.service;
 
 import com.ltmap.halobiosmaintain.entity.work.FisheggQualitative;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IFisheggQualitativeService extends IService<FisheggQualitative> {
 
+    List<FisheggQualitative> queryBiologicalType(String year, String voyage);
+    List<String> statisticTypeFromOneMap(String year, String voyage);
 }

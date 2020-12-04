@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 /**
  * excel数据导入控制器
@@ -43,6 +45,84 @@ public class ExcelDataImportController {
 
     //选择文件一次性选择的多个文件数据查重使用
     public static List<Object> excelDataList;
+
+    /**
+     * 查询缓存数据
+     * @return
+     */
+    @PostMapping("queryCacheData")
+    @ApiOperation(value = "查询缓存数据")
+    public Response queryCacheData(){
+        if(ShiroUtils.isLogin()){
+            String userId = ShiroUtils.getUserId();
+            // 从json文件读allMapList
+            List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
+            return Responses.or(allMapList);
+        }else {
+            return Response.fail("无用户登陆信息，请重新登陆");
+        }
+    }
+
+    /**
+     * 从文件列表去除文件
+     * @param request
+     * @param codes
+     * @return
+     */
+    @PostMapping(value = "fileDelete")
+    @ApiOperation(value = "从文件列表去除文件")
+    @ApiImplicitParam(name = "codes",value = "需要清除的质控数据",required = true)
+    public Object fileDelete(HttpServletRequest request, String codes) {
+        if(ShiroUtils.isLogin()){
+            String userId = ShiroUtils.getUserId();
+            // 从json文件读allMapList
+            List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
+            // 遍历并剔除
+            List<String> codeList=new ArrayList<>();
+            codeList= Arrays.asList(codes.split("\\,"));
+            codeList = new ArrayList<>(codeList);
+            Iterator<String> codeIterator = codeList.iterator();
+            String code;
+            while (codeIterator.hasNext()){
+                code=codeIterator.next();
+                ListIterator<Map<String,Object>> mapIterator = allMapList.listIterator();
+                while (mapIterator.hasNext()) {
+                    Map<String, Object> map = mapIterator.next();
+                    if(map.get("code").toString().equals(code)) {
+                        mapIterator.remove();
+                        codeIterator.remove();
+                    }
+                }
+            }
+
+            // allMapList写回json文件
+            fileTestDataUtil.allMapList2jsonFile(allMapList,userId);
+            // 返回前台消息
+            StringBuilder sb=new StringBuilder();
+            for(String s:codeList) sb.append(s).append(",");
+            if(codeList.size()>0)
+                return Response.fail("存在未删除的文件:"+sb.substring(0,sb.length()-1));
+            return Response.ok();
+        }else {
+            return Response.fail("无用户登陆信息，请重新登陆");
+        }
+    }
+
+    /**
+     * 文件入库
+     * @param codes
+     * @return
+     */
+    @PostMapping(value = "/fileInsert")
+    @ApiOperation(value = "文件入库")
+    @ApiImplicitParam(name = "codes",value = "校验成功需要入库的数据编号(字符串用逗号分隔)",required = true)
+    @RequiresAuthentication
+    public Response<Object> fileInsert(String codes) {
+            String userId = ShiroUtils.getUserId();
+            List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
+            String userName = ShiroUtils.getAdminEntity().getUserName();
+            return excelDataImportService.fileInsert(allMapList,codes,userId,userName);
+    }
 
     /**
      * Excel校验
@@ -76,7 +156,8 @@ public class ExcelDataImportController {
         // 判断file数组不能为空并且长度大于0
         if (files != null && files.length > 0) {
             // 校验的excel信息放在allMapList作为缓存
-            List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(ShiroUtils.getUserId());
+            String userId = ShiroUtils.getUserId();
+            List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
             excelDataList=new ArrayList<>();
             // 循环获取file数组中得文件
             for (int i = 0; i < files.length; i++) {

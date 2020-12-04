@@ -2,6 +2,12 @@ package com.ltmap.halobiosmaintain.service;
 
 import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ltmap.halobiosmaintain.vo.req.FisheggQuantitativeReq;
+import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +19,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IFisheggQuantitativeService extends IService<FisheggQuantitative> {
 
+    /**
+     * 根据填报id删除对应所有数据
+     * @param reportId
+     */
+    Boolean deleteByReportId(Long reportId);
+    List<FisheggQuantitative> queryBiologicalType(String year, String voyage);
+
+    List<String> statisticTypeFromOneMap(String year, String voyage);
+
+    BigDecimal queryBiologicalDensity(String year, String voyage);
+
+    BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId);
+
+    HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 }

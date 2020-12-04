@@ -3,6 +3,10 @@ package com.ltmap.halobiosmaintain.service;
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * <p>
  * 水质表 服务类
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWaterqualityService extends IService<Waterquality> {
 
+    HashMap<String,HashMap<String,BigDecimal>> waterQualitystatisticOneYear(String year, String voyage,String element);
 }

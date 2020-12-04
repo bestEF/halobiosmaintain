@@ -1,7 +1,12 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.SwimminganimalIdentification;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISwimminganimalIdentificationService extends IService<SwimminganimalIdentification> {
 
+    List<SwimminganimalIdentification> queryBiologicalType(String year, String voyage);
+    HashMap<String,Integer> statisticTypeFromOneMap(String year, String voyage);
 }

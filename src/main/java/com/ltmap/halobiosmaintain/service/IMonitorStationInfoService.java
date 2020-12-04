@@ -26,4 +26,11 @@ public interface IMonitorStationInfoService extends IService<MonitorStationInfo>
     List<MonitorStationInfo> queryStationInfo(String year,String voyage);
 
     List<MonitorStationInfo> queryStationInfoById(Long stationId,Long reportId,String stationName);
+
+    /**
+     * 根据填报id删除所有站位信息
+     * @param reportId
+     * @return
+     */
+    Boolean deleteByReportId(Long reportId);
 }

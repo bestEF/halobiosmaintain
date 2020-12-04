@@ -23,5 +23,20 @@
         <result column="byzd2" property="byzd2" />
         <result column="byzd3" property="byzd3" />
     </resultMap>
+    <select id="queryBiologicalType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.* from intertidalzonebiological_quantitative a
+        left join monitor_data_report b on a.report_id=b.report_id
+        <where>
+            <if test="year!=null and year!=''">
+                <![CDATA[and b.year =#{year} ]]>
+            </if>
+            <if test="voyage!=null and voyage!=''">
+                <![CDATA[and b.voyage =#{voyage} ]]>
+            </if>
+            <if test="stationId!=null and stationId!=''">
+                <![CDATA[and a.station_id =#{stationId} ]]>
+            </if>
+        </where>
+    </select>
 
 </mapper>

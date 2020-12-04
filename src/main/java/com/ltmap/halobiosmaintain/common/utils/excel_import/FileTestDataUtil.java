@@ -3,7 +3,11 @@ package com.ltmap.halobiosmaintain.common.utils.excel_import;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.ltmap.halobiosmaintain.config.Constant;
 import com.ltmap.halobiosmaintain.controller.ExcelDataImportController;
+import com.ltmap.halobiosmaintain.entity.work.MonitorDataReport;
+import com.ltmap.halobiosmaintain.service.IFisheggQuantitativeService;
+import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
 import com.ltmap.halobiosmaintain.vo.req.FisheggQuantitativeReq;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,14 +15,19 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.*;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -34,15 +43,17 @@ public class FileTestDataUtil {
     private Config config;
     @Resource
     private ExcelDataImportController excelDataImportController;
+    @Resource
+    private IMonitorDataReportService monitorDataReportService;
 
-    /**
-     * 年份
-     */
+    /**年份**/
     public static String YEAR;
-    /**
-     * 航次
-     */
+    /**航次**/
     public static String VOYAGE;
+    /**当前表格数据类型**/
+    public static String dataType;
+
+
     public static ParseXMLUtil parseXmlUtil;
 
     static String err1="存在不允许的空数据；";
@@ -246,26 +257,28 @@ public class FileTestDataUtil {
             totalCells = sheet.getRow(titleRows).getPhysicalNumberOfCells();
         }
 
-        boolean isHeadRight = readSheetHeadData(sheet,entityName,totalCells,titleType);//表头
+        boolean isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);//表头
 
         if(isHeadRight){
-            if (totalRows>=titleRows+1) {//if (totalRows>=2) {
+            //+6是判断有没有真实数据  真实数据是从第5+1行开始的
+            if (totalRows>=6) {//if (totalRows>=2) {
                 headMap = (Map) getCurEntityHeadMap().get(getCurEntityCode());
                 // 循环Excel行数,从第2行开始,1行表头不入库
                 List<String> returnList=new ArrayList<>();
 
-                for (int r = titleRows; r < totalRows; r++) {//for (int r = 1; r < totalRows; r++) {
+                //从第5+1行读数据
+                //-1是因为最后一行填的是填报人等信息
+                for (int r = 5; r < totalRows-1; r++) {//for (int r = 1; r < totalRows; r++) {
                     Row row = sheet.getRow(r);
                     if (isBlankRow(row)) {
                         continue;
                     }
 
                     // 按不同文件类型执行校验
-
-                    returnList=classify(totalCells,row,headMap,entityName,r,excelType,allMapList);
+                    returnList=classify(totalCells,totalRows,row,headMap,entityName,r,excelType,allMapList,sheet);
 
                     // 查重
-                    Boolean dataExist=Boolean.valueOf(returnList.get(0));// 0：数据库重复数据
+                    Boolean dataExist=false;//=Boolean.valueOf(returnList.get(0));// 0：数据库重复数据
                     Boolean sameInfo=Boolean.valueOf(returnList.get(1));// 1：Excel文件列表重复数据
                     boolean exist=false;
                     if(dataExist) {
@@ -412,11 +425,11 @@ public class FileTestDataUtil {
     }
 
     // 按不同类型划分不同方法
-    private List<String> classify(Integer totalCells,Row row,Map headMap,String entityName,int r,String type,List<Map<String, Object>> allMapList){
+    private List<String> classify(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,String type,List<Map<String, Object>> allMapList,Sheet sheet){
         List<String> list=new ArrayList<>();
         switch (type){
             case "FisheggQuantitativeExcelRule":// 鱼卵定量数据表
-                list = fisheggQuantitativeExcelRule(totalCells,row,headMap,entityName,r,allMapList);
+                list = fisheggQuantitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
                 list.add("1");
                 break;
             default:
@@ -426,40 +439,155 @@ public class FileTestDataUtil {
     }
 
     //鱼卵定量数据表
-    private List<String> fisheggQuantitativeExcelRule(Integer totalCells,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList){
+    private List<String> fisheggQuantitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
         List<String> returnList=new ArrayList<>();
         FisheggQuantitativeReq fisheggQuantitativeReq = new FisheggQuantitativeReq();
         int totalRst = 0;//每行格式错误单元格的数目
         int validaterst = 0;
 
+        //将年份和航次信息写入对象
+        fisheggQuantitativeReq.setYear(YEAR);
+        fisheggQuantitativeReq.setVoyage(VOYAGE);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingFisheggQuantitative(sheet,headMap,entityName,fisheggQuantitativeReq,totalRows);
+
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < totalCells; c++) {
             Cell cell = row.getCell(c);
-            String headTitle = headMap.get(c).toString();
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
             totalRst += validaterst;
 
             if(totalRst == 0 && cell != null) {             // 定制
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-                if(c==0){
-                    //msWarterExtReq.setStationCode(cell.getStringCellValue());
-                } else if(c==48){
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    fisheggQuantitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    //msWarterExtReq.setHk(Float.valueOf(cellValue));
+                    fisheggQuantitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        fisheggQuantitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        fisheggQuantitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setRopeLength(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setWaterFiltration(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setBiologicalChineseName(cellValue);
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setBiologicalLatinName(cellValue);
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setDevelopStage(cellValue);
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setEggRadius(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQuantitativeReq.setDensity(new BigDecimal(cellValue));
                 }
-
             }
 
         }
 
-        //数据库查重
-        boolean dataExist=false;//boolean dataExist = dataExisted(msWarterExtReq, Constant.shuiti);// 定制 // && (!isSampleRepeat);
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(fisheggQuantitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
         returnList.add(String.valueOf(dataExist));
 
         // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
         boolean sameInfo=false;
+        FisheggQuantitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("FisheggQuantitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(FisheggQuantitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(fisheggQuantitativeReq.getMonitoringArea()) &&
+                            item.getEcologicalType().equals(fisheggQuantitativeReq.getEcologicalType()) &&
+                            item.getTaskDate().equals(fisheggQuantitativeReq.getTaskDate()) &&
+                            item.getMonitorCompany().equals(fisheggQuantitativeReq.getMonitorCompany()) &&
+                            item.getOrganizationCompany().equals(fisheggQuantitativeReq.getOrganizationCompany()) &&
+                            item.getReportDate().equals(fisheggQuantitativeReq.getReportDate()) &&
+                            item.getYear().equals(fisheggQuantitativeReq.getYear()) &&
+                            item.getVoyage().equals(fisheggQuantitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
         returnList.add(String.valueOf(sameInfo));
 
         // 校验合格：写入dataList
@@ -468,6 +596,189 @@ public class FileTestDataUtil {
             excelDataImportController.excelDataList.add(fisheggQuantitativeReq);
         }
         return returnList;
+    }
+
+    /**
+     * 对仔鱼定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param fisheggQuantitativeReq
+     */
+    public void specialHandlingFisheggQuantitative(Sheet sheet,Map headMap,String entityName,FisheggQuantitativeReq fisheggQuantitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                fisheggQuantitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                fisheggQuantitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                fisheggQuantitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                fisheggQuantitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setReportName(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setCheckName(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQuantitativeReq.setVerifyName(cell.getStringCellValue());
+        }
+
     }
 
     /**
@@ -551,18 +862,23 @@ public class FileTestDataUtil {
                 }
                 //规则4：是否是数字
                 else if(rulName.equals(ParseConstans.RULE_NAME_NUMERIC)){
-//                  if(!StringUtils.isNotBlank(cellValue) || cellValue.equals("——"))
-
-//                  break;
                     cellType = colCell.getCellType();
                     if((cellType != Cell.CELL_TYPE_NUMERIC && cellType!= Cell.CELL_TYPE_FORMULA && StringUtils.isNotEmpty(cellValue))) {
-                        if(!errorString.toString().contains(err3)) errorString.append(err3);
-                        errorMap.put("curRow", curRow);
-                        errorMap.put("curCol", curCol);
-                        errorMap.put("rulMsg", rulMsg);
-                        errorList.add(errorMap);
-                        result = -1;
-                        break;
+
+                        //原本只要excel在填写时格式正确 就不需要try里面的内容 加上try是为了防止excel内出现：以文本形式存储的数字的情况
+                        try {
+                            Double doubleValue = Double.valueOf(cellValue);
+                            break;
+                        }catch (NumberFormatException e){
+                            if(!errorString.toString().contains(err3)) errorString.append(err3);
+                            errorMap.put("curRow", curRow);
+                            errorMap.put("curCol", curCol);
+                            errorMap.put("rulMsg", rulMsg);
+                            errorList.add(errorMap);
+                            result = -1;
+                            break;
+                        }
+
                     }
                 }
                 //规则5：是否是日期格式
@@ -709,31 +1025,48 @@ public class FileTestDataUtil {
      * @param sheet
      */
     @SuppressWarnings({ "unchecked" })
-    public static boolean readSheetHeadData(Sheet sheet,String entityName,int totalCells,boolean titleType){
+    public static boolean readSheetHeadData(Sheet sheet,String entityName,int totalRows,int totalCells,boolean titleType,String excelType){
         Map headMap = new HashMap();
         curEntityHeadMap = new HashMap();
-        Row excelheadRow1 = sheet.getRow(titleType?2:0);
-        int excelLastRow = excelheadRow1.getLastCellNum();
-        if(excelLastRow == ParseXMLUtil.headMap.size()) {//if(excelLastRow == totalCells) { // Excel列数
+
+        //将固定不变的9个表头key放入headMap
+        headMap.put(Constant.monitoringAreaCode, Constant.monitoringArea);
+        headMap.put(Constant.ecologicaltypeCode, Constant.ecologicaltype);
+        headMap.put(Constant.missionDateCode, Constant.missionDate);
+        headMap.put(Constant.monitoringUnitCode, Constant.monitoringUnit);
+        headMap.put(Constant.organizationalUnitCode, Constant.organizationalUnit);
+        headMap.put(Constant.completionDateCode, Constant.completionDate);
+        headMap.put(Constant.informantCode, Constant.informant);
+        headMap.put(Constant.proofreaderCode, Constant.proofreader);
+        headMap.put(Constant.auditorCode, Constant.auditor);
+
+        //取行 3是因为16种表不一样的表头key信息是从第三行开始的
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+        if(excelLastCellNum == ParseXMLUtil.headMap.size()-Constant.constantTableHeadCount) {//if(excelLastRow == totalCells) { // Excel列数
             Map<String,Map<String,String>> columnMap = parseXmlUtil.getColumnMap();
-            if(titleType)
+            if(titleType) {
+                log.info("getCurEntityCode():"+getCurEntityCode());
+                log.info("ParseXMLUtil.headMap.toString():"+ParseXMLUtil.headMap.toString());
                 curEntityHeadMap.put(getCurEntityCode(), ParseXMLUtil.headMap);// Excel表头为两行时进入此方法，将表头字段放入curEntityHeadMap
-            else{
+            }
+            else {
                 String headTitle = "";
-                for(int i=0;i<excelLastRow;i++){
+                for (int i = 0; i < excelLastCellNum; i++) {
                     Cell cell = null;
                     cell = excelheadRow1.getCell(i);
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
-                    if(columnMap.get(entityName+"_"+headTitle)!=null) {
-                        if(headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
-                        if(!columnMap.get(entityName+"_"+headTitle).get("code").equals(i+"")) {
+                    if (columnMap.get(entityName + "_" + headTitle) != null) {
+                        if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                        //+6是因为.xml文件中是code为6处和excel表格读取表头key信息对应的
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(i+6 + "")) {
                             return false;
                         }
-                    }else {
+                    } else {
                         return false;
                     }
-                    headMap.put(i, headTitle);
+                    headMap.put(i + Constant.constantTableHeadCount, headTitle);
                 }
                 curEntityHeadMap.put(getCurEntityCode(), headMap);
             }

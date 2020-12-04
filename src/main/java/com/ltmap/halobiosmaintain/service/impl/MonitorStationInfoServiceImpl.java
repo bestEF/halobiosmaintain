@@ -25,6 +25,17 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
     @Resource
     private MonitorStationInfoMapper monitorStationInfoMapper;
 
+    /**
+     * 根据填报id删除所有站位信息
+     * @param reportId
+     * @return
+     */
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<MonitorStationInfo> lqw = Wrappers.lambdaQuery();
+        lqw.eq(MonitorStationInfo::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return true;
+    }
 
     /*
      * @Description:查询所有监测站位

@@ -1,7 +1,11 @@
 package com.ltmap.halobiosmaintain.mapper.work;
 
+import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.SmallzooplanktonIinet;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SmallzooplanktonIinetMapper extends BaseMapper<SmallzooplanktonIinet> {
 
+    List<SmallzooplanktonIinet> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 }
