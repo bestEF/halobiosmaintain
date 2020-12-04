@@ -80,9 +80,14 @@ public class MonitorDataReportServiceImpl extends ServiceImpl<MonitorDataReportM
     }
 
     @Override
-    public List<MonitorDataReport> monitorDataReportInfo(String year){
+    public List<MonitorDataReport> monitorDataReportInfo(String monitoringArea,String ecologicalType,String monitorCompany,String startDate,String endDate,String year){
         LambdaQueryWrapper<MonitorDataReport> queryWrapper=new LambdaQueryWrapper();
-        queryWrapper.eq(!Strings.isNullOrEmpty(year),MonitorDataReport::getYear,year);
+        queryWrapper.eq(!Strings.isNullOrEmpty(year),MonitorDataReport::getYear,year)
+                .like(!Strings.isNullOrEmpty(monitoringArea),MonitorDataReport::getMonitoringArea,monitoringArea)
+                .like(!Strings.isNullOrEmpty(ecologicalType),MonitorDataReport::getEcologicalType,ecologicalType)
+                .like(!Strings.isNullOrEmpty(monitorCompany),MonitorDataReport::getMonitorCompany,monitorCompany)
+                .between(!Strings.isNullOrEmpty(startDate)&&!Strings.isNullOrEmpty(endDate),MonitorDataReport::getTaskDate,startDate,endDate);
         return monitorDataReportMapper.selectList(queryWrapper);
     }
+
 }

@@ -34,4 +34,23 @@
             </if>
         </where>
     </select>
+
+    <select id="listSmallfishQualitative" parameterType="java.lang.String" resultType="com.ltmap.halobiosmaintain.entity.work.SmallfishQualitative">
+        select a.*,b.station_name,b.plan_lon,b.plan_lat,b.real_lon,b.real_lat from smallfish_qualitative a
+        left join monitor_station_info b on a.station_id=b.station_id
+        <where>
+            <if test="stationName!=null and stationName!=''">
+                and b.station_name like concat('%',#{stationName},'%')
+            </if>
+            <if test="biologicalChineseName!=null and biologicalChineseName!=''">
+                and a.biological_chinese_name like concat('%',#{biologicalChineseName},'%')
+            </if>
+            <if test="startDate!=null and startDate.trim() neq ''">
+                and date_format(a.monitor_date,'%Y-%m-%d') &gt;= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate!=null and endDate.trim() neq ''">
+                and date_format(a.monitor_date,'%Y-%m-%d') &lt;= str_to_date(#{endDate},'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
 </mapper>

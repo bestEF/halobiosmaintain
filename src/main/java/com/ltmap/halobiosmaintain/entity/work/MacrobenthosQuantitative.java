@@ -117,6 +117,32 @@ public class MacrobenthosQuantitative extends Model<MacrobenthosQuantitative> {
      */
     private String byzd3;
 
+    //站位数据
+    /**
+     * 站位名称
+     */
+    private String stationName;
+
+    /**
+     * 计划经度
+     */
+    private BigDecimal planLon;
+
+    /**
+     * 计划纬度
+     */
+    private BigDecimal planLat;
+
+    /**
+     * 实测经度
+     */
+    private BigDecimal realLon;
+
+    /**
+     * 实测纬度
+     */
+    private BigDecimal realLat;
+
 
     public Long getId() {
         return id;

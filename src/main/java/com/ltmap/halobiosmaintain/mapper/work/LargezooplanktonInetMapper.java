@@ -1,5 +1,7 @@
 package com.ltmap.halobiosmaintain.mapper.work;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ltmap.halobiosmaintain.entity.work.IntertidalzonebiologicalQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.LargezooplanktonInet;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
@@ -18,4 +20,7 @@ import java.util.List;
 public interface LargezooplanktonInetMapper extends BaseMapper<LargezooplanktonInet> {
 
     List<LargezooplanktonInet> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
+
+    IPage<LargezooplanktonInet> listLargezooplanktonInet(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+
 }

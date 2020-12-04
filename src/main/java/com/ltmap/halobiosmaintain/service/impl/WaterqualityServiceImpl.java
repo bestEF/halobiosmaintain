@@ -1,6 +1,11 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
+import com.ltmap.halobiosmaintain.entity.work.SwimminganimalIdentification;
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
 import com.ltmap.halobiosmaintain.mapper.work.WaterqualityMapper;
 import com.ltmap.halobiosmaintain.service.IWaterqualityService;
@@ -341,5 +346,18 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
         }
 
         return resultMap;
+    }
+
+    /*
+     * @Description:水质数据
+     * @Param waterquality:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:53
+     */
+    @Override
+    public IPage<Waterquality> listWaterquality(Integer current,Integer size,String stationName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return waterqualityMapper.listWaterquality(page,stationName,  startDate,  endDate);
     }
 }

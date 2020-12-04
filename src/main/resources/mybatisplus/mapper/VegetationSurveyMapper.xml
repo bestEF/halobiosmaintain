@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltmap.halobiosmaintain.mapper.work.VegetationSurveyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ltmap.halobiosmaintain.entity.work.VegetationSurvey">
+        <id column="id" property="id" />
+        <result column="protec_name" property="protecName" />
+        <result column="survey_date" property="surveyDate" />
+        <result column="weather" property="weather" />
+        <result column="place" property="place" />
+        <result column="num" property="num" />
+        <result column="area" property="area" />
+        <result column="high" property="high" />
+        <result column="lon" property="lon" />
+        <result column="lat" property="lat" />
+        <result column="habitat_type" property="habitatType" />
+        <result column="human_type" property="humanType" />
+        <result column="human_intensity" property="humanIntensity" />
+        <result column="threatened_factors" property="threatenedFactors" />
+        <result column="vegetation_type" property="vegetationType" />
+        <result column="dominant_species" property="dominantSpecies" />
+        <result column="total_coverage" property="totalCoverage" />
+        <result column="survey_name" property="surveyName" />
+        <result column="byzd1" property="byzd1" />
+        <result column="byzd2" property="byzd2" />
+        <result column="byzd3" property="byzd3" />
+    </resultMap>
+
+    <select id="listVegetationSurvey" parameterType="java.lang.String" resultType="com.ltmap.halobiosmaintain.entity.work.VegetationSurvey">
+        select a.* from vegetation_survey a
+        <where>
+            <if test="protecName!=null and protecName!=''">
+                and b.protec_name like concat('%',#{protecName},'%')
+            </if>
+            <if test="place!=null and place!=''">
+                and a.place like concat('%',#{place},'%')
+            </if>
+            <if test="startDate!=null and startDate.trim() neq ''">
+                and date_format(a.survey_date,'%Y-%m-%d') &gt;= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate!=null and endDate.trim() neq ''">
+                and date_format(a.survey_date,'%Y-%m-%d') &lt;= str_to_date(#{endDate},'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
+</mapper>

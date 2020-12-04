@@ -1,5 +1,7 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,4 +20,6 @@ import java.util.List;
 public interface IWaterqualityService extends IService<Waterquality> {
 
     HashMap<String,HashMap<String,BigDecimal>> waterQualitystatisticOneYear(String year, String voyage,String element);
+
+    IPage<Waterquality> listWaterquality(Integer current, Integer size,String stationName, String startDate, String endDate);
 }

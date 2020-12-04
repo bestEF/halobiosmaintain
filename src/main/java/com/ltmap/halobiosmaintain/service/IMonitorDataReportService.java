@@ -23,5 +23,5 @@ public interface IMonitorDataReportService extends IService<MonitorDataReport> {
      * @return
      */
     boolean updateData(MonitorDataReport monitorDataReport, int fisheggQuantitativeType);
-    List<MonitorDataReport> monitorDataReportInfo(String year);
+    List<MonitorDataReport> monitorDataReportInfo(String monitoringArea,String ecologicalType,String monitorCompany,String startDate,String endDate,String year);
 }

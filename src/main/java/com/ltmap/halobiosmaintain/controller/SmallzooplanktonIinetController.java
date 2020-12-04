@@ -1,9 +1,27 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ltmap.halobiosmaintain.common.result.Response;
+import com.ltmap.halobiosmaintain.common.result.Responses;
+import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
+import com.ltmap.halobiosmaintain.entity.work.SmallzooplanktonIinet;
+import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
+import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
+import com.ltmap.halobiosmaintain.service.ISmallfishQuantitativeService;
+import com.ltmap.halobiosmaintain.service.ISmallzooplanktonIinetService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -13,9 +31,53 @@ import org.springframework.stereotype.Controller;
  * @author fjh
  * @since 2020-11-27
  */
-@Controller
+@Api(tags = "小型浮游动物（II型网）")
+@RestController
 @RequestMapping("/smallzooplanktonIinet")
 public class SmallzooplanktonIinetController {
 
+    @Resource
+    private ISmallzooplanktonIinetService smallzooplanktonIinetService;
+    @Resource
+    private IMonitorStationInfoService monitorStationInfoService;
+    @Resource
+    private IMonitorDataReportService monitorDataReportService;
+
+
+
+    @ApiOperation(value ="小型浮游动物（II型网）数据查询_数据管理")
+    @PostMapping("/listSmallzooplanktonIinet")
+    public Response<IPage<SmallzooplanktonIinet>> listSmallzooplanktonIinet(@RequestParam(defaultValue = "1")Integer current,
+                                                                            @RequestParam(defaultValue = "10")Integer size,
+                                                                            String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<SmallzooplanktonIinet> smallzooplanktonIinets= smallzooplanktonIinetService.listSmallzooplanktonIinet(current,size,stationName,biologicalChineseName,startDate,endDate);
+        return Responses.or(smallzooplanktonIinets);
+    }
+
+
+    @ApiOperation(value ="小型浮游动物（II型网）数据删除_数据管理")
+    @PostMapping("/deleteSmallzooplanktonIinet")
+    public Response<Boolean> deleteSmallzooplanktonIinet(String reportId){
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("report_id", reportId);
+        //查询站位id
+        List<SmallzooplanktonIinet> smallzooplanktonIinets = smallzooplanktonIinetService.listByMap(map);
+
+        //删除生物质量数据表
+        Boolean deleted= smallzooplanktonIinetService.removeByMap(map);
+
+        //删除站位数据表
+        for (int i = 0; i < smallzooplanktonIinets.size(); i++) {
+            HashMap<String, Object> map2 = new HashMap<>();
+            map.put("station_id", smallzooplanktonIinets.get(i).getStationId());
+            monitorStationInfoService.removeByMap(map2);
+        }
+
+        //删除填报数据
+        monitorDataReportService.removeById(reportId);
+
+        return Responses.or(deleted);
+    }
 }
 

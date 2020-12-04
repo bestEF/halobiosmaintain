@@ -1,6 +1,10 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
 import com.ltmap.halobiosmaintain.entity.work.FisheggQualitative;
 import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
 import com.ltmap.halobiosmaintain.mapper.work.FisheggQualitativeMapper;
@@ -62,5 +66,17 @@ public class FisheggQualitativeServiceImpl extends ServiceImpl<FisheggQualitativ
         return list;
     }
 
+    /*
+     * @Description:鱼卵定性数据查询
+     * @Param fisheggQualitative:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:44
+     */
+    @Override
+    public IPage<FisheggQualitative> listFisheggQualitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<FisheggQualitative> page=new Page<>(current, size);
+        return fisheggQualitativeMapper.listFisheggQualitative(page,stationName,biologicalChineseName,startDate,endDate);
+    }
 
 }

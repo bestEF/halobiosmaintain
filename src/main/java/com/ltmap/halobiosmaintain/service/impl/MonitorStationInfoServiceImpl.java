@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -57,4 +58,5 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
         .eq(!Strings.isNullOrEmpty(stationName),MonitorStationInfo::getStationName,stationName);
         return monitorStationInfoMapper.selectList(lambdaQueryWrapper);
     }
+
 }

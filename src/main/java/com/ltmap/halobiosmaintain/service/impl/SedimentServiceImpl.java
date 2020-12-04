@@ -1,5 +1,10 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.Phytoplankton;
 import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
 import com.ltmap.halobiosmaintain.mapper.work.SedimentMapper;
@@ -210,5 +215,18 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 break;
         }
         return resultMap;
+    }
+
+    /*
+     * @Description:沉积物数据
+     * @Param sediment:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:49
+     */
+    @Override
+    public IPage<Sediment> listSediment(Integer current,Integer size,String stationName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return sedimentMapper.listSediment(page,stationName,  startDate,  endDate);
     }
 }

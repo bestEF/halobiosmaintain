@@ -1,6 +1,11 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.Phytoplankton;
 import com.ltmap.halobiosmaintain.mapper.work.MacrobenthosQuantitativeMapper;
@@ -65,5 +70,18 @@ public class PhytoplanktonServiceImpl extends ServiceImpl<PhytoplanktonMapper, P
             phytoplanktonMap.put(temp.toString(),Collections.frequency(list, temp));
         }
         return phytoplanktonMap;
+    }
+
+    /*
+     * @Description:浮游植物数据
+     * @Param phytoplankton:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:49
+     */
+    @Override
+    public IPage<Phytoplankton> listPhytoplankton(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return phytoplanktonMapper.listPhytoplankton(page,stationName,  biologicalChineseName,  startDate,  endDate);
     }
 }

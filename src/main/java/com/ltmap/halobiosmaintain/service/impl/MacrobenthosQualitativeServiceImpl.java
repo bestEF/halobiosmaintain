@@ -1,6 +1,11 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.LargezooplanktonInet;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
 import com.ltmap.halobiosmaintain.mapper.work.MacrobenthosQualitativeMapper;
@@ -195,5 +200,18 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
         }
         biomass=biomass.subtract(new BigDecimal(macrobenthosQualitativeList.size()));
         return biomass;
+    }
+
+    /*
+     * @Description:大型底栖动物定性数据
+     * @Param macrobenthosQualitative:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:48
+     */
+    @Override
+    public IPage<MacrobenthosQualitative> listMacrobenthosQualitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return macrobenthosQualitativeMapper.listMacrobenthosQualitative(page,stationName,  biologicalChineseName,  startDate,  endDate);
     }
 }

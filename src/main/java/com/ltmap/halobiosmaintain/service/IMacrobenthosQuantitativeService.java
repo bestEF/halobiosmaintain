@@ -1,5 +1,6 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -33,5 +34,7 @@ public interface IMacrobenthosQuantitativeService extends IService<MacrobenthosQ
 
     HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage);
 
+
+    IPage<MacrobenthosQuantitative> listMacrobenthosQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
 
 }

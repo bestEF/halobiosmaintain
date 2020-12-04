@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +18,11 @@ import java.io.Serializable;
  * @author fjh
  * @since 2020-11-27
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @TableName("fishegg_quantitative")
 public class FisheggQuantitative extends Model<FisheggQuantitative> {
 
@@ -101,6 +108,32 @@ public class FisheggQuantitative extends Model<FisheggQuantitative> {
      * 备用字段3
      */
     private String byzd3;
+
+    //站位数据
+    /**
+     * 站位名称
+     */
+    private String stationName;
+
+    /**
+     * 计划经度
+     */
+    private BigDecimal planLon;
+
+    /**
+     * 计划纬度
+     */
+    private BigDecimal planLat;
+
+    /**
+     * 实测经度
+     */
+    private BigDecimal realLon;
+
+    /**
+     * 实测纬度
+     */
+    private BigDecimal realLat;
 
 
     public Long getId() {

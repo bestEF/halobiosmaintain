@@ -1,6 +1,10 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.mapper.work.BiologicalQualityMapper;
 import com.ltmap.halobiosmaintain.service.IBiologicalQualityService;
@@ -239,4 +243,19 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
         }
         return resultMap;
     }
+
+    /*
+     * @Description:生物质量数据查询
+     * @Param biologicalQuality:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:43
+     */
+    @Override
+    public IPage<BiologicalQuality> listBiologicalQuality(Integer current,Integer size,String stationName,String biologicalChineseName,String startDate,String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return biologicalQualityMapper.listBiologicalQuality(page,stationName,biologicalChineseName,startDate,endDate);
+    }
+
+
 }

@@ -366,169 +366,179 @@ public class MonitorStationInfoController {
 
     //统计分析模块
 
-    @ApiOperation(value ="一年内变化范围")
+    @ApiOperation(value ="一年内某种类的密度和生物量变化范围")
     @PostMapping("/densityOneYear")
-    public  Response<HashMap<String,HashMap<String,BigDecimal>>> densityOneYear(String year, String voyage,String statisticType){
+    public  Response<HashMap<String,HashMap<String,BigDecimal>>> densityOneYear(String year, String voyage,String statisticType,String bioType){
         HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
 
 
         if(statisticType.equals("density")){
             //大型底栖动物
-            //大型底栖动物定量
-            HashMap<String,BigDecimal> macrobenthosQuantitativeDensityMap= macrobenthosQuantitativeService.queryBiologicalDensityOneYear(year,voyage);
-            //大型底栖动物定性
-            HashMap<String,BigDecimal> macrobenthosQualitativeDensityMap=macrobenthosQualitativeService.queryBiologicalDensityOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuemacroMap=new HashMap<>();
-            //最大值
-            BigDecimal max1 =macrobenthosQuantitativeDensityMap.get("max");
-            BigDecimal max2 =macrobenthosQualitativeDensityMap.get("max");
-            BigDecimal max=max1;
-            if(max1.compareTo(max2) > -1){//max1大于等于max2
+            if(bioType.equals("macrobenthos")) {
+                //大型底栖动物定量
+                HashMap<String, BigDecimal> macrobenthosQuantitativeDensityMap = macrobenthosQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
+                //大型底栖动物定性
+                HashMap<String, BigDecimal> macrobenthosQualitativeDensityMap = macrobenthosQualitativeService.queryBiologicalDensityOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuemacroMap = new HashMap<>();
+                //最大值
+                BigDecimal max1 = macrobenthosQuantitativeDensityMap.get("max");
+                BigDecimal max2 = macrobenthosQualitativeDensityMap.get("max");
+                BigDecimal max = max1;
+                if (max1.compareTo(max2) > -1) {//max1大于等于max2
 
-            }
-            if(max1.compareTo(max2) < 1){//max1小于等于max2
-                max=max2;
-            }
-            valuemacroMap.put("max",max);
-            //最小值
-            BigDecimal min1 =macrobenthosQuantitativeDensityMap.get("min");
-            BigDecimal min2 =macrobenthosQualitativeDensityMap.get("min");
-            BigDecimal min=min1;
-            if(min1.compareTo(min2) > -1){//max1大于等于max2
-                min=min2;
-            }
-            valuemacroMap.put("min",min);
-            //平均值
-            BigDecimal ave1 =macrobenthosQuantitativeDensityMap.get("ave");
-            BigDecimal ave2 =macrobenthosQualitativeDensityMap.get("ave");
-            ave1=ave1.add(ave2).divide(new BigDecimal(2));
+                }
+                if (max1.compareTo(max2) < 1) {//max1小于等于max2
+                    max = max2;
+                }
+                valuemacroMap.put("max", max);
+                //最小值
+                BigDecimal min1 = macrobenthosQuantitativeDensityMap.get("min");
+                BigDecimal min2 = macrobenthosQualitativeDensityMap.get("min");
+                BigDecimal min = min1;
+                if (min1.compareTo(min2) > -1) {//max1大于等于max2
+                    min = min2;
+                }
+                valuemacroMap.put("min", min);
+                //平均值
+                BigDecimal ave1 = macrobenthosQuantitativeDensityMap.get("ave");
+                BigDecimal ave2 = macrobenthosQualitativeDensityMap.get("ave");
+                ave1 = ave1.add(ave2).divide(new BigDecimal(2));
 
-            valuemacroMap.put("ave",ave1);
-            resultMap.put("macrobenthos",valuemacroMap);
-
+                valuemacroMap.put("ave", ave1);
+                resultMap.put("value", valuemacroMap);
+            }
             //鱼卵仔鱼
-            //鱼卵定量
-            HashMap<String,BigDecimal> fisheggQuantitativeDensityMap= fisheggQuantitativeService.queryBiologicalDensityOneYear(year,voyage);
-            //仔鱼定量
-            HashMap<String,BigDecimal> smallfishQuantitativeDensityMap= smallfishQuantitativeService.queryBiologicalDensityOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuefishMap=new HashMap<>();
-            //最大值
-            BigDecimal maxfish1 =fisheggQuantitativeDensityMap.get("max");
-            BigDecimal maxfish2 =smallfishQuantitativeDensityMap.get("max");
-            BigDecimal maxfish=maxfish1;
-            if(maxfish1.compareTo(maxfish2) > -1){//max1大于等于max2
+            if(bioType.equals("fisheggSmall")) {
+                //鱼卵定量
+                HashMap<String, BigDecimal> fisheggQuantitativeDensityMap = fisheggQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
+                //仔鱼定量
+                HashMap<String, BigDecimal> smallfishQuantitativeDensityMap = smallfishQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuefishMap = new HashMap<>();
+                //最大值
+                BigDecimal maxfish1 = fisheggQuantitativeDensityMap.get("max");
+                BigDecimal maxfish2 = smallfishQuantitativeDensityMap.get("max");
+                BigDecimal maxfish = maxfish1;
+                if (maxfish1.compareTo(maxfish2) > -1) {//max1大于等于max2
 
-            }
-            if(maxfish1.compareTo(maxfish2) < 1){//max1小于等于max2
-                maxfish=maxfish2;
-            }
-            valuefishMap.put("max",maxfish);
-            //最小值
-            BigDecimal minfish1 =fisheggQuantitativeDensityMap.get("min");
-            BigDecimal minfish2 =smallfishQuantitativeDensityMap.get("min");
-            BigDecimal minfish=min1;
-            if(minfish1.compareTo(minfish2) > -1){//max1大于等于max2
-                minfish=minfish2;
-            }
-            valuefishMap.put("min",minfish);
-            //平均值
-            BigDecimal avefish1 =fisheggQuantitativeDensityMap.get("ave");
-            BigDecimal avefish2 =smallfishQuantitativeDensityMap.get("ave");
-            avefish1=avefish1.add(avefish2).divide(new BigDecimal(2));
+                }
+                if (maxfish1.compareTo(maxfish2) < 1) {//max1小于等于max2
+                    maxfish = maxfish2;
+                }
+                valuefishMap.put("max", maxfish);
+                //最小值
+                BigDecimal minfish1 = fisheggQuantitativeDensityMap.get("min");
+                BigDecimal minfish2 = smallfishQuantitativeDensityMap.get("min");
+                BigDecimal minfish = minfish1;
+                if (minfish1.compareTo(minfish2) > -1) {//max1大于等于max2
+                    minfish = minfish2;
+                }
+                valuefishMap.put("min", minfish);
+                //平均值
+                BigDecimal avefish1 = fisheggQuantitativeDensityMap.get("ave");
+                BigDecimal avefish2 = smallfishQuantitativeDensityMap.get("ave");
+                avefish1 = avefish1.add(avefish2).divide(new BigDecimal(2));
 
-            valuefishMap.put("ave",avefish1);
-            resultMap.put("fisheggSmall",valuefishMap);
-
+                valuefishMap.put("ave", avefish1);
+                resultMap.put("value", valuefishMap);
+            }
             //游泳动物
 
             //潮间带生物
-            HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensity=intertidalzonebiologicalQuantitativeService.queryBiologicalDensityOneYear(year,voyage);
-            HashMap<String,BigDecimal> valueinterMap=new HashMap<>();
+            if (bioType.equals("intertidalzonebiological")) {
+                HashMap<String, BigDecimal> intertidalzonebiologicalQuantitativeDensity = intertidalzonebiologicalQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
+                HashMap<String, BigDecimal> valueinterMap = new HashMap<>();
 
-            valueinterMap.put("max",intertidalzonebiologicalQuantitativeDensity.get("max"));
-            valueinterMap.put("min",intertidalzonebiologicalQuantitativeDensity.get("min"));
-            valueinterMap.put("ave",intertidalzonebiologicalQuantitativeDensity.get("ave"));
-            resultMap.put("intertidalzonebiological",valueinterMap);
-
+                valueinterMap.put("max", intertidalzonebiologicalQuantitativeDensity.get("max"));
+                valueinterMap.put("min", intertidalzonebiologicalQuantitativeDensity.get("min"));
+                valueinterMap.put("ave", intertidalzonebiologicalQuantitativeDensity.get("ave"));
+                resultMap.put("value", valueinterMap);
+            }
             //浮游植物
 
             //浮游动物
             //大型浮游动物一型网
-            HashMap<String,BigDecimal> largezooplanktonInetDensity=largezooplanktonInetService.queryBiologicalDensityOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuelargezoopMap=new HashMap<>();
+            if(bioType.equals("largezooplankton")) {
+                HashMap<String, BigDecimal> largezooplanktonInetDensity = largezooplanktonInetService.queryBiologicalDensityOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuelargezoopMap = new HashMap<>();
 
-            valuelargezoopMap.put("max",largezooplanktonInetDensity.get("max"));
-            valuelargezoopMap.put("min",largezooplanktonInetDensity.get("min"));
-            valuelargezoopMap.put("ave",largezooplanktonInetDensity.get("ave"));
-            resultMap.put("largezooplankton",valuelargezoopMap);
-
+                valuelargezoopMap.put("max", largezooplanktonInetDensity.get("max"));
+                valuelargezoopMap.put("min", largezooplanktonInetDensity.get("min"));
+                valuelargezoopMap.put("ave", largezooplanktonInetDensity.get("ave"));
+                resultMap.put("value", valuelargezoopMap);
+            }
             //小型浮游动物二型网smallzooplanktonIinetService
-            HashMap<String,BigDecimal> smallzooplanktonIinetDensity=smallzooplanktonIinetService.queryBiologicalDensityOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuesmallzoopMap=new HashMap<>();
+            if(bioType.equals("smallzooplankton")) {
+                HashMap<String, BigDecimal> smallzooplanktonIinetDensity = smallzooplanktonIinetService.queryBiologicalDensityOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuesmallzoopMap = new HashMap<>();
 
-            valuesmallzoopMap.put("max",smallzooplanktonIinetDensity.get("max"));
-            valuesmallzoopMap.put("min",smallzooplanktonIinetDensity.get("min"));
-            valuesmallzoopMap.put("ave",smallzooplanktonIinetDensity.get("ave"));
-            resultMap.put("smallzooplankton",valuesmallzoopMap);
+                valuesmallzoopMap.put("max", smallzooplanktonIinetDensity.get("max"));
+                valuesmallzoopMap.put("min", smallzooplanktonIinetDensity.get("min"));
+                valuesmallzoopMap.put("ave", smallzooplanktonIinetDensity.get("ave"));
+                resultMap.put("value", valuesmallzoopMap);
+            }
         }
         if (statisticType.equals("biomass")){
             //大型底栖动物
-            //大型底栖动物定量
-            HashMap<String,BigDecimal> macrobenthosQuantitativeBiomass= macrobenthosQuantitativeService.queryBiologicalBiomassOneYear(year,voyage);
-            //大型底栖动物定性
-            HashMap<String,BigDecimal> macrobenthosQualitativeBiomass=macrobenthosQualitativeService.queryBiologicalBiomassOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuemacroMap=new HashMap<>();
+            if(bioType.equals("macrobenthos")) {
+                //大型底栖动物定量
+                HashMap<String, BigDecimal> macrobenthosQuantitativeBiomass = macrobenthosQuantitativeService.queryBiologicalBiomassOneYear(year, voyage);
+                //大型底栖动物定性
+                HashMap<String, BigDecimal> macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomassOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuemacroMap = new HashMap<>();
 
-            //最大值
-            BigDecimal max1 =macrobenthosQuantitativeBiomass.get("max");
-            BigDecimal max2 =macrobenthosQualitativeBiomass.get("max");
-            BigDecimal max=max1;
-            if(max1.compareTo(max2) > -1){//max1大于等于max2
+                //最大值
+                BigDecimal max1 = macrobenthosQuantitativeBiomass.get("max");
+                BigDecimal max2 = macrobenthosQualitativeBiomass.get("max");
+                BigDecimal max = max1;
+                if (max1.compareTo(max2) > -1) {//max1大于等于max2
 
+                }
+                if (max1.compareTo(max2) < 1) {//max1小于等于max2
+                    max = max2;
+                }
+                valuemacroMap.put("max", max);
+                //最小值
+                BigDecimal min1 = macrobenthosQuantitativeBiomass.get("min");
+                BigDecimal min2 = macrobenthosQualitativeBiomass.get("min");
+                BigDecimal min = min1;
+                if (min1.compareTo(min2) > -1) {//max1大于等于max2
+                    min = min2;
+                }
+                valuemacroMap.put("min", min);
+                //平均值
+                BigDecimal ave1 = macrobenthosQuantitativeBiomass.get("ave");
+                BigDecimal ave2 = macrobenthosQualitativeBiomass.get("ave");
+                ave1 = ave1.add(ave2).divide(new BigDecimal(2));
+
+                valuemacroMap.put("ave", ave1);
+                resultMap.put("value", valuemacroMap);
             }
-            if(max1.compareTo(max2) < 1){//max1小于等于max2
-                max=max2;
-            }
-            valuemacroMap.put("max",max);
-            //最小值
-            BigDecimal min1 =macrobenthosQuantitativeBiomass.get("min");
-            BigDecimal min2 =macrobenthosQualitativeBiomass.get("min");
-            BigDecimal min=min1;
-            if(min1.compareTo(min2) > -1){//max1大于等于max2
-                min=min2;
-            }
-            valuemacroMap.put("min",min);
-            //平均值
-            BigDecimal ave1 =macrobenthosQuantitativeBiomass.get("ave");
-            BigDecimal ave2 =macrobenthosQualitativeBiomass.get("ave");
-            ave1=ave1.add(ave2).divide(new BigDecimal(2));
-
-            valuemacroMap.put("ave",ave1);
-            resultMap.put("macrobenthos",valuemacroMap);
-
             //鱼卵仔鱼
 
             //游泳动物
 
             //潮间带生物
-            HashMap<String,BigDecimal>  intertidalzonebiologicalQuantitativeBiomass=intertidalzonebiologicalQuantitativeService.queryBiologicalBiomassOneYear(year,voyage);
-            HashMap<String,BigDecimal> valueinterMap=new HashMap<>();
+            if (bioType.equals("intertidalzonebiological")) {
+                HashMap<String, BigDecimal> intertidalzonebiologicalQuantitativeBiomass = intertidalzonebiologicalQuantitativeService.queryBiologicalBiomassOneYear(year, voyage);
+                HashMap<String, BigDecimal> valueinterMap = new HashMap<>();
 
-            valueinterMap.put("max",intertidalzonebiologicalQuantitativeBiomass.get("max"));
-            valueinterMap.put("min",intertidalzonebiologicalQuantitativeBiomass.get("min"));
-            valueinterMap.put("ave",intertidalzonebiologicalQuantitativeBiomass.get("ave"));
-            resultMap.put("intertidalzonebiological",valueinterMap);
-
+                valueinterMap.put("max", intertidalzonebiologicalQuantitativeBiomass.get("max"));
+                valueinterMap.put("min", intertidalzonebiologicalQuantitativeBiomass.get("min"));
+                valueinterMap.put("ave", intertidalzonebiologicalQuantitativeBiomass.get("ave"));
+                resultMap.put("value", valueinterMap);
+            }
             //浮游植物
 
             //浮游动物
-            HashMap<String,BigDecimal>  largezooplanktonInetBiomass=largezooplanktonInetService.queryBiologicalBiomassOneYear(year,voyage);
-            HashMap<String,BigDecimal> valuelargezoopMap=new HashMap<>();
+            if (bioType.equals("zooplankton")) {
+                HashMap<String, BigDecimal> largezooplanktonInetBiomass = largezooplanktonInetService.queryBiologicalBiomassOneYear(year, voyage);
+                HashMap<String, BigDecimal> valuelargezoopMap = new HashMap<>();
 
-            valuelargezoopMap.put("max",largezooplanktonInetBiomass.get("max"));
-            valuelargezoopMap.put("min",largezooplanktonInetBiomass.get("min"));
-            valuelargezoopMap.put("ave",largezooplanktonInetBiomass.get("ave"));
-            resultMap.put("zooplankton",valuelargezoopMap);
+                valuelargezoopMap.put("max", largezooplanktonInetBiomass.get("max"));
+                valuelargezoopMap.put("min", largezooplanktonInetBiomass.get("min"));
+                valuelargezoopMap.put("ave", largezooplanktonInetBiomass.get("ave"));
+                resultMap.put("value", valuelargezoopMap);
+            }
         }
         return Responses.or(resultMap);
     }

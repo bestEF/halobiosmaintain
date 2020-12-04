@@ -1,5 +1,6 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,4 +26,6 @@ public interface ISmallfishQuantitativeService extends IService<SmallfishQuantit
     BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId);
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
+
+    IPage<SmallfishQuantitative> listSmallfishQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
 }

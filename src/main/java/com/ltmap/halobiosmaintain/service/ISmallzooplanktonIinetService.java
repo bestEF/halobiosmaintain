@@ -1,5 +1,7 @@
 package com.ltmap.halobiosmaintain.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ltmap.halobiosmaintain.entity.work.LargezooplanktonInet;
 import com.ltmap.halobiosmaintain.entity.work.SmallzooplanktonIinet;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -24,4 +26,6 @@ public interface ISmallzooplanktonIinetService extends IService<Smallzooplankton
     BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId);
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
+
+    IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
 }

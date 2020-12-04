@@ -1,16 +1,15 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
-import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
-import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQualitative;
-import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
+import com.ltmap.halobiosmaintain.entity.work.*;
 import com.ltmap.halobiosmaintain.mapper.work.FisheggQuantitativeMapper;
 import com.ltmap.halobiosmaintain.mapper.work.MacrobenthosQuantitativeMapper;
 import com.ltmap.halobiosmaintain.service.IFisheggQuantitativeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ltmap.halobiosmaintain.vo.req.FisheggQuantitativeReq;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,6 +28,7 @@ import java.util.List;
  */
 @Service
 public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitativeMapper, FisheggQuantitative> implements IFisheggQuantitativeService {
+
     @Resource
     private FisheggQuantitativeMapper fisheggQuantitativeMapper;
 
@@ -140,6 +140,12 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
         }
         density=density.subtract(new BigDecimal(fisheggQuantitativeList.size()));
         return density;
+    }
+
+    @Override
+    public IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<FisheggQuantitative> page=new Page<>(current, size);
+        return fisheggQuantitativeMapper.listFisheggQuantitative(page,stationName,biologicalChineseName,startDate,endDate);
     }
 
 }

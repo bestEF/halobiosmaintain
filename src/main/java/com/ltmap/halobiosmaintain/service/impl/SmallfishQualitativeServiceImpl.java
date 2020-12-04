@@ -1,6 +1,11 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
+import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.entity.work.SmallfishQualitative;
 import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.ltmap.halobiosmaintain.mapper.work.SmallfishQualitativeMapper;
@@ -60,4 +65,18 @@ public class SmallfishQualitativeServiceImpl extends ServiceImpl<SmallfishQualit
         }
         return list;
     }
+
+    /*
+     * @Description:仔鱼定性数据
+     * @Param smallfishQualitative:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:50
+     */
+    @Override
+    public IPage<SmallfishQualitative> listSmallfishQualitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return smallfishQualitativeMapper.listSmallfishQualitative(page,stationName,  biologicalChineseName,  startDate,  endDate);
+    }
+
 }

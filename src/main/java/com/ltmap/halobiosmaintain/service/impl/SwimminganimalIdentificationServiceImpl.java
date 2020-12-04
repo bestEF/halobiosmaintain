@@ -1,9 +1,10 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
-import com.ltmap.halobiosmaintain.entity.work.Phytoplankton;
-import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
-import com.ltmap.halobiosmaintain.entity.work.SwimminganimalIdentification;
+import com.ltmap.halobiosmaintain.entity.work.*;
 import com.ltmap.halobiosmaintain.mapper.work.SwimminganimalIdentificationMapper;
 import com.ltmap.halobiosmaintain.service.ISmallfishQuantitativeService;
 import com.ltmap.halobiosmaintain.service.ISwimminganimalIdentificationService;
@@ -68,5 +69,17 @@ public class SwimminganimalIdentificationServiceImpl extends ServiceImpl<Swimmin
         return swimminganimalIdentificationMap;
     }
 
+    /*
+     * @Description:游泳动物数据
+     * @Param swimminganimalIdentification:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/4 8:52
+     */
+    @Override
+    public IPage<SwimminganimalIdentification> listSwimminganimalIdentification(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+        IPage<BiologicalQuality> page=new Page<>(current, size);
+        return swimminganimalIdentificationMapper.listSwimminganimalIdentification(page,stationName,  biologicalChineseName,  startDate,  endDate);
+    }
 
 }
