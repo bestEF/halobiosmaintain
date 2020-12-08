@@ -69,14 +69,14 @@ public class FisheggQualitativeServiceImpl extends ServiceImpl<FisheggQualitativ
     public List<String> statisticTypeFromOneMap(String year, String voyage){
         List<FisheggQualitative> fisheggQualitativeList=fisheggQualitativeMapper.queryBiologicalType(year,voyage);
         List list = new ArrayList();
-        for (int i = 0; i <fisheggQualitativeList.size() ; i++) {
+        for (int i = 0; i < fisheggQualitativeList.size(); i++) {
             list.add(fisheggQualitativeList.get(i).getBiologicalChineseName());
         }
         return list;
     }
 
     /*
-     * @Description:鱼卵定性数据查询
+     * @Description:鱼卵定性数据查询_数据管理
      * @Param fisheggQualitative:
      * @Return:
      * @Author: Niko

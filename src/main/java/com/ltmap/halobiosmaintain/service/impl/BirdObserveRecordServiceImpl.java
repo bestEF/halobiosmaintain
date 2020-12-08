@@ -29,6 +29,16 @@ public class BirdObserveRecordServiceImpl extends ServiceImpl<BirdObserveRecordM
     private BirdObserveRecordMapper birdObserveRecordMapper;
 
 
+    /**
+     * @Description:鸟类观测记录子表查询_数据管理
+     * @Param current:
+     * @Param size:
+     * @Param chineseName:
+     * @Param id:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:09
+     */
     @Override
     public IPage<BirdObserveRecord> listBirdObserveRecord(Integer current, Integer size, String chineseName,Long id){
         LambdaQueryWrapper<BirdObserveRecord> queryWrapper=new LambdaQueryWrapper<>();

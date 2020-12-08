@@ -21,7 +21,7 @@ public interface IWaterqualityService extends IService<Waterquality> {
 
     HashMap<String,HashMap<String,BigDecimal>> waterQualitystatisticOneYear(String year, String voyage,String element);
 
-    HashMap<String,HashMap<String,String>> waterQualityOrder(String year, String voyage);
+    HashMap<String,HashMap<String,BigDecimal>> waterQualityOrder(String year, String voyage);
 
     IPage<Waterquality> listWaterquality(Integer current, Integer size,String stationName, String startDate, String endDate);
 

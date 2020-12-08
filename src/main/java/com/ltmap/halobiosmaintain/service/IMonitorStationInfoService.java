@@ -25,6 +25,8 @@ public interface IMonitorStationInfoService extends IService<MonitorStationInfo>
      */
     List<MonitorStationInfo> queryStationInfo(String year,String voyage);
 
+    List<MonitorStationInfo> queryStationInfobyDataType(String year,String voyage,String dataType);
+
     List<MonitorStationInfo> queryStationInfoById(Long stationId,Long reportId,String stationName);
 
     /**

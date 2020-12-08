@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +17,11 @@ import java.io.Serializable;
  * @author Niko
  * @since 2020-12-04
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @TableName("vegetation_survey_record")
 public class VegetationSurveyRecord extends Model<VegetationSurveyRecord> {
 

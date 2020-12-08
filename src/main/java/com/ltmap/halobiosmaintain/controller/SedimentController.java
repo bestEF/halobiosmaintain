@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
@@ -57,7 +58,7 @@ public class SedimentController {
 
     @ApiOperation(value ="沉积物评价标准等级")
     @PostMapping("/sedimentOrder")
-    public Response<HashMap<String,HashMap<String,String>>> sedimentOrder(String year, String voyage){
+    public Response<HashMap<String,HashMap<String,BigDecimal>>> sedimentOrder(String year, String voyage){
 
         return Responses.or(sedimentService.sedimentOrder(year,voyage));
     }
@@ -124,7 +125,9 @@ public class SedimentController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
 
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, sediments.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);

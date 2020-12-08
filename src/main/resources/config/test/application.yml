@@ -3,7 +3,7 @@ server:
   #端口号
   port: 6101
   #ip
-  ip: http://localhost:6101
+  ip: http://47.105.120.29:6101
   #工程访问上下文名称
   servlet:
     context-path: /halobiosmaintain

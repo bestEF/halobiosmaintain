@@ -43,6 +43,15 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
         return false;
     }
 
+    /**
+     * @Description:沉积物变化范围
+     * @Param year:
+     * @Param voyage:
+     * @Param element:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:13
+     */
     public HashMap<String,HashMap<String, BigDecimal>>  sedimentstatisticOneYear(String year, String voyage, String element){
         List<Sediment> sediments= sedimentMapper.sedimentstatisticOneYear(year,voyage);
         HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
@@ -58,6 +67,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "cd"://镉
                 HashMap<String, BigDecimal> cDvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal cDmax = sediments.stream().map(Sediment::getCd).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -72,6 +88,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "lhw"://硫化物
                 HashMap<String, BigDecimal> codvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getLhw()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal codmax = sediments.stream().map(Sediment::getLhw).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -86,6 +109,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "tcr"://总铬
                 HashMap<String, BigDecimal> crvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTcr()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal crmax = sediments.stream().map(Sediment::getTcr).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -100,6 +130,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "cu"://铜
                 HashMap<String, BigDecimal> cuvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal cumax = sediments.stream().map(Sediment::getCu).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -114,6 +151,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "yjt"://有机碳
                 HashMap<String, BigDecimal> gsyvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getYjt()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal gsymax = sediments.stream().map(Sediment::getYjt).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -128,6 +172,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "hg"://汞
                 HashMap<String, BigDecimal> hgvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal hgmax = sediments.stream().map(Sediment::getHg).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -142,6 +193,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "pb"://铅
                 HashMap<String, BigDecimal> pbvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal pbmax = sediments.stream().map(Sediment::getPb).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -156,6 +214,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "syl"://石油类
                 HashMap<String, BigDecimal> sylvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal sylmax = sediments.stream().map(Sediment::getSyl).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -170,6 +235,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "tn"://总氮
                 HashMap<String, BigDecimal> tnvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTn()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal tnmax = sediments.stream().map(Sediment::getTn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -184,6 +256,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "tp"://总磷
                 HashMap<String, BigDecimal> tpvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTp()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal tpmax = sediments.stream().map(Sediment::getTp).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -199,6 +278,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "eh"://Eh
                 HashMap<String, BigDecimal> yxsydvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getEh()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal yxsydmax = sediments.stream().map(Sediment::getEh).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -213,6 +299,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "ass"://砷
                 HashMap<String, BigDecimal> aSSvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal aSSmax = sediments.stream().map(Sediment::getAss).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -227,6 +320,13 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             case "zn"://锌
                 HashMap<String, BigDecimal> znvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
+                if(sediments.size()==0){
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal znmax = sediments.stream().map(Sediment::getZn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -244,7 +344,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
 
 
     /**
-     * @Description:沉积物质量评价标准等级统计
+     * @Description:沉积物评价标准等级
      * @Param year:
      * @Param voyage:
      * @Return:
@@ -252,60 +352,86 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
      * @Date: 2020/12/7 16:06
      */
     @Override
-    public HashMap<String,HashMap<String,String>>  sedimentOrder(String year, String voyage){
+    public HashMap<String,HashMap<String,BigDecimal>>  sedimentOrder(String year, String voyage){
         List<Sediment> sediments= sedimentMapper.sedimentstatisticOneYear(year,voyage);
-        HashMap<String,HashMap<String,String>> resultMap=new HashMap<>();
-
+        HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
+        BigDecimal order1=new BigDecimal(0);
+        BigDecimal order2=new BigDecimal(0);
+        BigDecimal order3=new BigDecimal(0);
         if(sediments.size()==0){
-            HashMap<String, String> valueMap0 = new HashMap<>();
-
+            HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+            valueMap0.put("第一类", order1);
+            valueMap0.put("第二类", order2);
+            valueMap0.put("第三类", order3);
             resultMap.put("value",valueMap0);
-
             return resultMap;
         }
         //水质标准类别占比
-        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfo(year, voyage);
+        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfobyDataType(year, voyage,"沉积物");
         for (int i = 0; i < monitorStationInfos.size(); i++) {
             List<Sediment> sediments1 = sedimentMapper.sedimentStationOneYear(year, voyage, monitorStationInfos.get(i).getStationId());
 
             //求平均值
             //汞
             sediments1 = sediments1.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
-            BigDecimal hg = sediments1.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal hg=new BigDecimal(0);
+            if(sediments1.size()!=0){
+                hg = sediments1.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //镉
             sediments1 = sediments1.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
-            BigDecimal cd = sediments1.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cd=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 cd = sediments1.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //铬
             sediments1 = sediments1.stream().filter(x -> x.getTcr()!=null).collect(Collectors.toList());
-            BigDecimal cr = sediments1.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cr=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 cr = sediments1.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //铅
             sediments1 = sediments1.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
-            BigDecimal pb = sediments1.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal pb=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 pb = sediments1.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //砷
             sediments1 = sediments1.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
-            BigDecimal ass = sediments1.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal ass=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 ass = sediments1.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //铜
             sediments1 = sediments1.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
-            BigDecimal cu = sediments1.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cu=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 cu = sediments1.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //锌
             sediments1 = sediments1.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
-            BigDecimal zn = sediments1.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal zn=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 zn = sediments1.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //有机碳
             sediments1 = sediments1.stream().filter(x -> x.getYjt()!=null).collect(Collectors.toList());
-            BigDecimal yjt = sediments1.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal yjt=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 yjt = sediments1.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //硫化物
             sediments1 = sediments1.stream().filter(x -> x.getLhw()!=null).collect(Collectors.toList());
-            BigDecimal lhw = sediments1.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal lhw=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 lhw = sediments1.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //石油类
             sediments1 = sediments1.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
-            BigDecimal syl = sediments1.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal syl=new BigDecimal(0);
+            if(sediments1.size()!=0) {
+                 syl = sediments1.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
             //按海水水质标准计算等级
             //汞
             int hgint1 = hg.compareTo(new BigDecimal(0.2));
@@ -350,30 +476,22 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
 
             //第一类
             if((yjtint1<=0)  && (lhwint1<=0)&&(sylint1<=0)&&(hgint1<=0)&&(cdint1<=0)&&(pbint1<=0)&&(crint1<=0)&&(assint1<=0)&&(cuint1<=0)&&(znint1<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第一类");
-                resultMap.put("value",valueMap1);
+                order1 = order1.add(new BigDecimal(1));
             }
             //第二类
             else if((yjtint2<=0)  && (lhwint2<=0)&&(sylint2<=0)&&(hgint2<=0)&&(cdint2<=0)&&(pbint2<=0)&&(crint2<=0)&&(assint2<=0)&&(cuint2<=0)&&(znint2<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第二类");
-                resultMap.put("value",valueMap1);
+                order2 = order2.add(new BigDecimal(1));
             }
             //第三类
             else if((yjtint3<=0)  && (lhwint3<=0)&&(sylint3<=0)&&(hgint3<=0)&&(cdint3<=0)&&(pbint3<=0)&&(crint3<=0)&&(assint3<=0)&&(cuint3<=0)&&(znint3<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第三类");
-                resultMap.put("value",valueMap1);
-            }
-            else{
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                resultMap.put("value",valueMap1);
+                order3 = order3.add(new BigDecimal(1));
             }
         }
+        HashMap<String, BigDecimal> valueMap1 = new HashMap<>();
+        valueMap1.put("第一类", order1);
+        valueMap1.put("第二类", order2);
+        valueMap1.put("第三类", order3);
+        resultMap.put("value", valueMap1);
         return resultMap;
     }
 

@@ -30,6 +30,18 @@ public class VegetationSurveyServiceImpl extends ServiceImpl<VegetationSurveyMap
 
 
 
+    /**
+     * @Description:植被调查记录主表查询_数据管理
+     * @Param current:
+     * @Param size:
+     * @Param protecName:
+     * @Param place:
+     * @Param startDate:
+     * @Param endDate:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:15
+     */
     @Override
     public IPage<VegetationSurvey> listVegetationSurvey(Integer current, Integer size, String protecName, String place, String startDate, String endDate){
         IPage<VegetationSurvey> page=new Page<>(current, size);

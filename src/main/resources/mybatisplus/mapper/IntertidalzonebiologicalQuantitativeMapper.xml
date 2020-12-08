@@ -40,7 +40,7 @@
     </select>
 
     <select id="listIntertidalzonebiologicalQuantitative" parameterType="java.lang.String" resultType="com.ltmap.halobiosmaintain.entity.work.IntertidalzonebiologicalQuantitative">
-        select a.*,b.station_name,b.plan_lon,b.plan_lat,b.real_lon,b.real_lat from intertidalzonebiological_quantitative a
+        select a.*,b.station_name,b.station_location,b.plan_lon,b.plan_lat,b.real_lon,b.real_lat from intertidalzonebiological_quantitative a
         left join monitor_station_info b on a.station_id=b.station_id
         <where>
             <if test="stationName!=null and stationName!=''">

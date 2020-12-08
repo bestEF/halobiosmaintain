@@ -27,6 +27,16 @@ public class VegetationSurveyRecordServiceImpl extends ServiceImpl<VegetationSur
     @Resource
     private VegetationSurveyRecordMapper vegetationSurveyRecordMapper;
 
+    /**
+     * @Description:植被调查记录子表查询_数据管理
+     * @Param current:
+     * @Param size:
+     * @Param chineseName:
+     * @Param id:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:15
+     */
     @Override
     public IPage<VegetationSurveyRecord> listVegetationSurveyRecord(Integer current, Integer size, String chineseName,Long id){
         LambdaQueryWrapper<VegetationSurveyRecord> queryWrapper=new LambdaQueryWrapper<>();

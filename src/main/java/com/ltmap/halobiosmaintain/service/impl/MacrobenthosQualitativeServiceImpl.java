@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -88,7 +89,9 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < macrobenthosQualitativeList.size(); i++) {
-            density = density.add(macrobenthosQualitativeList.get(i).getDensity());
+            if(macrobenthosQualitativeList.get(i).getDensity()!=null){
+                density = density.add(macrobenthosQualitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(macrobenthosQualitativeList.size()));
         return density;
@@ -106,12 +109,15 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
+        macrobenthosQualitativeList=macrobenthosQualitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         if(macrobenthosQualitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
             resultMap.put("ave",new BigDecimal(0));
             return resultMap;
         }
+
         //求最大值
         BigDecimal max = macrobenthosQualitativeList.stream().map(MacrobenthosQualitative::getDensity).max((x1, x2) -> x1.compareTo(x2)).get();
         //求最小值
@@ -136,7 +142,9 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < macrobenthosQualitativeList.size(); i++) {
-            density = density.add(macrobenthosQualitativeList.get(i).getBiomass());
+            if (macrobenthosQualitativeList.get(i).getBiomass() != null) {
+                density = density.add(macrobenthosQualitativeList.get(i).getBiomass());
+            }
         }
         density=density.subtract(new BigDecimal(macrobenthosQualitativeList.size()));
         return density;
@@ -154,12 +162,15 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
     public HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
+        macrobenthosQualitativeList=macrobenthosQualitativeList.stream().filter(x->x.getBiomass()!=null).collect(Collectors.toList());
+
         if(macrobenthosQualitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
             resultMap.put("ave",new BigDecimal(0));
             return resultMap;
         }
+
         //求最大值
         BigDecimal max = macrobenthosQualitativeList.stream().map(MacrobenthosQualitative::getBiomass).max((x1, x2) -> x1.compareTo(x2)).get();
         //求最小值
@@ -186,7 +197,9 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < macrobenthosQualitativeList.size(); i++) {
-            density = density.add(macrobenthosQualitativeList.get(i).getDensity());
+            if (macrobenthosQualitativeList.get(i).getDensity() != null) {
+                density = density.add(macrobenthosQualitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(macrobenthosQualitativeList.size()));
         return density;
@@ -205,14 +218,16 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,stationId);
         BigDecimal biomass = new BigDecimal(0);
         for (int i = 0; i < macrobenthosQualitativeList.size(); i++) {
-            biomass = biomass.add(macrobenthosQualitativeList.get(i).getBiomass());
+            if (macrobenthosQualitativeList.get(i).getBiomass() != null) {
+                biomass = biomass.add(macrobenthosQualitativeList.get(i).getBiomass());
+            }
         }
         biomass=biomass.subtract(new BigDecimal(macrobenthosQualitativeList.size()));
         return biomass;
     }
 
     /*
-     * @Description:大型底栖动物定性数据
+     * @Description:大型底栖动物定性数据查询_数据管理
      * @Param macrobenthosQualitative:
      * @Return:
      * @Author: Niko

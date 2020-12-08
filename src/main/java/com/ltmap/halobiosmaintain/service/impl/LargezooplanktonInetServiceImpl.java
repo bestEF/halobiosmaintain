@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -85,7 +86,9 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            density = density.add(largezooplanktonInetList.get(i).getDensity());
+            if(largezooplanktonInetList.get(i).getDensity()!=null){
+                density = density.add(largezooplanktonInetList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(largezooplanktonInetList.size()));
         return density;
@@ -103,6 +106,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(largezooplanktonInetList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -133,8 +137,9 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         BigDecimal biomass = new BigDecimal(0);
         for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+            if(largezooplanktonInetList.get(i).getTotalBiomass()!=null){
             biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
-        }
+        }}
         biomass=biomass.subtract(new BigDecimal(largezooplanktonInetList.size()));
         return biomass;
     }
@@ -150,6 +155,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     public HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getTotalBiomass()!=null).collect(Collectors.toList());
         if(largezooplanktonInetList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -182,8 +188,9 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+            if(largezooplanktonInetList.get(i).getDensity()!=null){
             density = density.add(largezooplanktonInetList.get(i).getDensity());
-        }
+        }}
         density=density.subtract(new BigDecimal(largezooplanktonInetList.size()));
         return density;
     }
@@ -201,14 +208,16 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year, voyage,stationId);
         BigDecimal biomass = new BigDecimal(0);
         for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
+            if (largezooplanktonInetList.get(i).getTotalBiomass() != null) {
+                biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
+            }
         }
         biomass=biomass.subtract(new BigDecimal(largezooplanktonInetList.size()));
         return biomass;
     }
 
     /*
-     * @Description:大型浮游动物数据
+     * @Description:大型浮游动物（I型网）数据查询_数据管理
      * @Param largezooplanktonInet:
      * @Return:
      * @Author: Niko

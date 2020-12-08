@@ -186,6 +186,18 @@ public class MonitorDataReportServiceImpl extends ServiceImpl<MonitorDataReportM
         return false;
     }
 
+    /**
+     * @Description:查询所有年份/查询年份对应的航次
+     * @Param monitoringArea:
+     * @Param ecologicalType:
+     * @Param monitorCompany:
+     * @Param startDate:
+     * @Param endDate:
+     * @Param year:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:12
+     */
     @Override
     public List<MonitorDataReport> monitorDataReportInfo(String monitoringArea,String ecologicalType,String monitorCompany,String startDate,String endDate,String year){
         LambdaQueryWrapper<MonitorDataReport> queryWrapper=new LambdaQueryWrapper();
@@ -193,7 +205,8 @@ public class MonitorDataReportServiceImpl extends ServiceImpl<MonitorDataReportM
                 .like(!Strings.isNullOrEmpty(monitoringArea),MonitorDataReport::getMonitoringArea,monitoringArea)
                 .like(!Strings.isNullOrEmpty(ecologicalType),MonitorDataReport::getEcologicalType,ecologicalType)
                 .like(!Strings.isNullOrEmpty(monitorCompany),MonitorDataReport::getMonitorCompany,monitorCompany)
-                .between(!Strings.isNullOrEmpty(startDate)&&!Strings.isNullOrEmpty(endDate),MonitorDataReport::getTaskDate,startDate,endDate);
+                .ge(!Strings.isNullOrEmpty(startDate),MonitorDataReport::getTaskDate,startDate)
+                .le(!Strings.isNullOrEmpty(endDate),MonitorDataReport::getTaskDate,endDate);
         return monitorDataReportMapper.selectList(queryWrapper);
     }
 

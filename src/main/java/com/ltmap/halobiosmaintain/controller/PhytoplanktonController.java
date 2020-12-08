@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
@@ -83,7 +84,9 @@ public class PhytoplanktonController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
 
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, phytoplanktons.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);

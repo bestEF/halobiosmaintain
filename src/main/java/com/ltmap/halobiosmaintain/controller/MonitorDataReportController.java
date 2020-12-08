@@ -131,14 +131,36 @@ public class MonitorDataReportController {
             if(Strings.isNullOrEmpty(dataType)){
                 for (int j = 0; j < listDataTypeWithoutDuplicates.size(); j++) {
                     MonitorDataReport monitorDataReport=new MonitorDataReport();
-                    monitorDataReport=monitorDataReports.get(i);
+                    monitorDataReport.setReportId(monitorDataReports.get(i).getReportId());
+                    monitorDataReport.setCheckName(monitorDataReports.get(i).getCheckName());
+                    monitorDataReport.setEcologicalType(monitorDataReports.get(i).getEcologicalType());
+                    monitorDataReport.setMonitorCompany(monitorDataReports.get(i).getMonitorCompany());
+                    monitorDataReport.setMonitoringArea(monitorDataReports.get(i).getMonitoringArea());
+                    monitorDataReport.setOrganizationCompany(monitorDataReports.get(i).getOrganizationCompany());
+                    monitorDataReport.setReportDate(monitorDataReports.get(i).getReportDate());
+                    monitorDataReport.setReportName(monitorDataReports.get(i).getReportName());
+                    monitorDataReport.setTaskDate(monitorDataReports.get(i).getTaskDate());
+                    monitorDataReport.setVerifyName(monitorDataReports.get(i).getVerifyName());
+                    monitorDataReport.setVoyage(monitorDataReports.get(i).getVoyage());
+                    monitorDataReport.setYear(monitorDataReports.get(i).getYear());
                     monitorDataReport.setByzd1(listDataTypeWithoutDuplicates.get(j));
                     monitorDataReportsResult.add(monitorDataReport);
                 }
             }else{
                 if(listDataTypeWithoutDuplicates.contains(dataType)){
                     MonitorDataReport monitorDataReport=new MonitorDataReport();
-                    monitorDataReport=monitorDataReports.get(i);
+                    monitorDataReport.setReportId(monitorDataReports.get(i).getReportId());
+                    monitorDataReport.setCheckName(monitorDataReports.get(i).getCheckName());
+                    monitorDataReport.setEcologicalType(monitorDataReports.get(i).getEcologicalType());
+                    monitorDataReport.setMonitorCompany(monitorDataReports.get(i).getMonitorCompany());
+                    monitorDataReport.setMonitoringArea(monitorDataReports.get(i).getMonitoringArea());
+                    monitorDataReport.setOrganizationCompany(monitorDataReports.get(i).getOrganizationCompany());
+                    monitorDataReport.setReportDate(monitorDataReports.get(i).getReportDate());
+                    monitorDataReport.setReportName(monitorDataReports.get(i).getReportName());
+                    monitorDataReport.setTaskDate(monitorDataReports.get(i).getTaskDate());
+                    monitorDataReport.setVerifyName(monitorDataReports.get(i).getVerifyName());
+                    monitorDataReport.setVoyage(monitorDataReports.get(i).getVoyage());
+                    monitorDataReport.setYear(monitorDataReports.get(i).getYear());
                     monitorDataReport.setByzd1(dataType);
                     monitorDataReportsResult.add(monitorDataReport);
                 }

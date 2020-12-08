@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -89,7 +90,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
+            if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
+                density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return density;
@@ -107,6 +110,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(intertidalzonebiologicalQuantitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -137,7 +141,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
         BigDecimal biomass = new BigDecimal(0);
         for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
+            if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
+                biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
+            }
         }
         biomass=biomass.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return biomass;
@@ -155,6 +161,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
     public HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeList.stream().filter(x->x.getBiomass()!=null).collect(Collectors.toList());
         if(intertidalzonebiologicalQuantitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -186,8 +193,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+            if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
             density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
-        }
+        }}
         density=density.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return density;
     }
@@ -205,14 +213,15 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year, voyage,stationId);
         BigDecimal biomass = new BigDecimal(0);
         for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+            if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
             biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
-        }
+        }}
         biomass=biomass.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return biomass;
     }
 
     /*
-     * @Description:潮间带生物数据
+     * @Description:潮间带生物数据查询_数据管理
      * @Param intertidalzonebiologicalQuantitative:
      * @Return:
      * @Author: Niko

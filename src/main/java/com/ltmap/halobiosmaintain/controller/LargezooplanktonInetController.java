@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.IntertidalzonebiologicalQuantitative;
@@ -46,7 +47,7 @@ public class LargezooplanktonInetController {
     private IMonitorDataReportService monitorDataReportService;
 
 
-    @ApiOperation(value ="大型浮游动物_I型网数据查询_数据管理")
+    @ApiOperation(value ="大型浮游动物（I型网）数据查询_数据管理")
     @PostMapping("/listLargezooplanktonInet")
     public Response<IPage<LargezooplanktonInet>> listLargezooplanktonInet(@RequestParam(defaultValue = "1")Integer current,
                                                                           @RequestParam(defaultValue = "10")Integer size,
@@ -57,7 +58,7 @@ public class LargezooplanktonInetController {
 
 
 
-    @ApiOperation(value ="大型浮游动物_I型网数据删除_数据管理")
+    @ApiOperation(value ="大型浮游动物（I型网）数据删除_数据管理")
     @PostMapping("/deleteLargezooplanktonInet")
     public Response<Boolean> deleteLargezooplanktonInet(String reportId){
 
@@ -84,7 +85,9 @@ public class LargezooplanktonInetController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
 
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, largezooplanktonInets.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);

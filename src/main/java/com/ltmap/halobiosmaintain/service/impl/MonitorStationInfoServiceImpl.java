@@ -104,6 +104,23 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
     }
 
     @Override
+    public List<MonitorStationInfo> queryStationInfobyDataType(String year,String voyage,String dataType){
+        LambdaQueryWrapper<MonitorStationInfo> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.like(!Strings.isNullOrEmpty(dataType),MonitorStationInfo::getDataType,dataType)
+        .notLike(MonitorStationInfo::getDataType,"沉积物粒度");
+        return monitorStationInfoMapper.selectList(lambdaQueryWrapper);
+    }
+
+    /**
+     * @Description:查询监测站位通过站位Id
+     * @Param stationId:
+     * @Param reportId:
+     * @Param stationName:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:12
+     */
+    @Override
     public List<MonitorStationInfo> queryStationInfoById(Long stationId,Long reportId,String stationName){
         LambdaQueryWrapper<MonitorStationInfo> lambdaQueryWrapper = Wrappers.lambdaQuery();
         lambdaQueryWrapper.eq(stationId!=null, MonitorStationInfo::getStationId, stationId).eq(reportId!=null,MonitorStationInfo::getReportId,reportId)

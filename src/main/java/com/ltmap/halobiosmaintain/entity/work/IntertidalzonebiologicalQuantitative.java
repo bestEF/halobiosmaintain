@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -18,6 +20,11 @@ import java.io.Serializable;
  * @author fjh
  * @since 2020-11-27
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @TableName("intertidalzonebiological_quantitative")
 public class IntertidalzonebiologicalQuantitative extends Model<IntertidalzonebiologicalQuantitative> {
 
@@ -120,6 +127,11 @@ public class IntertidalzonebiologicalQuantitative extends Model<Intertidalzonebi
      */
     @TableField(exist = false)
     private String stationName;
+
+    /**
+     * 站位所在地
+     */
+    private String stationLocation;
 
     /**
      * 计划经度

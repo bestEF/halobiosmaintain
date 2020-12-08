@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
@@ -47,7 +48,7 @@ public class HydrometeorologicalController {
     private IMonitorDataReportService monitorDataReportService;
 
 
-    @ApiOperation(value ="水文气象变化范围")
+    @ApiOperation(value ="水文气象变化范围_一年内")
     @PostMapping("/hydrometeorologicalRangeOneYear")
     public Response<HashMap<String, HashMap<String, BigDecimal>>> hydrometeorologicalRangeOneYear(String year, String voyage, String element){
 
@@ -114,7 +115,9 @@ public class HydrometeorologicalController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
 
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, hydrometeorologicals.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);

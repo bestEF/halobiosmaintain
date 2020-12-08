@@ -44,6 +44,15 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
         return false;
     }
 
+    /**
+     * @Description:水质变化范围_一年内
+     * @Param year:
+     * @Param voyage:
+     * @Param element:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:15
+     */
     @Override
     public HashMap<String,HashMap<String,BigDecimal>>  waterQualitystatisticOneYear(String year, String voyage,String element){
         List<Waterquality> waterqualities= waterqualityMapper.waterQualitystatisticOneYear(year,voyage);
@@ -61,6 +70,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "ad"://氨-氮
                 HashMap<String, BigDecimal> aDvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getaD()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal aDmax = waterqualities.stream().map(Waterquality::getaD).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -75,6 +92,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "ass"://砷
                 HashMap<String, BigDecimal> aSSvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal aSSmax = waterqualities.stream().map(Waterquality::getAss).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -89,6 +114,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "cd"://镉
                 HashMap<String, BigDecimal> cDvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal cDmax = waterqualities.stream().map(Waterquality::getCd).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -103,6 +136,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "cod"://化学需氧量
                 HashMap<String, BigDecimal> codvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getCod()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal codmax = waterqualities.stream().map(Waterquality::getCod).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -117,6 +158,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "cr"://铬
                 HashMap<String, BigDecimal> crvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal crmax = waterqualities.stream().map(Waterquality::getCr).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -131,6 +180,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "cu"://铜
                 HashMap<String, BigDecimal> cuvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal cumax = waterqualities.stream().map(Waterquality::getCu).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -145,6 +202,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "gsy"://硅酸盐
                 HashMap<String, BigDecimal> gsyvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getGsy()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal gsymax = waterqualities.stream().map(Waterquality::getGsy).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -159,6 +224,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "hg"://汞
                 HashMap<String, BigDecimal> hgvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal hgmax = waterqualities.stream().map(Waterquality::getHg).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -173,6 +246,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "dorjy"://溶解氧
                 HashMap<String, BigDecimal> dorjyvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getDorjy()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal dorjymax = waterqualities.stream().map(Waterquality::getDorjy).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -187,6 +268,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "hxlsy"://活性磷酸盐
                 HashMap<String, BigDecimal> hxlsyvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getHxlsy()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal hxlsymax = waterqualities.stream().map(Waterquality::getHxlsy).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -201,6 +290,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "pb"://铅
                 HashMap<String, BigDecimal> pbvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal pbmax = waterqualities.stream().map(Waterquality::getPb).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -215,6 +312,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "ph"://ph
                 HashMap<String, BigDecimal> phvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getPh()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal phmax = waterqualities.stream().map(Waterquality::getPh).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -229,6 +334,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "syl"://石油类
                 HashMap<String, BigDecimal> sylvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal sylmax = waterqualities.stream().map(Waterquality::getSyl).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -243,6 +356,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "tn"://总氮
                 HashMap<String, BigDecimal> tnvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getTn()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal tnmax = waterqualities.stream().map(Waterquality::getTn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -257,6 +378,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "toc"://总有机碳
                 HashMap<String, BigDecimal> tocvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getToc()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal tocmax = waterqualities.stream().map(Waterquality::getToc).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -271,6 +400,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "tp"://总磷
                 HashMap<String, BigDecimal> tpvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getTp()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal tpmax = waterqualities.stream().map(Waterquality::getTp).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -285,6 +422,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "xfw"://悬浮物
                 HashMap<String, BigDecimal> xfwvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getXfw()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal xfwmax = waterqualities.stream().map(Waterquality::getXfw).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -299,6 +444,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "xsyd"://硝酸盐-氮
                 HashMap<String, BigDecimal> xsydvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getXsyD()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal xsydmax = waterqualities.stream().map(Waterquality::getXsyD).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -313,6 +466,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "yd"://盐度
                 HashMap<String, BigDecimal> ydvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getYd()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal ydmax = waterqualities.stream().map(Waterquality::getYd).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -327,6 +488,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "yjl"://有机磷
                 HashMap<String, BigDecimal> yjlvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getYjl()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal yjlmax = waterqualities.stream().map(Waterquality::getYjl).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -341,6 +510,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "ylsa"://叶绿素-a
                 HashMap<String, BigDecimal> ylsavalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getYlsA()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal ylsamax = waterqualities.stream().map(Waterquality::getYlsA).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -355,6 +532,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "yxsyd"://亚硝酸盐-氮
                 HashMap<String, BigDecimal> yxsydvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getYxsyD()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal yxsydmax = waterqualities.stream().map(Waterquality::getYxsyD).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -369,6 +554,14 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             case "zn"://锌
                 HashMap<String, BigDecimal> znvalueMap = new HashMap<>();
                 waterqualities = waterqualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
+                if(waterqualities.size()==0){
+                    HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+                    valueMap0.put("max",new BigDecimal(0));
+                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("ave",new BigDecimal(0));
+                    resultMap.put("value",valueMap0);
+                    return resultMap;
+                }
                 //求最大值
                 BigDecimal znmax = waterqualities.stream().map(Waterquality::getZn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -396,77 +589,127 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
      * @Date: 2020/12/7 15:43
      */
     @Override
-    public HashMap<String,HashMap<String,String>>  waterQualityOrder(String year, String voyage){
+    public HashMap<String,HashMap<String,BigDecimal>>  waterQualityOrder(String year, String voyage){
         List<Waterquality> waterqualities= waterqualityMapper.waterQualitystatisticOneYear(year,voyage);
-        HashMap<String,HashMap<String,String>> resultMap=new HashMap<>();
-
+        HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
+        BigDecimal order1=new BigDecimal(0);
+        BigDecimal order2=new BigDecimal(0);
+        BigDecimal order3=new BigDecimal(0);
+        BigDecimal order4=new BigDecimal(0);
         if(waterqualities.size()==0){
-            HashMap<String, String> valueMap0 = new HashMap<>();
-
+            HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
+            valueMap0.put("第一类", order1);
+            valueMap0.put("第二类", order2);
+            valueMap0.put("第三类", order3);
+            valueMap0.put("第四类", order4);
             resultMap.put("value",valueMap0);
-
             return resultMap;
         }
         //水质标准类别占比
-        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfo(year, voyage);
+        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfobyDataType(year, voyage,"水质");
+
         for (int i = 0; i < monitorStationInfos.size(); i++) {
             List<Waterquality> waterqualities1 = waterqualityMapper.waterQualitystatisticStationOneYear(year, voyage, monitorStationInfos.get(i).getStationId());
 
             //求平均值
             //悬浮物
             waterqualities1 = waterqualities1.stream().filter(x -> x.getXfw()!=null).collect(Collectors.toList());
-            BigDecimal xfw = waterqualities1.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal xfw=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 xfw = waterqualities1.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //ph
             waterqualities1 = waterqualities1.stream().filter(x -> x.getPh()!=null).collect(Collectors.toList());
-            BigDecimal ph = waterqualities1.stream().map(Waterquality::getPh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal ph=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 ph = waterqualities1.stream().map(Waterquality::getPh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //溶解氧
             waterqualities1 = waterqualities1.stream().filter(x -> x.getDorjy()!=null).collect(Collectors.toList());
-            BigDecimal dorjy = waterqualities1.stream().map(Waterquality::getDorjy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal dorjy=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 dorjy = waterqualities1.stream().map(Waterquality::getDorjy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //化学需氧量
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCod()!=null).collect(Collectors.toList());
-            BigDecimal cod = waterqualities1.stream().map(Waterquality::getCod).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal cod=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 cod = waterqualities1.stream().map(Waterquality::getCod).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //氨氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getaD()!=null).collect(Collectors.toList());
-            BigDecimal ad = waterqualities1.stream().map(Waterquality::getaD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal ad=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 ad = waterqualities1.stream().map(Waterquality::getaD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //硝酸盐氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getXsyD()!=null).collect(Collectors.toList());
-            BigDecimal xsyd = waterqualities1.stream().map(Waterquality::getXsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal xsyd=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 xsyd = waterqualities1.stream().map(Waterquality::getXsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //亚硝酸盐氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getYxsyD()!=null).collect(Collectors.toList());
-            BigDecimal yxsyd = waterqualities1.stream().map(Waterquality::getYxsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal yxsyd=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 yxsyd = waterqualities1.stream().map(Waterquality::getYxsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //无机氮=氨氮+硝酸盐氮+亚硝酸盐氮
             BigDecimal wjd=ad.add(xsyd).add(yxsyd);
             //活性磷酸盐
             waterqualities1 = waterqualities1.stream().filter(x -> x.getHxlsy()!=null).collect(Collectors.toList());
-            BigDecimal hxlsy = waterqualities1.stream().map(Waterquality::getHxlsy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal hxlsy=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 hxlsy = waterqualities1.stream().map(Waterquality::getHxlsy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //汞
             waterqualities1 = waterqualities1.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
-            BigDecimal hg = waterqualities1.stream().map(Waterquality::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal hg=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 hg = waterqualities1.stream().map(Waterquality::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //镉
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
-            BigDecimal cd = waterqualities1.stream().map(Waterquality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cd=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 cd = waterqualities1.stream().map(Waterquality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //铬
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
-            BigDecimal cr = waterqualities1.stream().map(Waterquality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cr=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 cr = waterqualities1.stream().map(Waterquality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //铅
             waterqualities1 = waterqualities1.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
-            BigDecimal pb = waterqualities1.stream().map(Waterquality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal pb=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 pb = waterqualities1.stream().map(Waterquality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //砷
             waterqualities1 = waterqualities1.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
-            BigDecimal ass = waterqualities1.stream().map(Waterquality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal ass=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 ass = waterqualities1.stream().map(Waterquality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //铜
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
-            BigDecimal cu = waterqualities1.stream().map(Waterquality::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal cu=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 cu = waterqualities1.stream().map(Waterquality::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //锌
             waterqualities1 = waterqualities1.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
-            BigDecimal zn = waterqualities1.stream().map(Waterquality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
-
+            BigDecimal zn=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 zn = waterqualities1.stream().map(Waterquality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
+            //石油类
+            waterqualities1 = waterqualities1.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
+            BigDecimal syl=new BigDecimal(0);
+            if(waterqualities1.size()!=0) {
+                 syl = waterqualities1.stream().map(Waterquality::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 7, BigDecimal.ROUND_HALF_UP);
+            }
             //按海水水质标准计算等级
             //悬浮物
             int xfwint1 = xfw.compareTo(new BigDecimal(10));
@@ -527,45 +770,43 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             int znint2 = zn.compareTo(new BigDecimal(0.05));
             int znint3 = zn.compareTo(new BigDecimal(0.1));
             int znint4 = zn.compareTo(new BigDecimal(0.5));
+            //石油类
+            int sylint1 = zn.compareTo(new BigDecimal(0.05));
+            int sylint2 = zn.compareTo(new BigDecimal(0.3));
+            int sylint3 = zn.compareTo(new BigDecimal(0.5));
 
             //第一类
-            if((xfwint1<=0) && (phint1>=0) && (phint2<=0)&&(dorjyint1>0)&&(codint1<=0)&&(wjdint1<=0)&&(hxlsyint1<=0)&&(hgint1<=0)&&(cdint1<=0)&&(pbint1<=0)&&(crint1<=0)&&(assint1<=0)&&(cuint1<=0)&&(znint1<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第一类");
-                resultMap.put("value",valueMap1);
+            if ((xfwint1 <= 0) && (phint1 >= 0) && (phint2 <= 0) && (dorjyint1 > 0) && (codint1 <= 0) && (wjdint1 <= 0) && (hxlsyint1 <= 0) && (hgint1 <= 0) && (cdint1 <= 0) && (pbint1 <= 0) && (crint1 <= 0) && (assint1 <= 0) && (cuint1 <= 0) && (znint1 <= 0) && (sylint1 <= 0)) {
+                order1 = order1.add(new BigDecimal(1));
             }
             //第二类
-            else if((xfwint1<=0) && (phint1>=0) && (phint2<=0)&&(dorjyint2>0)&&(codint2<=0)&&(wjdint2<=0)&&(hxlsyint2<=0)&&(hgint2<=0)&&(cdint2<=0)&&(pbint2<=0)&&(crint2<=0)&&(assint2<=0)&&(cuint2<=0)&&(znint2<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第二类");
-                resultMap.put("value",valueMap1);
+            else if ((xfwint1 <= 0) && (phint1 >= 0) && (phint2 <= 0) && (dorjyint2 > 0) && (codint2 <= 0) && (wjdint2 <= 0) && (hxlsyint2 <= 0) && (hgint2 <= 0) && (cdint2 <= 0) && (pbint2 <= 0) && (crint2 <= 0) && (assint2 <= 0) && (cuint2 <= 0) && (znint2 <= 0) && (sylint1 <= 0)) {
+                order2 = order2.add(new BigDecimal(1));
             }
             //第三类
-            else if((xfwint2<=0) && (phint3>=0) && (phint4<=0)&&(dorjyint3>0)&&(codint3<=0)&&(wjdint3<=0)&&(hxlsyint2<=0)&&(hgint2<=0)&&(cdint3<=0)&&(pbint3<=0)&&(crint3<=0)&&(assint3<=0)&&(cuint3<=0)&&(znint3<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第三类");
-                resultMap.put("value",valueMap1);
+            else if ((xfwint2 <= 0) && (phint3 >= 0) && (phint4 <= 0) && (dorjyint3 > 0) && (codint3 <= 0) && (wjdint3 <= 0) && (hxlsyint2 <= 0) && (hgint2 <= 0) && (cdint3 <= 0) && (pbint3 <= 0) && (crint3 <= 0) && (assint3 <= 0) && (cuint3 <= 0) && (znint3 <= 0) && (sylint2 <= 0)) {
+                order3 = order3.add(new BigDecimal(1));
             }
             //第四类
-            else if((xfwint3<=0) && (phint3>=0) && (phint4<=0)&&(dorjyint4>0)&&(codint4<=0)&&(wjdint4<=0)&&(hxlsyint3<=0)&&(hgint3<=0)&&(cdint3<=0)&&(pbint4<=0)&&(crint4<=0)&&(assint3<=0)&&(cuint3<=0)&&(znint4<=0)){
-
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                valueMap1.put(monitorStationInfos.get(i).getStationName(),"第四类");
-                resultMap.put("value",valueMap1);
-            }
-            else{
-                HashMap<String, String> valueMap1 = new HashMap<>();
-                resultMap.put("value",valueMap1);
+            else if ((xfwint3 <= 0) && (phint3 >= 0) && (phint4 <= 0) && (dorjyint4 > 0) && (codint4 <= 0) && (wjdint4 <= 0) && (hxlsyint3 <= 0) && (hgint3 <= 0) && (cdint3 <= 0) && (pbint4 <= 0) && (crint4 <= 0) && (assint3 <= 0) && (cuint3 <= 0) && (znint4 <= 0) && (sylint3 <= 0)) {
+                order4 = order4.add(new BigDecimal(1));
+            } else {
+//                HashMap<String, BigDecimal> valueMap1 = new HashMap<>();
+//                resultMap.put("value",valueMap1);
             }
         }
+        HashMap<String, BigDecimal> valueMap1 = new HashMap<>();
+        valueMap1.put("第一类", order1);
+        valueMap1.put("第二类", order2);
+        valueMap1.put("第三类", order3);
+        valueMap1.put("第四类", order4);
+        resultMap.put("value", valueMap1);
+
         return resultMap;
     }
 
     /*
-     * @Description:水质数据
+     * @Description:水质数据查询_数据管理
      * @Param waterquality:
      * @Return:
      * @Author: Niko

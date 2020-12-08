@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -88,7 +89,9 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
-            density = density.add(smallfishQuantitativeList.get(i).getDensity());
+            if(smallfishQuantitativeList.get(i).getDensity()!=null){
+                density = density.add(smallfishQuantitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
         return density;
@@ -106,6 +109,7 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        smallfishQuantitativeList=smallfishQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(smallfishQuantitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -137,7 +141,9 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
-            density = density.add(smallfishQuantitativeList.get(i).getDensity());
+            if (smallfishQuantitativeList.get(i).getDensity() != null) {
+                density = density.add(smallfishQuantitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
         return density;

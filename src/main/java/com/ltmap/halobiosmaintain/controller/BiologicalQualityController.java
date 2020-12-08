@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
@@ -46,14 +47,14 @@ public class BiologicalQualityController {
     @Resource
     private IMonitorDataReportService monitorDataReportService;
 
-    @ApiOperation(value ="生物质量变化范围")
+    @ApiOperation(value ="生物质量变化范围_一年内")
     @PostMapping("/biologicalQualityRange")
     public Response<HashMap<String, HashMap<String, BigDecimal>>> biologicalQualityRangeOneYear(String year, String voyage, String element){
 
         return Responses.or(biologicalQualityService.biologicalQualityRangeOneYear(year,voyage,element));
     }
 
-    @ApiOperation(value ="生物质量评价标准等级描述")
+    @ApiOperation(value ="生物质量评价标准等级描述_一年内")
     @PostMapping("/biologicalQualityOrder")
     public Response<HashMap<String,HashMap<String,String>>> biologicalQualityOrder(String year, String voyage){
 
@@ -96,6 +97,7 @@ public class BiologicalQualityController {
     @PostMapping("/deleteBiologicalQuality")
     public Response<Boolean> deleteBiologicalQuality(String reportId){
 
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("report_id", reportId);
         //查询站位id
@@ -119,17 +121,18 @@ public class BiologicalQualityController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
-
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, biologicalQualities.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
                 monitorStationInfoService.update(null,lambdaUpdateWrapper);
             }
-            monitorStationInfoService.removeByMap(map2);
+            Boolean deleted2=  monitorStationInfoService.removeByMap(map2);
         }
 
         //删除填报数据
-        monitorDataReportService.removeById(reportId);
+        Boolean deleted3=  monitorDataReportService.removeById(reportId);
 
         return Responses.or(deleted);
     }

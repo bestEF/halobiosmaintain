@@ -43,7 +43,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
     }
 
     /*
-     * @Description:水文气象变化范围
+     * @Description:水文气象变化范围_一年内
      * @Param year:
      * @Param voyage:
      * @Param element:
@@ -67,6 +67,13 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                 case "watertem"://水温
                     HashMap<String, BigDecimal> tempvalueMap = new HashMap<>();
                     hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getWatertemperature()!=null).collect(Collectors.toList());
+                    if(Objects.equals(hydrometeorologicals.size(),0)){
+                        valueMap0.put("max",new BigDecimal(0));
+                        valueMap0.put("min",new BigDecimal(0));
+                        valueMap0.put("ave", new BigDecimal(0));
+                        resultMap.put("value", valueMap0);
+                        return resultMap;
+                    }
                     //求最大值
                     BigDecimal tempmax = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).max((x1, x2) -> x1.compareTo(x2)).get();
                     //求最小值
@@ -81,6 +88,13 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                 case "pellucidity"://透明度
                     HashMap<String, BigDecimal> pellucidityvalueMap = new HashMap<>();
                     hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getPellucidity()!=null).collect(Collectors.toList());
+                    if(Objects.equals(hydrometeorologicals.size(),0)){
+                        valueMap0.put("max",new BigDecimal(0));
+                        valueMap0.put("min",new BigDecimal(0));
+                        valueMap0.put("ave", new BigDecimal(0));
+                        resultMap.put("value", valueMap0);
+                        return resultMap;
+                    }
                     //求最大值
                     BigDecimal pelluciditymax = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).max((x1, x2) -> x1.compareTo(x2)).get();
                     //求最小值
@@ -98,7 +112,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
     }
 
     /*
-     * @Description:水文气象数据
+     * @Description:水文气象数据查询_数据管理
      * @Param hydrometeorological:
      * @Return:
      * @Author: Niko

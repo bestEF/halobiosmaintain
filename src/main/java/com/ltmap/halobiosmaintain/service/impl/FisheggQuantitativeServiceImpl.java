@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -86,7 +87,9 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
-            density = density.add(fisheggQuantitativeList.get(i).getDensity());
+            if(fisheggQuantitativeList.get(i).getDensity()!=null){
+                density = density.add(fisheggQuantitativeList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(fisheggQuantitativeList.size()));
         return density;
@@ -104,6 +107,7 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        fisheggQuantitativeList=fisheggQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(fisheggQuantitativeList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -136,12 +140,25 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
+            if(fisheggQuantitativeList.get(i).getDensity()!=null){
             density = density.add(fisheggQuantitativeList.get(i).getDensity());
-        }
+        }}
         density=density.subtract(new BigDecimal(fisheggQuantitativeList.size()));
         return density;
     }
 
+    /**
+     * @Description:鱼卵定量数据查询_数据管理
+     * @Param current:
+     * @Param size:
+     * @Param stationName:
+     * @Param biologicalChineseName:
+     * @Param startDate:
+     * @Param endDate:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/8 17:10
+     */
     @Override
     public IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate){
         IPage<FisheggQuantitative> page=new Page<>(current, size);

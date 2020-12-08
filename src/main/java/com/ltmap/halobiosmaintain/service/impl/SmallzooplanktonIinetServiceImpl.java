@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -88,7 +89,9 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
-            density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+            if (smallzooplanktonIinetList.get(i).getDensity() != null) {
+                density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(smallzooplanktonIinetList.size()));
         return density;
@@ -106,6 +109,7 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
     public HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage) {
         HashMap<String,BigDecimal> resultMap=new HashMap<>();
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
+        smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(smallzooplanktonIinetList.size()==0){
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
@@ -138,7 +142,9 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,stationId);
         BigDecimal density = new BigDecimal(0);
         for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
-            density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+            if (smallzooplanktonIinetList.get(i).getDensity() != null) {
+                density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+            }
         }
         density=density.subtract(new BigDecimal(smallzooplanktonIinetList.size()));
         return density;

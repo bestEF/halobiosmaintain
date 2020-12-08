@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
@@ -49,16 +50,16 @@ public class WaterqualityController {
 
 
 
-    @ApiOperation(value ="水质变化范围")
+    @ApiOperation(value ="水质变化范围_一年内")
     @PostMapping("/waterQualityRange")
     public Response<HashMap<String,HashMap<String,BigDecimal>>> waterQualitystatisticOneYear(String year, String voyage, String element){
 
        return Responses.or(waterqualityService.waterQualitystatisticOneYear(year,voyage,element));
     }
 
-    @ApiOperation(value ="水质评价标准等级")
+    @ApiOperation(value ="水质评价标准等级_一年内")
     @PostMapping("/waterQualityOrder")
-    public Response<HashMap<String,HashMap<String,String>>> waterQualityOrder(String year, String voyage){
+    public Response<HashMap<String,HashMap<String,BigDecimal>>> waterQualityOrder(String year, String voyage){
 
         return Responses.or(waterqualityService.waterQualityOrder(year,voyage));
     }
@@ -123,7 +124,9 @@ public class WaterqualityController {
                         dataTypeNew +=item;
                     }
                 }
-                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                if(!Strings.isNullOrEmpty(dataTypeNew)){
+                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+                }
 
                 LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                 lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, waterqualities.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
