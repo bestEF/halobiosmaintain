@@ -3,7 +3,7 @@ server:
   #端口号
   port: 9091
   #ip
-  ip: http://localhost:9091
+  ip: http://192.168.2.108:9091
   #工程访问上下文名称
   servlet:
     context-path: /halobiosmaintain

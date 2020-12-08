@@ -1169,6 +1169,14 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
                 excelType="WaterqualityExcelRule";
                 FileTestDataUtil.dataType=Constant.waterqualityName;
                 break;
+            case Constant.birdObserveRecordType:
+                excelType="BirdObserveRecordRule";
+                FileTestDataUtil.dataType=Constant.birdObserveRecordName;
+                break;
+            case Constant.vegetationSurveyRecordType:
+                excelType="VegetationSurveyRecordRule";
+                FileTestDataUtil.dataType=Constant.vegetationSurveyRecordName;
+                break;
             default:
                 excelType="";
                 break;

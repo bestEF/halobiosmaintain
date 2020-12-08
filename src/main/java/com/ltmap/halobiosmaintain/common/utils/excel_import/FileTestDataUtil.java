@@ -256,49 +256,60 @@ public class FileTestDataUtil {
             totalCells = sheet.getRow(titleRows).getPhysicalNumberOfCells();
         }
 
-//        switch (excelType){
-//            case "BiologicalQualityExcelRule":
-//                break;
-//            case "FisheggQualitativeExcelRule":
-//                break;
-//            case "FisheggQuantitativeExcelRule":
-//                break;
-//            case "HydrometeorologicalExcelRule":
-//                break;
-//            case "IntertidalzonebiologicalQuantitativeExcelRule":
-//                break;
-//            case "LargezooplanktonInetExcelRule":
-//                break;
-//            case "MacrobenthosQualitativeExcelRule":
-//                break;
-//            case "MacrobenthosQuantitativeExcelRule":
-//                break;
-//            case "PhytoplanktonExcelRule":
-//                break;
-//            case "SedimentExcelRule":
-//                break;
-//            case "SedimentgrainExcelRule":
-//                break;
-//            case "SmallfishQualitativeExcelRule":
-//                break;
-//            case "SmallfishQuantitativeExcelRule":
-//                break;
-//            case "SmallzooplanktonIinetExcelRule":
-//                break;
-//            case "SwimminganimalIdentificationExcelRule":
-//                break;
-//            case "WaterqualityExcelRule":
-//                break;
-//        }
 
-        String[] differTblHead={"SedimentgrainExcelRule"};
         boolean isHeadRight=false;
-        if(Arrays.asList(differTblHead).contains(excelType)){
-            isHeadRight = readSpecialSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
-            realDataFlag=realDataFlag+1;
-        }else {
-            isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);//表头
+        switch (excelType){
+            case "BiologicalQualityExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "FisheggQualitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "FisheggQuantitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "HydrometeorologicalExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "IntertidalzonebiologicalQuantitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "LargezooplanktonInetExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "MacrobenthosQualitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "MacrobenthosQuantitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "PhytoplanktonExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "SedimentExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "SedimentgrainExcelRule":
+                isHeadRight = readSpecialSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                realDataFlag=realDataFlag+1;
+                break;
+            case "SmallfishQualitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "SmallfishQuantitativeExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "SmallzooplanktonIinetExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "SwimminganimalIdentificationExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
+            case "WaterqualityExcelRule":
+                isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                break;
         }
+
 
         if(isHeadRight){
             if (totalRows>=realDataFlag) {
