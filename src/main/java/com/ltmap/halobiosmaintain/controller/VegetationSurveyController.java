@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -45,7 +46,7 @@ public class VegetationSurveyController {
 
     @ApiOperation(value ="植被调查记录主表查询_数据管理")
     @PostMapping("/listVegetationSurvey")
-    public Response<IPage<VegetationSurvey>> listBirdObserve(@RequestParam(defaultValue = "1")Integer current,
+    public Response<IPage<VegetationSurvey>> listVegetationSurvey(@RequestParam(defaultValue = "1")Integer current,
                                                              @RequestParam(defaultValue = "10")Integer size,
                                                              String protecName, String place, String startDate, String endDate){
         IPage<VegetationSurvey> vegetationSurveyIPage= vegetationSurveyService.listVegetationSurvey(current,size,protecName,place,startDate,endDate);
@@ -59,6 +60,18 @@ public class VegetationSurveyController {
                                                                               String chineseName, Long id){
         IPage<VegetationSurveyRecord> vegetationSurveyRecordIPage= vegetationSurveyRecordService.listVegetationSurveyRecord(current,size,chineseName,id);
         return Responses.or(vegetationSurveyRecordIPage);
+    }
+
+    @ApiOperation(value ="植被调查记录主表删除_数据管理")
+    @PostMapping("/deleteVegetationSurvey")
+    public Response<Boolean> deleteVegetationSurvey(Long id){
+        HashMap deleteMap=new HashMap();
+        deleteMap.put("id",id);
+        //删除子表
+        vegetationSurveyRecordService.removeByMap(deleteMap);
+        //删除主表
+        Boolean deleted = vegetationSurveyService.removeById(id);
+        return Responses.or(deleted);
     }
 }
 

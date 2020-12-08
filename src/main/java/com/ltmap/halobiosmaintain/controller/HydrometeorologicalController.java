@@ -1,11 +1,13 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.Hydrometeorological;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.service.IHydrometeorologicalService;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
 import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
@@ -100,7 +102,24 @@ public class HydrometeorologicalController {
         //删除站位数据表
         for (int i = 0; i < hydrometeorologicals.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", hydrometeorologicals.get(i).getStationId());
+            map2.put("station_id", hydrometeorologicals.get(i).getStationId());
+            //修改展位数据中的数据类型，删除水文气象
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(hydrometeorologicals.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("水文气象")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, hydrometeorologicals.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

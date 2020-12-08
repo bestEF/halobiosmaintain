@@ -21,6 +21,14 @@ public interface IBiologicalQualityService extends IService<BiologicalQuality> {
 
     HashMap<String, HashMap<String, BigDecimal>> biologicalQualityRangeOneYear(String year, String voyage, String element);
 
+    HashMap<String, HashMap<String, String>> biologicalQualityOrder(String year, String voyage);
+
     IPage<BiologicalQuality> listBiologicalQuality(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate);
 
+    /**
+     * 根据填报id删除对应所有数据
+     * @param reportId
+     * @return
+     */
+    Boolean deleteByReportId(Long reportId);
 }

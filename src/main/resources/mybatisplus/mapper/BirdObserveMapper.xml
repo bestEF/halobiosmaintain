@@ -35,7 +35,7 @@
         select a.* from bird_observe a
         <where>
             <if test="protecName!=null and protecName!=''">
-                and b.protec_name like concat('%',#{protecName},'%')
+                and a.protec_name like concat('%',#{protecName},'%')
             </if>
             <if test="place!=null and place!=''">
                 and a.place like concat('%',#{place},'%')

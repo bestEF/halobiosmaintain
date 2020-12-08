@@ -21,5 +21,10 @@ public interface ISedimentService extends IService<Sediment> {
 
     HashMap<String, HashMap<String, BigDecimal>> sedimentstatisticOneYear(String year, String voyage, String element);
 
+    HashMap<String, HashMap<String, String>> sedimentOrder(String year, String voyage);
+
+
     IPage<Sediment> listSediment(Integer current, Integer size,String stationName, String startDate, String endDate);
+
+    Boolean deleteByReportId(Long reportId);
 }

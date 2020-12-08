@@ -1,9 +1,11 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.entity.work.Phytoplankton;
 import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
@@ -51,6 +53,15 @@ public class SedimentController {
 
         return Responses.or(sedimentService.sedimentstatisticOneYear(year,voyage,element));
     }
+
+
+    @ApiOperation(value ="沉积物评价标准等级")
+    @PostMapping("/sedimentOrder")
+    public Response<HashMap<String,HashMap<String,String>>> sedimentOrder(String year, String voyage){
+
+        return Responses.or(sedimentService.sedimentOrder(year,voyage));
+    }
+
 
     @ApiOperation(value ="沉积物监测项目变化_多年数据")
     @PostMapping("/sedimentRangeMultiYear")
@@ -101,7 +112,24 @@ public class SedimentController {
         //删除站位数据表
         for (int i = 0; i < sediments.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", sediments.get(i).getStationId());
+            map2.put("station_id", sediments.get(i).getStationId());
+            //修改展位数据中的数据类型，删除沉积物
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(sediments.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("沉积物")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, sediments.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

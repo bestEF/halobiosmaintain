@@ -32,4 +32,6 @@ public interface IIntertidalzonebiologicalQuantitativeService extends IService<I
     HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage);
 
     IPage<IntertidalzonebiologicalQuantitative> listIntertidalzonebiologicalQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+
+    Boolean deleteByReportId(Long reportId);
 }

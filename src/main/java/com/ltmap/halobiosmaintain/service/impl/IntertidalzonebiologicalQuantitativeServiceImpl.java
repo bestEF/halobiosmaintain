@@ -2,6 +2,7 @@ package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
 import com.ltmap.halobiosmaintain.entity.work.*;
@@ -28,6 +29,14 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
 
     @Resource
     private IntertidalzonebiologicalQuantitativeMapper intertidalzonebiologicalQuantitativeMapper;
+
+    //根据填报id删除对应所有数据
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<IntertidalzonebiologicalQuantitative> lqw = Wrappers.lambdaQuery();
+        lqw.eq(IntertidalzonebiologicalQuantitative::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return false;
+    }
 
     /*
      * @Description:询生物种种类

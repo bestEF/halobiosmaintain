@@ -1,10 +1,12 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.service.IBiologicalQualityService;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
 import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
@@ -49,6 +51,13 @@ public class BiologicalQualityController {
     public Response<HashMap<String, HashMap<String, BigDecimal>>> biologicalQualityRangeOneYear(String year, String voyage, String element){
 
         return Responses.or(biologicalQualityService.biologicalQualityRangeOneYear(year,voyage,element));
+    }
+
+    @ApiOperation(value ="生物质量评价标准等级描述")
+    @PostMapping("/biologicalQualityOrder")
+    public Response<HashMap<String,HashMap<String,String>>> biologicalQualityOrder(String year, String voyage){
+
+        return Responses.or(biologicalQualityService.biologicalQualityOrder(year,voyage));
     }
 
     @ApiOperation(value ="生物质量监测项目变化_多年数据")
@@ -98,7 +107,24 @@ public class BiologicalQualityController {
        //删除站位数据表
         for (int i = 0; i < biologicalQualities.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", biologicalQualities.get(i).getStationId());
+            map2.put("station_id", biologicalQualities.get(i).getStationId());
+            //修改展位数据中的数据类型，删除生物质量
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(biologicalQualities.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("生物质量")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, biologicalQualities.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

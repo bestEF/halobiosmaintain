@@ -2,6 +2,7 @@ package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.common.utils.ListDistinctUtils;
@@ -28,6 +29,14 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
 
     @Resource
     private MacrobenthosQuantitativeMapper macrobenthosQuantitativeMapper;
+
+    //根据填报id删除对应所有数据
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<MacrobenthosQuantitative> lqw = Wrappers.lambdaQuery();
+        lqw.eq(MacrobenthosQuantitative::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return false;
+    }
 
     /*
      * @Description:查询生物种种类

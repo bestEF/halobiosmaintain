@@ -28,4 +28,6 @@ public interface ISmallfishQuantitativeService extends IService<SmallfishQuantit
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 
     IPage<SmallfishQuantitative> listSmallfishQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+
+    Boolean deleteByReportId(Long reportId);
 }

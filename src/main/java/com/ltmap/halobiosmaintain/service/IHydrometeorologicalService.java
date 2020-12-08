@@ -22,4 +22,6 @@ public interface IHydrometeorologicalService extends IService<Hydrometeorologica
     HashMap<String, HashMap<String, BigDecimal>> hydrometeorologicalRangeOneYear(String year, String voyage, String element);
 
     IPage<Hydrometeorological> listHydrometeorological(Integer current, Integer size,String stationName, String startDate, String endDate);
+
+    Boolean deleteByReportId(Long reportId);
 }

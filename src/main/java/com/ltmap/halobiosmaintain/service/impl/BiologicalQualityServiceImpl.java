@@ -2,19 +2,20 @@ package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
-import com.ltmap.halobiosmaintain.entity.work.MacrobenthosQuantitative;
-import com.ltmap.halobiosmaintain.entity.work.Sediment;
+import com.ltmap.halobiosmaintain.entity.work.*;
 import com.ltmap.halobiosmaintain.mapper.work.BiologicalQualityMapper;
 import com.ltmap.halobiosmaintain.service.IBiologicalQualityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -29,6 +30,17 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
 
     @Resource
     private BiologicalQualityMapper biologicalQualityMapper;
+    @Resource
+    private IMonitorStationInfoService monitorStationInfoService;
+
+
+    //根据填报id删除对应所有数据
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<BiologicalQuality> lqw = Wrappers.lambdaQuery();
+        lqw.eq(BiologicalQuality::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return false;
+    }
 
     @Override
     public HashMap<String, HashMap<String, BigDecimal>> biologicalQualityRangeOneYear(String year, String voyage, String element){
@@ -46,6 +58,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
         switch (element) {
             case "cd"://镉
                 HashMap<String, BigDecimal> cDvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal cDmax = biologicalQualities.stream().map(BiologicalQuality::getCd).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -59,6 +72,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "sixsixsix"://六六六
                 HashMap<String, BigDecimal> codvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getSixsixsix()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal codmax = biologicalQualities.stream().map(BiologicalQuality::getSixsixsix).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -72,6 +86,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "cr"://铬
                 HashMap<String, BigDecimal> crvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal crmax = biologicalQualities.stream().map(BiologicalQuality::getCr).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -85,6 +100,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "cu"://铜
                 HashMap<String, BigDecimal> cuvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal cumax = biologicalQualities.stream().map(BiologicalQuality::getCu).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -98,6 +114,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "ddt"://滴滴涕
                 HashMap<String, BigDecimal> gsyvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getDdt()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal gsymax = biologicalQualities.stream().map(BiologicalQuality::getDdt).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -111,6 +128,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "thg"://汞
                 HashMap<String, BigDecimal> hgvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getThg()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal hgmax = biologicalQualities.stream().map(BiologicalQuality::getThg).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -124,6 +142,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "pb"://铅
                 HashMap<String, BigDecimal> pbvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal pbmax = biologicalQualities.stream().map(BiologicalQuality::getPb).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -137,6 +156,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "pcbs"://多氯联苯
                 HashMap<String, BigDecimal> sylvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getPcbs()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal sylmax = biologicalQualities.stream().map(BiologicalQuality::getPcbs).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -150,6 +170,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "syt"://石油烃
                 HashMap<String, BigDecimal> tnvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getSyt()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal tnmax = biologicalQualities.stream().map(BiologicalQuality::getSyt).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -163,6 +184,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "fdcjq"://粪大肠菌群
                 HashMap<String, BigDecimal> tpvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getFdcjq()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal tpmax = biologicalQualities.stream().map(BiologicalQuality::getFdcjq).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -177,6 +199,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
 
             case "lms"://氯霉素
                 HashMap<String, BigDecimal> yxsydvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getLms()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal yxsydmax = biologicalQualities.stream().map(BiologicalQuality::getLms).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -190,6 +213,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "kss"://抗生素
                 HashMap<String, BigDecimal> aSSvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getKss()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal aSSmax = biologicalQualities.stream().map(BiologicalQuality::getKss).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -203,6 +227,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "zn"://锌
                 HashMap<String, BigDecimal> znvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal znmax = biologicalQualities.stream().map(BiologicalQuality::getZn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -216,6 +241,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "dsp"://腹泻性贝毒
                 HashMap<String, BigDecimal> dspvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getDsp()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal dspmax = biologicalQualities.stream().map(BiologicalQuality::getDsp).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -229,6 +255,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 break;
             case "psp"://麻痹性贝毒
                 HashMap<String, BigDecimal> pspvalueMap = new HashMap<>();
+                biologicalQualities = biologicalQualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 //求最大值
                 BigDecimal pspmax = biologicalQualities.stream().map(BiologicalQuality::getZn).max((x1, x2) -> x1.compareTo(x2)).get();
                 //求最小值
@@ -241,6 +268,311 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 resultMap.put("value",pspvalueMap);
                 break;
         }
+        return resultMap;
+    }
+
+
+
+    /**
+     * @Description:生物质量评价标准等级统计
+     * @Param year:
+     * @Param voyage:
+     * @Return:
+     * @Author: Niko
+     * @Date: 2020/12/7 15:43
+     */
+    @Override
+    public HashMap<String,HashMap<String,String>>  biologicalQualityOrder(String year, String voyage){
+        List<BiologicalQuality> biologicalQualities= biologicalQualityMapper.biologicalQualityRangeOneYear(year,voyage);
+        HashMap<String,HashMap<String,String>> resultMap=new HashMap<>();
+
+        if(biologicalQualities.size()==0){
+            HashMap<String, String> valueMap0 = new HashMap<>();
+
+            resultMap.put("value",valueMap0);
+
+            return resultMap;
+        }else{//求平均值
+            //麻痹性贝毒
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getPsp()!=null).collect(Collectors.toList());
+            BigDecimal psp = biologicalQualities.stream().map(BiologicalQuality::getPsp).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+            //石油烃
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getSyt()!=null).collect(Collectors.toList());
+            BigDecimal syt = biologicalQualities.stream().map(BiologicalQuality::getSyt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+            //六六六
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getSixsixsix()!=null).collect(Collectors.toList());
+            BigDecimal six = biologicalQualities.stream().map(BiologicalQuality::getSixsixsix).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+            //滴滴涕
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getDdt()!=null).collect(Collectors.toList());
+            BigDecimal ddt = biologicalQualities.stream().map(BiologicalQuality::getDdt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+            //汞
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getThg()!=null).collect(Collectors.toList());
+            BigDecimal hg = biologicalQualities.stream().map(BiologicalQuality::getThg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+            //镉
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
+            BigDecimal cd = biologicalQualities.stream().map(BiologicalQuality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //铬
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
+            BigDecimal cr = biologicalQualities.stream().map(BiologicalQuality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //铅
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
+            BigDecimal pb = biologicalQualities.stream().map(BiologicalQuality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //砷
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
+            BigDecimal ass = biologicalQualities.stream().map(BiologicalQuality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //铜
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
+            BigDecimal cu = biologicalQualities.stream().map(BiologicalQuality::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //锌
+            biologicalQualities = biologicalQualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
+            BigDecimal zn = biologicalQualities.stream().map(BiologicalQuality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities.size()), 2, BigDecimal.ROUND_HALF_UP);
+
+            //按海水水质标准计算等级
+            //麻痹性贝毒
+            int pspint1 = psp.compareTo(new BigDecimal(0.8));
+            int pspint2 = psp.compareTo(new BigDecimal(0.8));
+            int pspint3 = psp.compareTo(new BigDecimal(0.8));
+            //石油烃
+            int sytint1 = syt.compareTo(new BigDecimal(15));
+            int sytint2 = syt.compareTo(new BigDecimal(50));
+            int sytint3 = syt.compareTo(new BigDecimal(80));
+            //六六六
+            int sixint1 = six.compareTo(new BigDecimal(0.02));
+            int sixint2 = six.compareTo(new BigDecimal(0.15));
+            int sixint3 = six.compareTo(new BigDecimal(0.5));
+            //滴滴涕
+            int ddtint1 = ddt.compareTo(new BigDecimal(0.01));
+            int ddtint2 = ddt.compareTo(new BigDecimal(0.1));
+            int ddtint3 = ddt.compareTo(new BigDecimal(0.5));
+            //汞
+            int hgint1 = hg.compareTo(new BigDecimal(0.05));
+            int hgint2 = hg.compareTo(new BigDecimal(0.1));
+            int hgint3 = hg.compareTo(new BigDecimal(0.3));
+            //镉
+            int cdint1 = cd.compareTo(new BigDecimal(0.2));
+            int cdint2 = cd.compareTo(new BigDecimal(2));
+            int cdint3 = cd.compareTo(new BigDecimal(5));
+            //铬
+            int crint1 = cr.compareTo(new BigDecimal(0.5));
+            int crint2 = cr.compareTo(new BigDecimal(2));
+            int crint3 = cr.compareTo(new BigDecimal(6));
+            //铅
+            int pbint1 = pb.compareTo(new BigDecimal(0.1));
+            int pbint2 = pb.compareTo(new BigDecimal(2));
+            int pbint3 = pb.compareTo(new BigDecimal(6));
+            //砷
+            int assint1 = ass.compareTo(new BigDecimal(1));
+            int assint2 = ass.compareTo(new BigDecimal(5));
+            int assint3 = ass.compareTo(new BigDecimal(8));
+            //铜
+            int cuint1 = cu.compareTo(new BigDecimal(10));
+            int cuint2 = cu.compareTo(new BigDecimal(25));
+            int cuint3 = cu.compareTo(new BigDecimal(50));
+            //锌
+            int znint1 = zn.compareTo(new BigDecimal(20));
+            int znint2 = zn.compareTo(new BigDecimal(50));
+            int znint3 = zn.compareTo(new BigDecimal(100));
+
+
+            String resultStr="超第一类生物质量标准的项目有：";
+            //第一类
+            if ((sytint1 <= 0)) {
+                resultStr+="石油烃"+"、";
+            }
+            if ((sixint1 <= 0)) {
+                resultStr+="六六六"+"、";
+            }
+            if ((ddtint1 <= 0)) {
+                resultStr+="滴滴涕"+"、";
+            }
+            if ((hgint1 <= 0)) {
+                resultStr+="汞"+"、";
+            }
+            if ((cdint1 <= 0)) {
+                resultStr+="镉"+"、";
+            }
+            if ((pbint1 <= 0)) {
+                resultStr+="铅"+"、";
+            }
+            if ((crint1 <= 0)) {
+                resultStr+="铬"+"、";
+            }
+            if ((assint1 <= 0)) {
+                resultStr+="砷"+"、";
+            }
+            if ((cuint1 <= 0)) {
+                resultStr+="铜"+"、";
+            }
+            if ((znint1 <= 0)) {
+                resultStr+="锌"+"、";
+            }
+            String result=resultStr.substring(0,resultStr.length()-1);
+            HashMap<String, String> valueMap1 = new HashMap<>();
+            valueMap1.put("resultStr", result);
+            resultMap.put("resultStr", valueMap1);
+        }
+//        //水质标准类别占比
+//        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfo(year, voyage);
+//        for (int i = 0; i < monitorStationInfos.size(); i++) {
+//            List<BiologicalQuality> biologicalQualities1 = biologicalQualityMapper.biologicalQualityStationOneYear(year, voyage, monitorStationInfos.get(i).getStationId());
+//            if(biologicalQualities1.size()>0){
+//
+//            //求平均值
+//            //麻痹性贝毒
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getPsp()!=null).collect(Collectors.toList());
+//            BigDecimal psp = biologicalQualities1.stream().map(BiologicalQuality::getPsp).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//            //石油烃
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getSyt()!=null).collect(Collectors.toList());
+//            BigDecimal syt = biologicalQualities1.stream().map(BiologicalQuality::getSyt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//            //六六六
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getSixsixsix()!=null).collect(Collectors.toList());
+//            BigDecimal six = biologicalQualities1.stream().map(BiologicalQuality::getSixsixsix).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//            //滴滴涕
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getDdt()!=null).collect(Collectors.toList());
+//            BigDecimal ddt = biologicalQualities1.stream().map(BiologicalQuality::getDdt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//            //汞
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getThg()!=null).collect(Collectors.toList());
+//            BigDecimal hg = biologicalQualities1.stream().map(BiologicalQuality::getThg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//            //镉
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
+//            BigDecimal cd = biologicalQualities1.stream().map(BiologicalQuality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //铬
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
+//            BigDecimal cr = biologicalQualities1.stream().map(BiologicalQuality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //铅
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
+//            BigDecimal pb = biologicalQualities1.stream().map(BiologicalQuality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //砷
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
+//            BigDecimal ass = biologicalQualities1.stream().map(BiologicalQuality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //铜
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
+//            BigDecimal cu = biologicalQualities1.stream().map(BiologicalQuality::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //锌
+//            biologicalQualities1 = biologicalQualities1.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
+//            BigDecimal zn = biologicalQualities1.stream().map(BiologicalQuality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(biologicalQualities1.size()), 2, BigDecimal.ROUND_HALF_UP);
+//
+//            //按海水水质标准计算等级
+//            //麻痹性贝毒
+//            int pspint1 = psp.compareTo(new BigDecimal(0.8));
+//            int pspint2 = psp.compareTo(new BigDecimal(0.8));
+//            int pspint3 = psp.compareTo(new BigDecimal(0.8));
+//            //石油烃
+//            int sytint1 = syt.compareTo(new BigDecimal(15));
+//            int sytint2 = syt.compareTo(new BigDecimal(50));
+//            int sytint3 = syt.compareTo(new BigDecimal(80));
+//            //六六六
+//            int sixint1 = six.compareTo(new BigDecimal(0.02));
+//            int sixint2 = six.compareTo(new BigDecimal(0.15));
+//            int sixint3 = six.compareTo(new BigDecimal(0.5));
+//            //滴滴涕
+//            int ddtint1 = ddt.compareTo(new BigDecimal(0.01));
+//            int ddtint2 = ddt.compareTo(new BigDecimal(0.1));
+//            int ddtint3 = ddt.compareTo(new BigDecimal(0.5));
+//            //汞
+//            int hgint1 = hg.compareTo(new BigDecimal(0.05));
+//            int hgint2 = hg.compareTo(new BigDecimal(0.1));
+//            int hgint3 = hg.compareTo(new BigDecimal(0.3));
+//            //镉
+//            int cdint1 = cd.compareTo(new BigDecimal(0.2));
+//            int cdint2 = cd.compareTo(new BigDecimal(2));
+//            int cdint3 = cd.compareTo(new BigDecimal(5));
+//            //铬
+//            int crint1 = cr.compareTo(new BigDecimal(0.5));
+//            int crint2 = cr.compareTo(new BigDecimal(2));
+//            int crint3 = cr.compareTo(new BigDecimal(6));
+//            //铅
+//            int pbint1 = pb.compareTo(new BigDecimal(0.1));
+//            int pbint2 = pb.compareTo(new BigDecimal(2));
+//            int pbint3 = pb.compareTo(new BigDecimal(6));
+//            //砷
+//            int assint1 = ass.compareTo(new BigDecimal(1));
+//            int assint2 = ass.compareTo(new BigDecimal(5));
+//            int assint3 = ass.compareTo(new BigDecimal(8));
+//            //铜
+//            int cuint1 = cu.compareTo(new BigDecimal(10));
+//            int cuint2 = cu.compareTo(new BigDecimal(25));
+//            int cuint3 = cu.compareTo(new BigDecimal(50));
+//            //锌
+//            int znint1 = zn.compareTo(new BigDecimal(20));
+//            int znint2 = zn.compareTo(new BigDecimal(50));
+//            int znint3 = zn.compareTo(new BigDecimal(100));
+//
+//
+//            //第一类
+//            if ((pspint1 <= 0) && (sytint1 <= 0) && (sixint1 <= 0) && (ddtint1 <= 0) && (hgint1 <= 0) && (cdint1 <= 0) && (pbint1 <= 0) && (crint1 <= 0) && (assint1 <= 0) && (cuint1 <= 0) && (znint1 <= 0)) {
+//
+//                HashMap<String, String> valueMap1 = new HashMap<>();
+//                valueMap1.put(monitorStationInfos.get(i).getStationName(), "第一类");
+//                resultMap.put("value", valueMap1);
+//            }
+//            //第二类
+//            else if ((pspint2 <= 0) && (sytint2 <= 0) && (sixint2 <= 0) && (ddtint2 <= 0) && (hgint2 <= 0) && (cdint2 <= 0) && (pbint2 <= 0) && (crint2 <= 0) && (assint2 <= 0) && (cuint2 <= 0) && (znint2 <= 0)) {
+//
+//                HashMap<String, String> valueMap1 = new HashMap<>();
+//                valueMap1.put(monitorStationInfos.get(i).getStationName(), "第二类");
+//                resultMap.put("value", valueMap1);
+//            }
+//            //第三类
+//            else if ((pspint3 <= 0) && (sytint3 <= 0) && (sixint3 <= 0) && (ddtint3 <= 0) && (hgint3 <= 0) && (cdint3 <= 0) && (pbint3 <= 0) && (crint3 <= 0) && (assint3 <= 0) && (cuint3 <= 0) && (znint3 <= 0)) {
+//
+//                HashMap<String, String> valueMap1 = new HashMap<>();
+//                valueMap1.put(monitorStationInfos.get(i).getStationName(), "第三类");
+//                resultMap.put("value", valueMap1);
+//            }
+//            else{
+//                HashMap<String, String> valueMap1 = new HashMap<>();
+//                resultMap.put("value",valueMap1);
+//            }
+//
+//            String resultStr="超第一类生物质量标准的项目有：";
+//            //第一类
+//            if ((sytint1 <= 0)) {
+//                resultStr+="石油烃"+"、";
+//            }
+//            if ((sixint1 <= 0)) {
+//                resultStr+="六六六"+"、";
+//            }
+//            if ((ddtint1 <= 0)) {
+//                resultStr+="滴滴涕"+"、";
+//            }
+//            if ((hgint1 <= 0)) {
+//                resultStr+="汞"+"、";
+//            }
+//            if ((cdint1 <= 0)) {
+//                resultStr+="镉"+"、";
+//            }
+//            if ((pbint1 <= 0)) {
+//                resultStr+="铅"+"、";
+//            }
+//            if ((crint1 <= 0)) {
+//                resultStr+="铬"+"、";
+//            }
+//            if ((assint1 <= 0)) {
+//                resultStr+="砷"+"、";
+//            }
+//            if ((cuint1 <= 0)) {
+//                resultStr+="铜"+"、";
+//            }
+//            if ((znint1 <= 0)) {
+//                resultStr+="锌"+"、";
+//            }
+//            String result=resultStr.substring(0,resultStr.length()-1);
+//            HashMap<String, String> valueMap1 = new HashMap<>();
+//            valueMap1.put("resultStr", result);
+//            resultMap.put("resultStr", valueMap1);
+//            }
+//        }
         return resultMap;
     }
 

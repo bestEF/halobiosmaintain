@@ -57,4 +57,21 @@
             </if>
         </where>
     </select>
+
+    <select id="sedimentStationOneYear" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.* from sediment a
+        left join monitor_data_report b on a.report_id=b.report_id
+        left join monitor_station_info c on a.station_id=c.station_id
+        <where>
+            <if test="year!=null and year!=''">
+                <![CDATA[and b.year =#{year} ]]>
+            </if>
+            <if test="voyage!=null and voyage!=''">
+                <![CDATA[and b.voyage =#{voyage} ]]>
+            </if>
+            <if test="stationId!=null and stationId!=''">
+                <![CDATA[and a.station_id =#{stationId} ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

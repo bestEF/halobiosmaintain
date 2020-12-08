@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <excel>
-    <entity name="Sheet1" code="FisheggQuantitativeExcelRule" >
-        <column name="监控区：" code="0" type="String">
+    <entity name="生物质量" code="BiologicalQualityExcelRule" >
+        <column name="监测区域：" code="0" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="监控区长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="生态类型：" code="1" type="String">
-            <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="生态类型长度超出单元格限制"></rule>
-            </rules>
-        </column>
-        <column name="任务日期：" code="2" type="String">
+        <column name="任务日期：" code="1" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
@@ -23,21 +16,21 @@
                 <rule name="length" length="50" message="任务日期长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="监测单位：" code="3" type="String">
+        <column name="监测单位：" code="2" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="监测单位长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="组织单位：" code="4" type="String">
+        <column name="组织单位：" code="3" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="组织单位长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="填报日期：" code="5" type="String">
+        <column name="填报日期：" code="4" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
@@ -45,42 +38,42 @@
                 <rule name="length" length="50" message="填报日期长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="监测站位" code="6" type="String">
+        <column name="监测站位" code="5" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="组织单位长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="计划经度" code="7" type="String">
+        <column name="计划经度" code="6" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="计划纬度" code="8" type="String">
+        <column name="计划纬度" code="7" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="实测经度" code="9" type="String">
+        <column name="实测经度" code="8" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="实测经度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="实测纬度" code="10" type="String">
+        <column name="实测纬度" code="9" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="实测纬度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="监测日期" code="11" type="String">
+        <column name="监测日期" code="10" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
@@ -88,88 +81,151 @@
                 <rule name="length" length="50" message="监测日期长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="水深" code="12" type="String">
+        <column name="水深" code="11" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="length" length="50" message="水深长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="绳长" code="13" type="String">
+        <column name="类群" code="12" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="生物种中文学名" code="13" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="生物种拉丁名" code="14" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="样品体（壳）长" code="15" type="String">
+            <rules>
                 <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="滤水量" code="14" type="String">
+        <column name="总汞" code="16" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="滤水量长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="生物种中文名" code="15" type="String">
+        <column name="镉" code="17" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="生物种中文名长度超出单元格限制"></rule>
-            </rules>
-        </column>
-        <column name="生物种拉丁名" code="16" type="String">
-            <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="生物种拉丁名长度超出单元格限制"></rule>
-            </rules>
-        </column>
-        <column name="发育阶段" code="17" type="String">
-            <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
-            </rules>
-        </column>
-        <column name="卵径" code="18" type="String">
-            <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="卵径长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="数量" code="19" type="String">
+        <column name="铅" code="18" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="isDigit" message="请输入数字(整数)"></rule>
-                <rule name="length" length="50" message="数量长度超出单元格限制"></rule>
-            </rules>
-        </column>
-        <column name="密度" code="20" type="String">
-            <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="数量长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="填报人：" code="21" type="String">
+        <column name="铜" code="19" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="砷" code="20" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="六六六" code="21" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="铬" code="22" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="滴滴涕" code="23" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="多氯联苯" code="24" type="String">
+            <rules>
+                <rule name="checkNumeric" message="请输入数字"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="石油烃" code="25" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="粪大肠菌群" code="26" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="氯霉素" code="27" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="抗生素" code="28" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="腹泻性贝毒" code="29" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="麻痹性贝毒" code="30" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="锌" code="31" type="String">
+            <rules>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
+            </rules>
+        </column>
+        <column name="填报人：" code="32" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="填报人长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="校对人：" code="22" type="String">
+        <column name="校对人：" code="33" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="校对人长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="审核人：" code="23" type="String">
+        <column name="审核人：" code="34" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="length" length="50" message="审核人长度超出单元格限制"></rule>
+                <rule name="length" length="50" message="长度超出单元格限制"></rule>
             </rules>
         </column>
     </entity>

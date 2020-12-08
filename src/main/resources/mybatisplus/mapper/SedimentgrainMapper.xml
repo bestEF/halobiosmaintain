@@ -9,25 +9,25 @@
         <result column="station_id" property="stationId" />
         <result column="monitor_date" property="monitorDate" />
         <result column="sampling_depth" property="samplingDepth" />
-        <result column="gravel_1" property="gravel1" />
-        <result column="gravel_2" property="gravel2" />
-        <result column="sand_1" property="sand1" />
-        <result column="sand_2" property="sand2" />
-        <result column="sand_3" property="sand3" />
-        <result column="sand_4" property="sand4" />
-        <result column="sand_5" property="sand5" />
-        <result column="pinksand_1" property="pinksand1" />
-        <result column="pinksand_2" property="pinksand2" />
-        <result column="clay_1" property="clay1" />
-        <result column="clay_2" property="clay2" />
-        <result column="granulecontent_1" property="granulecontent1" />
-        <result column="granulecontent_2" property="granulecontent2" />
-        <result column="granulecontent_3" property="granulecontent3" />
-        <result column="granulecontent_4" property="granulecontent4" />
+        <result column="gravel_1" property="gravel_1" />
+        <result column="gravel_2" property="gravel_2" />
+        <result column="sand_1" property="sand_1" />
+        <result column="sand_2" property="sand_2" />
+        <result column="sand_3" property="sand_3" />
+        <result column="sand_4" property="sand_4" />
+        <result column="sand_5" property="sand_5" />
+        <result column="pinksand_1" property="pinksand_1" />
+        <result column="pinksand_2" property="pinksand_2" />
+        <result column="clay_1" property="clay_1" />
+        <result column="clay_2" property="clay_2" />
+        <result column="granulecontent_1" property="granulecontent_1" />
+        <result column="granulecontent_2" property="granulecontent_2" />
+        <result column="granulecontent_3" property="granulecontent_3" />
+        <result column="granulecontent_4" property="granulecontent_4" />
         <result column="name_and_code" property="nameAndCode" />
-        <result column="particlecoefficient_1" property="particlecoefficient1" />
-        <result column="particlecoefficient_2" property="particlecoefficient2" />
-        <result column="particlecoefficient_3" property="particlecoefficient3" />
+        <result column="particlecoefficient_1" property="particlecoefficient_1" />
+        <result column="particlecoefficient_2" property="particlecoefficient_2" />
+        <result column="particlecoefficient_3" property="particlecoefficient_3" />
         <result column="byzd1" property="byzd1" />
         <result column="byzd2" property="byzd2" />
         <result column="byzd3" property="byzd3" />

@@ -1,9 +1,11 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.entity.work.Sediment;
 import com.ltmap.halobiosmaintain.entity.work.SwimminganimalIdentification;
 import com.ltmap.halobiosmaintain.entity.work.Waterquality;
@@ -54,6 +56,13 @@ public class WaterqualityController {
        return Responses.or(waterqualityService.waterQualitystatisticOneYear(year,voyage,element));
     }
 
+    @ApiOperation(value ="水质评价标准等级")
+    @PostMapping("/waterQualityOrder")
+    public Response<HashMap<String,HashMap<String,String>>> waterQualityOrder(String year, String voyage){
+
+        return Responses.or(waterqualityService.waterQualityOrder(year,voyage));
+    }
+
     @ApiOperation(value ="水质监测项目变化_多年数据")
     @PostMapping("/waterQualityRangeMultiYear")
     public Response<HashMap<String, HashMap<String, BigDecimal>>> waterQualityRangeMultiYear(String startYear,String endYear, String element){
@@ -102,7 +111,24 @@ public class WaterqualityController {
         //删除站位数据表
         for (int i = 0; i < waterqualities.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", waterqualities.get(i).getStationId());
+            map2.put("station_id", waterqualities.get(i).getStationId());
+            //修改展位数据中的数据类型，删除水质
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(waterqualities.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("水质")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, waterqualities.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

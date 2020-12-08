@@ -30,7 +30,7 @@ public class VegetationSurveyRecordServiceImpl extends ServiceImpl<VegetationSur
     @Override
     public IPage<VegetationSurveyRecord> listVegetationSurveyRecord(Integer current, Integer size, String chineseName,Long id){
         LambdaQueryWrapper<VegetationSurveyRecord> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(!Strings.isNullOrEmpty(chineseName),VegetationSurveyRecord::getChineseName,chineseName)
+        queryWrapper.like(!Strings.isNullOrEmpty(chineseName),VegetationSurveyRecord::getChineseName,chineseName)
         .eq(id!=null,VegetationSurveyRecord::getId,id);
         IPage<VegetationSurveyRecord> page=new Page<>(current, size);
         return vegetationSurveyRecordMapper.selectPage(page,queryWrapper);

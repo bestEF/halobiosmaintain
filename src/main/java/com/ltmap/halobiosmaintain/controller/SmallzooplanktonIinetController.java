@@ -1,9 +1,11 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.entity.work.SmallfishQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.SmallzooplanktonIinet;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
@@ -70,7 +72,24 @@ public class SmallzooplanktonIinetController {
         //删除站位数据表
         for (int i = 0; i < smallzooplanktonIinets.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", smallzooplanktonIinets.get(i).getStationId());
+            map2.put("station_id", smallzooplanktonIinets.get(i).getStationId());
+            //修改展位数据中的数据类型，删除浮游动物（II型网）
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(smallzooplanktonIinets.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("浮游动物（II型网）")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, smallzooplanktonIinets.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

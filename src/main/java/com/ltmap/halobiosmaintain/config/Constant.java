@@ -18,6 +18,9 @@ public class Constant {
 
 
     //================以下为直接定义的静态常量========================
+    /**正式数据第一个cell开始位 因为有两张表没有生物类型**/
+    public static final int officialDataStartSpecialSign=5;
+
     /**正式数据第一个cell开始位**/
     public static final int officialDataStartSign=6;
 
@@ -33,8 +36,8 @@ public class Constant {
     public static final String sedimentName="沉积物";
     public static final String sedimentgrainName="沉积物粒度";
     public static final String phytoplanktonName="浮游植物";
-    public static final String largezooplankton_1_netName="大型浮游动物（I型网）";
-    public static final String smallzooplankton_2_netName="小型浮游动物（II型网）";
+    public static final String largezooplankton_1_netName="浮游动物（I型网）";
+    public static final String smallzooplankton_2_netName="浮游动物（II型网）";
     public static final String macrobenthosQuantitativeName="大型底栖动物定量";
     public static final String macrobenthosQualitativeName="大型底栖动物定性";
     public static final String intertidalzonebiologicalQuantitativeName="潮间带生物定量";
@@ -42,7 +45,7 @@ public class Constant {
     public static final String fisheggQualitativeName="鱼卵定性";
     public static final String smallfishQuantitativeName="仔鱼定量";
     public static final String smallfishQualitativeName="仔鱼定性";
-    public static final String swimminganimalIdentificationName="游泳动物生物";
+    public static final String swimminganimalIdentificationName="游泳动物";
     public static final String biologicalQualityName="生物质量";
 
     //16中excel模板固定不变的表头key信息对应的标号
@@ -66,7 +69,7 @@ public class Constant {
     public static final int auditorCode=8;
 
     //16中excel模板固定不变的表头key信息
-    public static final String monitoringArea="监控区：";
+    public static final String monitoringArea="监测区域：";
     public static final String ecologicaltype="生态类型：";
     public static final String missionDate="任务日期：";
     public static final String monitoringUnit="监测单位：";
@@ -80,7 +83,22 @@ public class Constant {
     /**
      * 鱼卵定量excel模板类型标志
      */
-    public static final int fisheggQuantitativeType=1;
+    public static final int biologicalQualityType=1;
+    public static final int fisheggQualitativeType=2;
+    public static final int fisheggQuantitativeType=3;
+    public static final int hydrometeorologicalType=4;
+    public static final int intertidalzonebiologicalQuantitativeType=5;
+    public static final int largezooplanktonInetType=6;
+    public static final int macrobenthosQualitativeType=7;
+    public static final int macrobenthosQuantitativeType=8;
+    public static final int phytoplanktonType=9;
+    public static final int sedimentType=10;
+    public static final int sedimentgrainType=11;
+    public static final int smallfishQualitativeType=12;
+    public static final int smallfishQuantitativeType=13;
+    public static final int smallzooplanktonIinetType=14;
+    public static final int swimminganimalIdentificationType=15;
+    public static final int waterqualityType=16;
 
     //0 1标志
     /**

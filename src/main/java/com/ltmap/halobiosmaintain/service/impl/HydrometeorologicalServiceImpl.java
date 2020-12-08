@@ -2,6 +2,7 @@ package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
 import com.ltmap.halobiosmaintain.entity.work.FisheggQuantitative;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,6 +33,14 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
 
     @Resource
     private HydrometeorologicalMapper hydrometeorologicalMapper;
+
+    //根据填报id删除对应所有数据
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<Hydrometeorological> lqw = Wrappers.lambdaQuery();
+        lqw.eq(Hydrometeorological::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return false;
+    }
 
     /*
      * @Description:水文气象变化范围
@@ -56,6 +66,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
             switch (element) {
                 case "watertem"://水温
                     HashMap<String, BigDecimal> tempvalueMap = new HashMap<>();
+                    hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getWatertemperature()!=null).collect(Collectors.toList());
                     //求最大值
                     BigDecimal tempmax = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).max((x1, x2) -> x1.compareTo(x2)).get();
                     //求最小值
@@ -69,6 +80,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     break;
                 case "pellucidity"://透明度
                     HashMap<String, BigDecimal> pellucidityvalueMap = new HashMap<>();
+                    hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getPellucidity()!=null).collect(Collectors.toList());
                     //求最大值
                     BigDecimal pelluciditymax = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).max((x1, x2) -> x1.compareTo(x2)).get();
                     //求最小值

@@ -17,4 +17,6 @@ import java.util.List;
 public interface ISedimentgrainService extends IService<Sedimentgrain> {
 
     IPage<Sedimentgrain> listSedimentgrain(Integer current, Integer size,String stationName, String startDate, String endDate);
+
+    Boolean deleteByReportId(Long reportId);
 }

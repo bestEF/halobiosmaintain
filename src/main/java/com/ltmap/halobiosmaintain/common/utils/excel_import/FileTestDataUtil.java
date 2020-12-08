@@ -5,26 +5,21 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.ltmap.halobiosmaintain.config.Constant;
 import com.ltmap.halobiosmaintain.controller.ExcelDataImportController;
-import com.ltmap.halobiosmaintain.entity.work.MonitorDataReport;
-import com.ltmap.halobiosmaintain.service.IFisheggQuantitativeService;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
-import com.ltmap.halobiosmaintain.vo.req.FisheggQuantitativeReq;
+import com.ltmap.halobiosmaintain.vo.req.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
 import java.io.*;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -211,6 +206,10 @@ public class FileTestDataUtil {
         dataList1 = new ArrayList<>();
         dataList2 = new ArrayList<>();
         dataList3 = new ArrayList<>();
+
+        //用于判断有没有真实数据的变量 真实数据是从第5+1行开始的 但还有一行填报人等信息。所以这里定为7。
+        int realDataFlag=7;                                                                                                                                                                                                                                                                                                                                                 ;
+
         // 用于返回结果
         Map<String, Object> map = new HashMap<>();
         int totalRows = 0;
@@ -257,18 +256,25 @@ public class FileTestDataUtil {
             totalCells = sheet.getRow(titleRows).getPhysicalNumberOfCells();
         }
 
-        boolean isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);//表头
+        String[] differTblHead={"SedimentgrainExcelRule"};
+        boolean isHeadRight=false;
+        if(Arrays.asList(differTblHead).contains(excelType)){
+            isHeadRight = readSpecialSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+            realDataFlag=realDataFlag+1;
+        }else {
+            isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);//表头
+        }
 
         if(isHeadRight){
-            //+6是判断有没有真实数据  真实数据是从第5+1行开始的
-            if (totalRows>=6) {//if (totalRows>=2) {
+            if (totalRows>=realDataFlag) {
                 headMap = (Map) getCurEntityHeadMap().get(getCurEntityCode());
-                // 循环Excel行数,从第2行开始,1行表头不入库
+
                 List<String> returnList=new ArrayList<>();
 
-                //从第5+1行读数据
+                //从第5+1行读数据 对有些表特殊处理从第6+1行读数据
+                //-2是因为计算机从0开始计数所以-1 又因为有一行填报人等信息所以再次-1
                 //-1是因为最后一行填的是填报人等信息
-                for (int r = 5; r < totalRows-1; r++) {//for (int r = 1; r < totalRows; r++) {
+                for (int r = realDataFlag-2; r < totalRows-1; r++) {//for (int r = 1; r < totalRows; r++) {
                     Row row = sheet.getRow(r);
                     if (isBlankRow(row)) {
                         continue;
@@ -428,14 +434,5896 @@ public class FileTestDataUtil {
     private List<String> classify(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,String type,List<Map<String, Object>> allMapList,Sheet sheet){
         List<String> list=new ArrayList<>();
         switch (type){
+            case "BiologicalQualityExcelRule":
+                list = biologicalQualityExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "FisheggQualitativeExcelRule":
+                list = fisheggQualitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
             case "FisheggQuantitativeExcelRule":// 鱼卵定量数据表
                 list = fisheggQuantitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "HydrometeorologicalExcelRule":
+                list = hydrometeorologicalExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "IntertidalzonebiologicalQuantitativeExcelRule":
+                list = intertidalzonebiologicalQuantitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "LargezooplanktonInetExcelRule":
+                list = largezooplanktonInetExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "MacrobenthosQualitativeExcelRule":
+                list = macrobenthosQualitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "MacrobenthosQuantitativeExcelRule":
+                list = macrobenthosQuantitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "PhytoplanktonExcelRule":
+                list = phytoplanktonExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SedimentExcelRule":
+                list = sedimentExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SedimentgrainExcelRule":
+                list = sedimentgrainExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SmallfishQualitativeExcelRule":
+                list = smallfishQualitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SmallfishQuantitativeExcelRule":
+                list = smallfishQuantitativeExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SmallzooplanktonIinetExcelRule":
+                list = smallzooplanktonIinetExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "SwimminganimalIdentificationExcelRule":
+                list = swimminganimalIdentificationExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "WaterqualityExcelRule":
+                list = waterqualityExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
                 list.add("1");
                 break;
             default:
                 break;
         }
         return list;
+    }
+
+    //鱼卵定量数据表
+    private List<String> waterqualityExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        WaterqualityReq waterqualityReq = new WaterqualityReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        waterqualityReq.setYear(YEAR);
+        waterqualityReq.setVoyage(VOYAGE);
+        waterqualityReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingWaterquality(sheet,headMap,entityName,waterqualityReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    waterqualityReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    waterqualityReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    waterqualityReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    waterqualityReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    waterqualityReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        waterqualityReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        waterqualityReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        waterqualityReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setSamplingLevel(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setSamplingDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setDorjy(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setCod(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setYd(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setXfw(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setHxlsy(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setYxsyD(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setXsyD(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setAD(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setGsy(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setYlsA(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==25){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setSyl(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==26){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setPh(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==27){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setYjl(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==28){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setToc(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==29){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setTp(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==30){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setTn(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==31){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setAss(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==32){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setHg(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==33){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setCu(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==34){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setPb(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==35){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setCd(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==36){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setZn(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==37){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        waterqualityReq.setCr(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(waterqualityReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        WaterqualityReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("WaterqualityExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(WaterqualityReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(waterqualityReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(waterqualityReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(waterqualityReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(waterqualityReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(waterqualityReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(waterqualityReq.getReportDate()) &&
+                                    item.getYear().equals(waterqualityReq.getYear()) &&
+                                    item.getVoyage().equals(waterqualityReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(waterqualityReq);
+            excelDataImportController.excelDataList.add(waterqualityReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对鱼卵定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param waterqualityReq
+     */
+    public void specialHandlingWaterquality(Sheet sheet,Map headMap,String entityName,WaterqualityReq waterqualityReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //10代表10+1列
+        cell = row.getCell(10);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,10+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //18代表18+1列
+        cell = row.getCell(18);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,18+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                waterqualityReq.setTaskDate(localDate);
+            } catch (Exception e){
+                waterqualityReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //10代表10+1列
+        cell = row.getCell(10);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,10+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //18代表18+1列
+        cell = row.getCell(18);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,18+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                waterqualityReq.setReportDate(localDate);
+            } catch (Exception e){
+                waterqualityReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            waterqualityReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //生物质量数据表
+    private List<String> swimminganimalIdentificationExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SwimminganimalIdentificationReq swimminganimalIdentificationReq = new SwimminganimalIdentificationReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        swimminganimalIdentificationReq.setYear(YEAR);
+        swimminganimalIdentificationReq.setVoyage(VOYAGE);
+        swimminganimalIdentificationReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSwimminganimalIdentification(sheet,headMap,entityName,swimminganimalIdentificationReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //代表xml文件第c+6个 下面同理
+                if(c+Constant.officialDataStartSpecialSign==5){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    swimminganimalIdentificationReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSpecialSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    swimminganimalIdentificationReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    swimminganimalIdentificationReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    swimminganimalIdentificationReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    swimminganimalIdentificationReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==10){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        swimminganimalIdentificationReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        swimminganimalIdentificationReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==11){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        swimminganimalIdentificationReq.setSpecificName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setOverallLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setBodyLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setWeight(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setPureWeight(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setStomachContent(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setSex(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setFishgonadMaturity(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setAge(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        swimminganimalIdentificationReq.setRemark(cellValue);
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(swimminganimalIdentificationReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SwimminganimalIdentificationReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SwimminganimalIdentificationExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SwimminganimalIdentificationReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(swimminganimalIdentificationReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(swimminganimalIdentificationReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(swimminganimalIdentificationReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(swimminganimalIdentificationReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(swimminganimalIdentificationReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(swimminganimalIdentificationReq.getReportDate()) &&
+                                    item.getYear().equals(swimminganimalIdentificationReq.getYear()) &&
+                                    item.getVoyage().equals(swimminganimalIdentificationReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(swimminganimalIdentificationReq);
+            excelDataImportController.excelDataList.add(swimminganimalIdentificationReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对生物质量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param swimminganimalIdentificationReq
+     */
+    public void specialHandlingSwimminganimalIdentification(Sheet sheet,Map headMap,String entityName,SwimminganimalIdentificationReq swimminganimalIdentificationReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //10代表10+1列
+        cell = row.getCell(10);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,10+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                swimminganimalIdentificationReq.setTaskDate(localDate);
+            } catch (Exception e){
+                swimminganimalIdentificationReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //10代表10+1列
+        cell = row.getCell(10);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,10+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                swimminganimalIdentificationReq.setReportDate(localDate);
+            } catch (Exception e){
+                swimminganimalIdentificationReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            swimminganimalIdentificationReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //小型浮游动物（II型网）数据表
+    private List<String> smallzooplanktonIinetExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SmallzooplanktonIinetReq smallzooplanktonIinetReq = new SmallzooplanktonIinetReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        smallzooplanktonIinetReq.setYear(YEAR);
+        smallzooplanktonIinetReq.setVoyage(VOYAGE);
+        smallzooplanktonIinetReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSmallzooplanktonIinet(sheet,headMap,entityName,smallzooplanktonIinetReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    smallzooplanktonIinetReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallzooplanktonIinetReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallzooplanktonIinetReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallzooplanktonIinetReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallzooplanktonIinetReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        smallzooplanktonIinetReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        smallzooplanktonIinetReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        smallzooplanktonIinetReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setRopeLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setWaterFiltration(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setCategory(cellValue);
+                    }
+                }else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallzooplanktonIinetReq.setDensity(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(smallzooplanktonIinetReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SmallzooplanktonIinetReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SmallzooplanktonIinetExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SmallzooplanktonIinetReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(smallzooplanktonIinetReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(smallzooplanktonIinetReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(smallzooplanktonIinetReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(smallzooplanktonIinetReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(smallzooplanktonIinetReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(smallzooplanktonIinetReq.getReportDate()) &&
+                                    item.getYear().equals(smallzooplanktonIinetReq.getYear()) &&
+                                    item.getVoyage().equals(smallzooplanktonIinetReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(smallzooplanktonIinetReq);
+            excelDataImportController.excelDataList.add(smallzooplanktonIinetReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对小型浮游动物（II型网）-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param smallzooplanktonIinetReq
+     */
+    public void specialHandlingSmallzooplanktonIinet(Sheet sheet,Map headMap,String entityName,SmallzooplanktonIinetReq smallzooplanktonIinetReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallzooplanktonIinetReq.setTaskDate(localDate);
+            } catch (Exception e){
+                smallzooplanktonIinetReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallzooplanktonIinetReq.setReportDate(localDate);
+            } catch (Exception e){
+                smallzooplanktonIinetReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallzooplanktonIinetReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //仔鱼定量数据表
+    private List<String> smallfishQuantitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SmallfishQuantitativeReq smallfishQuantitativeReq = new SmallfishQuantitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        smallfishQuantitativeReq.setYear(YEAR);
+        smallfishQuantitativeReq.setVoyage(VOYAGE);
+        smallfishQuantitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSmallfishQuantitative(sheet,headMap,entityName,smallfishQuantitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    smallfishQuantitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQuantitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQuantitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQuantitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQuantitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        smallfishQuantitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        smallfishQuantitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        smallfishQuantitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setRopeLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setWaterFiltration(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setDevelopStage(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setBodyLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQuantitativeReq.setDensity(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(smallfishQuantitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SmallfishQuantitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SmallfishQuantitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SmallfishQuantitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(smallfishQuantitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(smallfishQuantitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(smallfishQuantitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(smallfishQuantitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(smallfishQuantitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(smallfishQuantitativeReq.getReportDate()) &&
+                                    item.getYear().equals(smallfishQuantitativeReq.getYear()) &&
+                                    item.getVoyage().equals(smallfishQuantitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(smallfishQuantitativeReq);
+            excelDataImportController.excelDataList.add(smallfishQuantitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对仔鱼定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param smallfishQuantitativeReq
+     */
+    public void specialHandlingSmallfishQuantitative(Sheet sheet,Map headMap,String entityName,SmallfishQuantitativeReq smallfishQuantitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallfishQuantitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                smallfishQuantitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallfishQuantitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                smallfishQuantitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQuantitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //仔鱼定性数据表
+    private List<String> smallfishQualitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SmallfishQualitativeReq smallfishQualitativeReq = new SmallfishQualitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        smallfishQualitativeReq.setYear(YEAR);
+        smallfishQualitativeReq.setVoyage(VOYAGE);
+        smallfishQualitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSmallfishQualitative(sheet,headMap,entityName,smallfishQualitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    smallfishQualitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQualitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQualitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQualitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    smallfishQualitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        smallfishQualitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        smallfishQualitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        smallfishQualitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setNetType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setTrawlDistance(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setTrawlTime(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setDevelopStage(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setBodyLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        smallfishQualitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(smallfishQualitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SmallfishQualitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SmallfishQualitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SmallfishQualitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(smallfishQualitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(smallfishQualitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(smallfishQualitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(smallfishQualitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(smallfishQualitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(smallfishQualitativeReq.getReportDate()) &&
+                                    item.getYear().equals(smallfishQualitativeReq.getYear()) &&
+                                    item.getVoyage().equals(smallfishQualitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(smallfishQualitativeReq);
+            excelDataImportController.excelDataList.add(smallfishQualitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对仔鱼定性-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param smallfishQualitativeReq
+     */
+    public void specialHandlingSmallfishQualitative(Sheet sheet,Map headMap,String entityName,SmallfishQualitativeReq smallfishQualitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallfishQualitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                smallfishQualitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                smallfishQualitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                smallfishQualitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            smallfishQualitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //沉积物粒度数据表
+    private List<String> sedimentgrainExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SedimentgrainReq sedimentgrainReq = new SedimentgrainReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        sedimentgrainReq.setYear(YEAR);
+        sedimentgrainReq.setVoyage(VOYAGE);
+        sedimentgrainReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSedimentgrain(sheet,headMap,entityName,sedimentgrainReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    sedimentgrainReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentgrainReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentgrainReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentgrainReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentgrainReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        sedimentgrainReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        sedimentgrainReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        sedimentgrainReq.setSamplingDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGravel1(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGravel2(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setSand1(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setSand2(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setSand3(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setSand4(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setSand5(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setPinksand2(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setClay1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setClay2(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGranulecontent1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==25){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGranulecontent2(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==26){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGranulecontent3(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==27){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setGranulecontent4(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==28){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setNameAndCode(cellValue);
+                    }
+                }else if(c+Constant.officialDataStartSign==29){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setParticlecoefficient1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==30){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setParticlecoefficient2(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==31){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setParticlecoefficient3(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==32){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==33){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==34){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(sedimentgrainReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SedimentgrainReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SedimentgrainExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SedimentgrainReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(sedimentgrainReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(sedimentgrainReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(sedimentgrainReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(sedimentgrainReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(sedimentgrainReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(sedimentgrainReq.getReportDate()) &&
+                                    item.getYear().equals(sedimentgrainReq.getYear()) &&
+                                    item.getVoyage().equals(sedimentgrainReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(sedimentgrainReq);
+            excelDataImportController.excelDataList.add(sedimentgrainReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对沉积物粒度-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param sedimentgrainReq
+     */
+    public void specialHandlingSedimentgrain(Sheet sheet,Map headMap,String entityName,SedimentgrainReq sedimentgrainReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(16);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,16+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                sedimentgrainReq.setTaskDate(localDate);
+            } catch (Exception e){
+                sedimentgrainReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(16);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,16+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                sedimentgrainReq.setReportDate(localDate);
+            } catch (Exception e){
+                sedimentgrainReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentgrainReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //沉积物数据表
+    private List<String> sedimentExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        SedimentReq sedimentReq = new SedimentReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        sedimentReq.setYear(YEAR);
+        sedimentReq.setVoyage(VOYAGE);
+        sedimentReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingSediment(sheet,headMap,entityName,sedimentReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    sedimentReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    sedimentReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        sedimentReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        sedimentReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        sedimentReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setSamplingLevel(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setSamplingDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setLhw(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setYjt(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setSyl(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setTp(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setTn(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setHg(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setAss(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setZn(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setCd(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setPb(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==25){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setCu(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==26){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setTcr(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==27){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        sedimentReq.setEh(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(sedimentReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        SedimentReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("SedimentExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(SedimentReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(sedimentReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(sedimentReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(sedimentReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(sedimentReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(sedimentReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(sedimentReq.getReportDate()) &&
+                                    item.getYear().equals(sedimentReq.getYear()) &&
+                                    item.getVoyage().equals(sedimentReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(sedimentReq);
+            excelDataImportController.excelDataList.add(sedimentReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对沉积物-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param sedimentReq
+     */
+    public void specialHandlingSediment(Sheet sheet,Map headMap,String entityName,SedimentReq sedimentReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //8代表8+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //16代表16+1列
+        cell = row.getCell(16);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,16+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                sedimentReq.setTaskDate(localDate);
+            } catch (Exception e){
+                sedimentReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //代表8+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //16代表16+1列
+        cell = row.getCell(16);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,16+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                sedimentReq.setReportDate(localDate);
+            } catch (Exception e){
+                sedimentReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            sedimentReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //浮游植物
+    private List<String> phytoplanktonExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        PhytoplanktonReq phytoplanktonReq = new PhytoplanktonReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        phytoplanktonReq.setYear(YEAR);
+        phytoplanktonReq.setVoyage(VOYAGE);
+        phytoplanktonReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingPhytoplankton(sheet,headMap,entityName,phytoplanktonReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    phytoplanktonReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    phytoplanktonReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    phytoplanktonReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    phytoplanktonReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    phytoplanktonReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        phytoplanktonReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        phytoplanktonReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        phytoplanktonReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setWaterType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setRopeLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setWaterFiltration(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setCategory(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        phytoplanktonReq.setCellCount(cellValue);
+                    }
+                }
+            }
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(fisheggQuantitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        PhytoplanktonReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("FisheggQuantitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(PhytoplanktonReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(phytoplanktonReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(phytoplanktonReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(phytoplanktonReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(phytoplanktonReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(phytoplanktonReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(phytoplanktonReq.getReportDate()) &&
+                                    item.getYear().equals(phytoplanktonReq.getYear()) &&
+                                    item.getVoyage().equals(phytoplanktonReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(phytoplanktonReq);
+            excelDataImportController.excelDataList.add(phytoplanktonReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对浮游植物-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param phytoplanktonReq
+     */
+    public void specialHandlingPhytoplankton(Sheet sheet,Map headMap,String entityName,PhytoplanktonReq phytoplanktonReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                phytoplanktonReq.setTaskDate(localDate);
+            } catch (Exception e){
+                phytoplanktonReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                phytoplanktonReq.setReportDate(localDate);
+            } catch (Exception e){
+                phytoplanktonReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            phytoplanktonReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //大型底栖动物定量数据表
+    private List<String> macrobenthosQuantitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        MacrobenthosQuantitativeReq macrobenthosQuantitativeReq = new MacrobenthosQuantitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        macrobenthosQuantitativeReq.setYear(YEAR);
+        macrobenthosQuantitativeReq.setVoyage(VOYAGE);
+        macrobenthosQuantitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingMacrobenthosQuantitative(sheet,headMap,entityName,macrobenthosQuantitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    macrobenthosQuantitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQuantitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQuantitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQuantitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQuantitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        macrobenthosQuantitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        macrobenthosQuantitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        macrobenthosQuantitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setSedimentType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setDredgerType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setSamplingTimes(Integer.parseInt(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setQuadratArea(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setSampleThickness(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setDensity(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setWeight(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQuantitativeReq.setBiomass(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(macrobenthosQuantitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        MacrobenthosQuantitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("MacrobenthosQuantitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(MacrobenthosQuantitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(macrobenthosQuantitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(macrobenthosQuantitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(macrobenthosQuantitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(macrobenthosQuantitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(macrobenthosQuantitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(macrobenthosQuantitativeReq.getReportDate()) &&
+                                    item.getYear().equals(macrobenthosQuantitativeReq.getYear()) &&
+                                    item.getVoyage().equals(macrobenthosQuantitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(macrobenthosQuantitativeReq);
+            excelDataImportController.excelDataList.add(macrobenthosQuantitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对大型底栖动物定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param macrobenthosQuantitativeReq
+     */
+    public void specialHandlingMacrobenthosQuantitative(Sheet sheet,Map headMap,String entityName,MacrobenthosQuantitativeReq macrobenthosQuantitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                macrobenthosQuantitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                macrobenthosQuantitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                macrobenthosQuantitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                macrobenthosQuantitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQuantitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //大型底栖动物定性数据表
+    private List<String> macrobenthosQualitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        MacrobenthosQualitativeReq macrobenthosQualitativeReq = new MacrobenthosQualitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        macrobenthosQualitativeReq.setYear(YEAR);
+        macrobenthosQualitativeReq.setVoyage(VOYAGE);
+        macrobenthosQualitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingMacrobenthosQualitative(sheet,headMap,entityName,macrobenthosQualitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    macrobenthosQualitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQualitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQualitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQualitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    macrobenthosQualitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        macrobenthosQualitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        macrobenthosQualitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        macrobenthosQualitativeReq.setNetType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setNetPortDensity(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setTrawlDistance(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setTrawlTime(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setDensity(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setWeight(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        macrobenthosQualitativeReq.setBiomass(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(macrobenthosQualitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        MacrobenthosQualitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("MacrobenthosQualitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(MacrobenthosQualitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(macrobenthosQualitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(macrobenthosQualitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(macrobenthosQualitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(macrobenthosQualitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(macrobenthosQualitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(macrobenthosQualitativeReq.getReportDate()) &&
+                                    item.getYear().equals(macrobenthosQualitativeReq.getYear()) &&
+                                    item.getVoyage().equals(macrobenthosQualitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(macrobenthosQualitativeReq);
+            excelDataImportController.excelDataList.add(macrobenthosQualitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对大型底栖动物定性-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param macrobenthosQualitativeReq
+     */
+    public void specialHandlingMacrobenthosQualitative(Sheet sheet,Map headMap,String entityName,MacrobenthosQualitativeReq macrobenthosQualitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                macrobenthosQualitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                macrobenthosQualitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                macrobenthosQualitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                macrobenthosQualitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            macrobenthosQualitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //大型浮游动物1型网数据表
+    private List<String> largezooplanktonInetExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        LargezooplanktonInetReq largezooplanktonInetReq = new LargezooplanktonInetReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        largezooplanktonInetReq.setYear(YEAR);
+        largezooplanktonInetReq.setVoyage(VOYAGE);
+        largezooplanktonInetReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingLargezooplanktonInet(sheet,headMap,entityName,largezooplanktonInetReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    largezooplanktonInetReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    largezooplanktonInetReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    largezooplanktonInetReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    largezooplanktonInetReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    largezooplanktonInetReq.setRealLat(new BigDecimal(cellValue));
+                }  else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        largezooplanktonInetReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        largezooplanktonInetReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        largezooplanktonInetReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setRopeLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setWaterFiltration(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setTotalBiomass(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setCategory(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        largezooplanktonInetReq.setDensity(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(largezooplanktonInetReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        LargezooplanktonInetReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("LargezooplanktonInetExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(LargezooplanktonInetReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(largezooplanktonInetReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(largezooplanktonInetReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(largezooplanktonInetReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(largezooplanktonInetReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(largezooplanktonInetReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(largezooplanktonInetReq.getReportDate()) &&
+                                    item.getYear().equals(largezooplanktonInetReq.getYear()) &&
+                                    item.getVoyage().equals(largezooplanktonInetReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(largezooplanktonInetReq);
+            excelDataImportController.excelDataList.add(largezooplanktonInetReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对型浮游动物1型网数据-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param largezooplanktonInetReq
+     */
+    public void specialHandlingLargezooplanktonInet(Sheet sheet,Map headMap,String entityName,LargezooplanktonInetReq largezooplanktonInetReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                largezooplanktonInetReq.setTaskDate(localDate);
+            } catch (Exception e){
+                largezooplanktonInetReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                largezooplanktonInetReq.setReportDate(localDate);
+            } catch (Exception e){
+                largezooplanktonInetReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            largezooplanktonInetReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //潮间带数据表
+    private List<String> intertidalzonebiologicalQuantitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        IntertidalzonebiologicalQuantitativeReq intertidalzonebiologicalQuantitativeReq = new IntertidalzonebiologicalQuantitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        intertidalzonebiologicalQuantitativeReq.setYear(YEAR);
+        intertidalzonebiologicalQuantitativeReq.setVoyage(VOYAGE);
+        intertidalzonebiologicalQuantitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingIntertidalzonebiologicalQuantitative(sheet,headMap,entityName,intertidalzonebiologicalQuantitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    intertidalzonebiologicalQuantitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    intertidalzonebiologicalQuantitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    intertidalzonebiologicalQuantitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    intertidalzonebiologicalQuantitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    intertidalzonebiologicalQuantitativeReq.setRealLat(new BigDecimal(cellValue));
+                }  else if(c+Constant.officialDataStartSign==11){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    intertidalzonebiologicalQuantitativeReq.setStationLocation(cellValue);
+                } else if(c+Constant.officialDataStartSign==12){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        intertidalzonebiologicalQuantitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        intertidalzonebiologicalQuantitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        intertidalzonebiologicalQuantitativeReq.setIntertidalZone(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setSedimentType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setSamplingTimes(Integer.parseInt(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setQuadratArea(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setSampleThickness(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setDensity(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setWeight(new BigDecimal(cellValue));
+                    }
+                }else if(c+Constant.officialDataStartSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        intertidalzonebiologicalQuantitativeReq.setBiomass(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(intertidalzonebiologicalQuantitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        IntertidalzonebiologicalQuantitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("IntertidalzonebiologicalQuantitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(IntertidalzonebiologicalQuantitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(intertidalzonebiologicalQuantitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(intertidalzonebiologicalQuantitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(intertidalzonebiologicalQuantitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(intertidalzonebiologicalQuantitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(intertidalzonebiologicalQuantitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(intertidalzonebiologicalQuantitativeReq.getReportDate()) &&
+                                    item.getYear().equals(intertidalzonebiologicalQuantitativeReq.getYear()) &&
+                                    item.getVoyage().equals(intertidalzonebiologicalQuantitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(intertidalzonebiologicalQuantitativeReq);
+            excelDataImportController.excelDataList.add(intertidalzonebiologicalQuantitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对潮间带-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param intertidalzonebiologicalQuantitativeReq
+     */
+    public void specialHandlingIntertidalzonebiologicalQuantitative(Sheet sheet,Map headMap,String entityName,IntertidalzonebiologicalQuantitativeReq intertidalzonebiologicalQuantitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                intertidalzonebiologicalQuantitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                intertidalzonebiologicalQuantitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                intertidalzonebiologicalQuantitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                intertidalzonebiologicalQuantitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            intertidalzonebiologicalQuantitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //水文气象数据表
+    private List<String> hydrometeorologicalExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        HydrometeorologicalReq hydrometeorologicalReq = new HydrometeorologicalReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        hydrometeorologicalReq.setYear(YEAR);
+        hydrometeorologicalReq.setVoyage(VOYAGE);
+        hydrometeorologicalReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingHydrometeorological(sheet,headMap,entityName,hydrometeorologicalReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    hydrometeorologicalReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    hydrometeorologicalReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    hydrometeorologicalReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    hydrometeorologicalReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    hydrometeorologicalReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        hydrometeorologicalReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        hydrometeorologicalReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        hydrometeorologicalReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        hydrometeorologicalReq.setSamplingLevel(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        hydrometeorologicalReq.setSamplingDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        hydrometeorologicalReq.setWatertemperature(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        hydrometeorologicalReq.setPellucidity(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(hydrometeorologicalReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        HydrometeorologicalReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("HydrometeorologicalExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(HydrometeorologicalReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(hydrometeorologicalReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(hydrometeorologicalReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(hydrometeorologicalReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(hydrometeorologicalReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(hydrometeorologicalReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(hydrometeorologicalReq.getReportDate()) &&
+                                    item.getYear().equals(hydrometeorologicalReq.getYear()) &&
+                                    item.getVoyage().equals(hydrometeorologicalReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(hydrometeorologicalReq);
+            excelDataImportController.excelDataList.add(hydrometeorologicalReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对水文气象-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param hydrometeorologicalReq
+     */
+    public void specialHandlingHydrometeorological(Sheet sheet,Map headMap,String entityName,HydrometeorologicalReq hydrometeorologicalReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //8代表8+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(15);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,15+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                hydrometeorologicalReq.setTaskDate(localDate);
+            } catch (Exception e){
+                hydrometeorologicalReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(8);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,8+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(15);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,15+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                hydrometeorologicalReq.setReportDate(localDate);
+            } catch (Exception e){
+                hydrometeorologicalReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            hydrometeorologicalReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //鱼卵定性数据表
+    private List<String> fisheggQualitativeExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        FisheggQualitativeReq fisheggQualitativeReq = new FisheggQualitativeReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        fisheggQualitativeReq.setYear(YEAR);
+        fisheggQualitativeReq.setVoyage(VOYAGE);
+        fisheggQualitativeReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingFisheggQualitative(sheet,headMap,entityName,fisheggQualitativeReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(c+Constant.officialDataStartSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    fisheggQualitativeReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQualitativeReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQualitativeReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQualitativeReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==10){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    fisheggQualitativeReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSign==11){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        fisheggQualitativeReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        fisheggQualitativeReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        fisheggQualitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setNetType(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setTrawlDistance(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setTrawlTime(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setBiologicalLatinName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setDevelopStage(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setEggRadius(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQualitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(fisheggQualitativeReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        FisheggQualitativeReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("FisheggQualitativeExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(FisheggQualitativeReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(fisheggQualitativeReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(fisheggQualitativeReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(fisheggQualitativeReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(fisheggQualitativeReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(fisheggQualitativeReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(fisheggQualitativeReq.getReportDate()) &&
+                                    item.getYear().equals(fisheggQualitativeReq.getYear()) &&
+                                    item.getVoyage().equals(fisheggQualitativeReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(fisheggQualitativeReq);
+            excelDataImportController.excelDataList.add(fisheggQualitativeReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对鱼卵定性-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param fisheggQualitativeReq
+     */
+    public void specialHandlingFisheggQualitative(Sheet sheet,Map headMap,String entityName,FisheggQualitativeReq fisheggQualitativeReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放生态类型值
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.ecologicaltypeCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setEcologicalType(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                fisheggQualitativeReq.setTaskDate(localDate);
+            } catch (Exception e){
+                fisheggQualitativeReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                fisheggQualitativeReq.setReportDate(localDate);
+            } catch (Exception e){
+                fisheggQualitativeReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            fisheggQualitativeReq.setByzd3(cell.getStringCellValue());
+        }
+
+    }
+
+    //生物质量数据表
+    private List<String> biologicalQualityExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        BiologicalQualityReq biologicalQualityReq = new BiologicalQualityReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //将年份和航次信息写入对象
+        biologicalQualityReq.setYear(YEAR);
+        biologicalQualityReq.setVoyage(VOYAGE);
+        biologicalQualityReq.setDataType(dataType);
+
+        //对9种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingBiologicalQuality(sheet,headMap,entityName,biologicalQualityReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //代表xml文件第c+6个 下面同理
+                if(c+Constant.officialDataStartSpecialSign==5){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    biologicalQualityReq.setStationName(cell.getStringCellValue());
+                } else if(c+Constant.officialDataStartSpecialSign==6){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    biologicalQualityReq.setPlanLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==7){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    biologicalQualityReq.setPlanLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==8){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    biologicalQualityReq.setRealLon(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==9){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    biologicalQualityReq.setRealLat(new BigDecimal(cellValue));
+                } else if(c+Constant.officialDataStartSpecialSign==10){
+                    if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                    }
+                    try{
+                        String strDate=getStringCellValue(cell);
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                        LocalDate localDate=null;
+                        if(strDate.contains("-")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains(".")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else if(strDate.contains("/")){
+                            dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                            localDate=LocalDate.parse(strDate,dtf);
+                        }else{
+                            Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                            localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        }
+                        biologicalQualityReq.setMonitorDate(localDate);
+                    } catch (Exception e){
+                        biologicalQualityReq.setMonitorDate(null);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==11){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)){
+                        biologicalQualityReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==12){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setCategory(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==13){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==14){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setBiologicalChineseName(cellValue);
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==15){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setSampleBodyLength(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setThg(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setCd(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setPb(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setCu(new BigDecimal(cellValue));
+                    }
+                } else if(c+Constant.officialDataStartSpecialSign==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setAss(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setSixsixsix(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setCr(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setDdt(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setPcbs(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==25){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setSyt(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==26){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setFdcjq(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==27){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setLms(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==28){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setKss(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==29){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setDsp(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==30){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setPsp(new BigDecimal(cellValue));
+                    }
+                }
+                else if(c+Constant.officialDataStartSpecialSign==31){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        biologicalQualityReq.setZn(new BigDecimal(cellValue));
+                    }
+                }
+            }
+
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(biologicalQualityReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        BiologicalQualityReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("BiologicalQualityExcelRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(BiologicalQualityReq)obj;
+                    if(
+                            item.getMonitoringArea().equals(biologicalQualityReq.getMonitoringArea()) &&
+                                    item.getEcologicalType().equals(biologicalQualityReq.getEcologicalType()) &&
+                                    item.getTaskDate().equals(biologicalQualityReq.getTaskDate()) &&
+                                    item.getMonitorCompany().equals(biologicalQualityReq.getMonitorCompany()) &&
+                                    item.getOrganizationCompany().equals(biologicalQualityReq.getOrganizationCompany()) &&
+                                    item.getReportDate().equals(biologicalQualityReq.getReportDate()) &&
+                                    item.getYear().equals(biologicalQualityReq.getYear()) &&
+                                    item.getVoyage().equals(biologicalQualityReq.getVoyage())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(biologicalQualityReq);
+            excelDataImportController.excelDataList.add(biologicalQualityReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对生物质量-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param biologicalQualityReq
+     */
+    public void specialHandlingBiologicalQuality(Sheet sheet,Map headMap,String entityName,BiologicalQualityReq biologicalQualityReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //取第1+1行
+        Row row = sheet.getRow(1);
+        //存放监控区值
+        //1代表第1+1列
+        Cell cell = row.getCell(1);
+        //0代表监控区
+        String headTitle = headMap.get(Constant.monitoringAreaCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setMonitoringArea(cell.getStringCellValue());
+        }
+
+        //存放任务日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.missionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(1+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                biologicalQualityReq.setTaskDate(localDate);
+            } catch (Exception e){
+                biologicalQualityReq.setTaskDate(null);
+            }
+        }
+
+        //取第2+1行
+        row = sheet.getRow(2);
+        //存放监测单位
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.monitoringUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setMonitorCompany(cell.getStringCellValue());
+        }
+
+        //存放组织单位
+        //6代表6+1列
+        cell = row.getCell(6);
+        headTitle = headMap.get(Constant.organizationalUnitCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,6+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setOrganizationCompany(cell.getStringCellValue());
+        }
+
+        //存放填报日期
+        //11代表11+1列
+        cell = row.getCell(11);
+        headTitle = headMap.get(Constant.completionDateCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(2+1,11+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate = getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                biologicalQualityReq.setReportDate(localDate);
+            } catch (Exception e){
+                biologicalQualityReq.setReportDate(null);
+            }
+        }
+
+
+        //取最后一行
+        row = sheet.getRow(totalRows - 1);
+        //存放填报人
+        //1代表第1+1列
+        cell = row.getCell(1);
+        headTitle = headMap.get(Constant.informantCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,1+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setByzd1(cell.getStringCellValue());
+        }
+
+        //存放校对人
+        cell = row.getCell(4);
+        headTitle = headMap.get(Constant.proofreaderCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,4+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setByzd2(cell.getStringCellValue());
+        }
+
+        //存放审核人
+        cell = row.getCell(7);
+        headTitle = headMap.get(Constant.auditorCode).toString();
+        /**按规则验证cell格式**/
+        validaterst = validateCellData(totalRows-1+1,7+1,cell,entityName,headTitle);
+        totalRst += validaterst;
+        if(totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            biologicalQualityReq.setByzd3(cell.getStringCellValue());
+        }
+
     }
 
     //鱼卵定量数据表
@@ -448,12 +6336,17 @@ public class FileTestDataUtil {
         //将年份和航次信息写入对象
         fisheggQuantitativeReq.setYear(YEAR);
         fisheggQuantitativeReq.setVoyage(VOYAGE);
+        fisheggQuantitativeReq.setDataType(dataType);
 
         //对9种特殊表头value值 按xml规则校验，并写入对象
         specialHandlingFisheggQuantitative(sheet,headMap,entityName,fisheggQuantitativeReq,totalRows);
 
+        //取
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
         // 循环row的列，按xml规则校验，并写入对象
-        for (int c = 0; c < totalCells; c++) {
+        for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
@@ -515,47 +6408,65 @@ public class FileTestDataUtil {
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)){
+                        fisheggQuantitativeReq.setWaterDepth(new BigDecimal(cellValue));
+                    }
                 } else if(c+Constant.officialDataStartSign==13){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setRopeLength(new BigDecimal(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setRopeLength(new BigDecimal(cellValue));
+                    }
                 } else if(c+Constant.officialDataStartSign==14){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setWaterFiltration(new BigDecimal(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setWaterFiltration(new BigDecimal(cellValue));
+                    }
                 } else if(c+Constant.officialDataStartSign==15){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setBiologicalChineseName(cellValue);
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setBiologicalChineseName(cellValue);
+                    }
                 } else if(c+Constant.officialDataStartSign==16){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setBiologicalLatinName(cellValue);
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setBiologicalLatinName(cellValue);
+                    }
                 } else if(c+Constant.officialDataStartSign==17){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setDevelopStage(cellValue);
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setDevelopStage(cellValue);
+                    }
                 } else if(c+Constant.officialDataStartSign==18){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setEggRadius(new BigDecimal(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setEggRadius(new BigDecimal(cellValue));
+                    }
                 } else if(c+Constant.officialDataStartSign==19){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setCount(Integer.parseInt(cellValue));
+                    }
                 } else if(c+Constant.officialDataStartSign==20){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
-                    fisheggQuantitativeReq.setDensity(new BigDecimal(cellValue));
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        fisheggQuantitativeReq.setDensity(new BigDecimal(cellValue));
+                    }
                 }
             }
 
@@ -599,7 +6510,7 @@ public class FileTestDataUtil {
     }
 
     /**
-     * 对仔鱼定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * 对鱼卵定量-9种特殊表头value值 按xml规则校验，并写入对象
      * @param sheet
      * @param headMap
      * @param entityName
@@ -752,7 +6663,7 @@ public class FileTestDataUtil {
         if(totalRst == 0 && cell != null) {             // 定制
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-            fisheggQuantitativeReq.setReportName(cell.getStringCellValue());
+            fisheggQuantitativeReq.setByzd1(cell.getStringCellValue());
         }
 
         //存放校对人
@@ -764,7 +6675,7 @@ public class FileTestDataUtil {
         if(totalRst == 0 && cell != null) {             // 定制
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-            fisheggQuantitativeReq.setCheckName(cell.getStringCellValue());
+            fisheggQuantitativeReq.setByzd2(cell.getStringCellValue());
         }
 
         //存放审核人
@@ -776,7 +6687,7 @@ public class FileTestDataUtil {
         if(totalRst == 0 && cell != null) {             // 定制
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-            fisheggQuantitativeReq.setVerifyName(cell.getStringCellValue());
+            fisheggQuantitativeReq.setByzd3(cell.getStringCellValue());
         }
 
     }
@@ -1019,18 +6930,23 @@ public class FileTestDataUtil {
 
     /**
      * @title readSheetHeadData
-     * @description 读取表头数据
+     * @description 读取特殊的表头数据
      * @author LiLu
      * @date 2018年9月10日 下午2:02:30
      * @param sheet
      */
     @SuppressWarnings({ "unchecked" })
-    public static boolean readSheetHeadData(Sheet sheet,String entityName,int totalRows,int totalCells,boolean titleType,String excelType){
+    public static boolean readSpecialSheetHeadData(Sheet sheet,String entityName,int totalRows,int totalCells,boolean titleType,String excelType){
         Map headMap = new HashMap();
         curEntityHeadMap = new HashMap();
+        int nominalNum_1=Constant.constantTableHeadCount;
+        //6是因为.xml文件中是code为6处和excel表格读取表头key信息对应的 针对没有生物类型的将-1
+        int nominalNum_2=6;
 
         //将固定不变的9个表头key放入headMap
         headMap.put(Constant.monitoringAreaCode, Constant.monitoringArea);
+
+        //因为有两张表没有生物类型 需要做特殊处理
         headMap.put(Constant.ecologicaltypeCode, Constant.ecologicaltype);
         headMap.put(Constant.missionDateCode, Constant.missionDate);
         headMap.put(Constant.monitoringUnitCode, Constant.monitoringUnit);
@@ -1040,10 +6956,94 @@ public class FileTestDataUtil {
         headMap.put(Constant.proofreaderCode, Constant.proofreader);
         headMap.put(Constant.auditorCode, Constant.auditor);
 
-        //取行 3是因为16种表不一样的表头key信息是从第三行开始的
+        //取行 3+1是因为16种表不一样的表头key信息是从第3+1行开始的
         Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
         int excelLastCellNum = excelheadRow1.getLastCellNum();
-        if(excelLastCellNum == ParseXMLUtil.headMap.size()-Constant.constantTableHeadCount) {//if(excelLastRow == totalCells) { // Excel列数
+        if(excelLastCellNum == ParseXMLUtil.headMap.size()-nominalNum_1) {//if(excelLastRow == totalCells) { // Excel列数
+            Map<String,Map<String,String>> columnMap = parseXmlUtil.getColumnMap();
+            String headTitle = "";
+            for (int i = 0; i < excelLastCellNum; i++) {
+                if((i>=0&&i<=6)||(i==22)){
+                    Cell cell = null;
+                    cell = excelheadRow1.getCell(i);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                    headTitle=headTitle.replaceAll("<","");
+                    if (columnMap.get(entityName + "_" + headTitle) != null) {
+                        if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(i+nominalNum_2 + "")) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                    headMap.put(i + Constant.constantTableHeadCount, headTitle);
+                }else if((i>=7&&i<=21)||(i>=23&&i<=25)){
+                    Cell cell = null;
+                    Row excelHeadRow2 = sheet.getRow(Constant.differInfoStartRow + 1);
+                    cell = excelHeadRow2.getCell(i);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    headTitle = getStringCellValue(cell).replaceAll(" ", "");
+                    headTitle=headTitle.replaceAll("<","");
+                    if (columnMap.get(entityName + "_" + headTitle) != null) {
+                        if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(i+nominalNum_2 + "")) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                    headMap.put(i + Constant.constantTableHeadCount, headTitle);
+                }
+
+            }
+            curEntityHeadMap.put(getCurEntityCode(), headMap);
+
+        }else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @title readSheetHeadData
+     * @description 读取表头数据
+     * @author LiLu
+     * @date 2018年9月10日 下午2:02:30
+     * @param sheet
+     */
+    @SuppressWarnings({ "unchecked" })
+    public static boolean readSheetHeadData(Sheet sheet,String entityName,int totalRows,int totalCells,boolean titleType,String excelType){
+        Map headMap = new HashMap();
+        curEntityHeadMap = new HashMap();
+        int nominalNum_1=Constant.constantTableHeadCount;
+        //6是因为.xml文件中是code为6处和excel表格读取表头key信息对应的 针对没有生物类型的将-1
+        int nominalNum_2=6;
+
+        //将固定不变的9个表头key放入headMap
+        headMap.put(Constant.monitoringAreaCode, Constant.monitoringArea);
+
+        //因为有两张表没有生物类型 需要做特殊处理
+        String[] tblRules={"BiologicalQualityExcelRule","SwimminganimalIdentificationExcelRule"};
+        if(!Arrays.asList(tblRules).contains(excelType)) {
+            headMap.put(Constant.ecologicaltypeCode, Constant.ecologicaltype);
+        }else {
+            nominalNum_1=nominalNum_1-1;
+            nominalNum_2=nominalNum_2-1;
+        }
+
+        headMap.put(Constant.missionDateCode, Constant.missionDate);
+        headMap.put(Constant.monitoringUnitCode, Constant.monitoringUnit);
+        headMap.put(Constant.organizationalUnitCode, Constant.organizationalUnit);
+        headMap.put(Constant.completionDateCode, Constant.completionDate);
+        headMap.put(Constant.informantCode, Constant.informant);
+        headMap.put(Constant.proofreaderCode, Constant.proofreader);
+        headMap.put(Constant.auditorCode, Constant.auditor);
+
+        //取行 3+1是因为16种表不一样的表头key信息是从第3+1行开始的
+        Row excelheadRow1 = sheet.getRow(Constant.differInfoStartRow);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+        if(excelLastCellNum == ParseXMLUtil.headMap.size()-nominalNum_1) {//if(excelLastRow == totalCells) { // Excel列数
             Map<String,Map<String,String>> columnMap = parseXmlUtil.getColumnMap();
             if(titleType) {
                 log.info("getCurEntityCode():"+getCurEntityCode());
@@ -1059,8 +7059,7 @@ public class FileTestDataUtil {
                     headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
                     if (columnMap.get(entityName + "_" + headTitle) != null) {
                         if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
-                        //+6是因为.xml文件中是code为6处和excel表格读取表头key信息对应的
-                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(i+6 + "")) {
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(i+nominalNum_2 + "")) {
                             return false;
                         }
                     } else {

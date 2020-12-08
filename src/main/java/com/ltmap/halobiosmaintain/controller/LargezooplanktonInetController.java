@@ -1,11 +1,13 @@
 package com.ltmap.halobiosmaintain.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.entity.work.IntertidalzonebiologicalQuantitative;
 import com.ltmap.halobiosmaintain.entity.work.LargezooplanktonInet;
+import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.service.IIntertidalzonebiologicalQuantitativeService;
 import com.ltmap.halobiosmaintain.service.ILargezooplanktonInetService;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
@@ -70,7 +72,24 @@ public class LargezooplanktonInetController {
         //删除站位数据表
         for (int i = 0; i < largezooplanktonInets.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
-            map.put("station_id", largezooplanktonInets.get(i).getStationId());
+            map2.put("station_id", largezooplanktonInets.get(i).getStationId());
+            //修改展位数据中的数据类型，删除浮游动物（I型网）
+            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(largezooplanktonInets.get(i).getStationId(),null,null);
+            if(monitorStationInfos.size()==1){
+                String dataTypeNew="";
+                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
+                for (String item:dataType
+                ) {
+                    if (!item.equals("浮游动物（I型网）")) {
+                        dataTypeNew +=item;
+                    }
+                }
+                dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
+
+                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, largezooplanktonInets.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+            }
             monitorStationInfoService.removeByMap(map2);
         }
 

@@ -2,6 +2,7 @@ package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ltmap.halobiosmaintain.entity.work.BiologicalQuality;
 import com.ltmap.halobiosmaintain.entity.work.Sediment;
@@ -27,6 +28,15 @@ public class SedimentgrainServiceImpl extends ServiceImpl<SedimentgrainMapper, S
 
     @Resource
     private SedimentgrainMapper sedimentgrainMapper;
+
+    //根据填报id删除对应所有数据
+    public Boolean deleteByReportId(Long reportId){
+        LambdaQueryWrapper<Sedimentgrain> lqw = Wrappers.lambdaQuery();
+        lqw.eq(Sedimentgrain::getReportId,reportId);
+        boolean removeFlag = remove(lqw);
+        return false;
+    }
+
     /*
      * @Description:沉积物粒度数据
      * @Param sediment:

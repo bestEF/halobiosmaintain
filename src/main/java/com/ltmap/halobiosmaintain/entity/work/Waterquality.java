@@ -1,11 +1,15 @@
 package com.ltmap.halobiosmaintain.entity.work;
 
 import java.math.BigDecimal;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.*;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +20,11 @@ import java.io.Serializable;
  * @author fjh
  * @since 2020-11-27
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 @TableName("waterquality")
 public class Waterquality extends Model<Waterquality> {
 
@@ -191,26 +200,31 @@ public class Waterquality extends Model<Waterquality> {
     /**
      * 站位名称
      */
+    @TableField(exist = false)
     private String stationName;
 
     /**
      * 计划经度
      */
+    @TableField(exist = false)
     private BigDecimal planLon;
 
     /**
      * 计划纬度
      */
+    @TableField(exist = false)
     private BigDecimal planLat;
 
     /**
      * 实测经度
      */
+    @TableField(exist = false)
     private BigDecimal realLon;
 
     /**
      * 实测纬度
      */
+    @TableField(exist = false)
     private BigDecimal realLat;
 
 

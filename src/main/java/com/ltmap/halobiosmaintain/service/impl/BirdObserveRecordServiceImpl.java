@@ -32,7 +32,7 @@ public class BirdObserveRecordServiceImpl extends ServiceImpl<BirdObserveRecordM
     @Override
     public IPage<BirdObserveRecord> listBirdObserveRecord(Integer current, Integer size, String chineseName,Long id){
         LambdaQueryWrapper<BirdObserveRecord> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(!Strings.isNullOrEmpty(chineseName),BirdObserveRecord::getChineseName,chineseName)
+        queryWrapper.like(!Strings.isNullOrEmpty(chineseName),BirdObserveRecord::getChineseName,chineseName)
         .eq(id!=null,BirdObserveRecord::getId,id);
         IPage<BirdObserveRecord> page=new Page<>(current, size);
         return birdObserveRecordMapper.selectPage(page,queryWrapper);

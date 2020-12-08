@@ -103,10 +103,11 @@ public class MonitorDataReportController {
 
     @ApiOperation(value ="查询数据填报信息")
     @PostMapping("/queryMonitorDataReport")
-    public Response<List<MonitorDataReport>> queryMonitorDataReport(@RequestParam(defaultValue = "1")Integer current,
+    public Response<HashMap<String,Object>> queryMonitorDataReport(@RequestParam(defaultValue = "1")Integer current,
                                                                     @RequestParam(defaultValue = "10")Integer size,
                                                                     String monitoringArea,String ecologicalType,String monitorCompany,  String dataType,String startDate,String endDate ){
 
+        HashMap<String,Object> hashMap=new HashMap<>();
         List<MonitorDataReport> monitorDataReportsResult=new ArrayList<>();
 
         List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(monitoringArea,ecologicalType,monitorCompany,startDate,endDate,null);
@@ -117,11 +118,14 @@ public class MonitorDataReportController {
             List<String> dataTypeList=new ArrayList<>();
             for (int j = 0; j <monitorStationInfos.size() ; j++) {
                 String dataType2 = monitorStationInfos.get(j).getDataType();
-                String[] dataTypeArray=dataType2.split(";");
-                for (String item:dataTypeArray
-                     ) {
-                    dataTypeList.add(item);
+                if(!Strings.isNullOrEmpty(dataType2)){
+                    String[] dataTypeArray=dataType2.split(";");
+                    for (String item:dataTypeArray
+                    ) {
+                        dataTypeList.add(item);
+                    }
                 }
+
             }
             List<String> listDataTypeWithoutDuplicates= dataTypeList.stream().distinct().collect(Collectors.toList());//去重
             if(Strings.isNullOrEmpty(dataType)){
@@ -140,8 +144,12 @@ public class MonitorDataReportController {
                 }
             }
         }
-        List<MonitorDataReport> monitorDataReportList = startPage(monitorDataReports,current,size);
-        return Responses.or(monitorDataReportList);
+        List<MonitorDataReport> monitorDataReportList = startPage(monitorDataReportsResult,current,size);
+        hashMap.put("current",current);
+        hashMap.put("size",size);
+        hashMap.put("total",monitorDataReportsResult.size());
+        hashMap.put("records",monitorDataReportList);
+        return Responses.or(hashMap);
     }
 
     /**
@@ -171,7 +179,7 @@ public class MonitorDataReportController {
         int fromIndex = 0; // 开始索引
         int toIndex = 0; // 结束索引
 
-        if (pageNum.equals(pageCount)) {
+        if (!pageNum.equals(pageCount)) {
             fromIndex = (pageNum - 1) * pageSize;
             toIndex = fromIndex + pageSize;
         } else {

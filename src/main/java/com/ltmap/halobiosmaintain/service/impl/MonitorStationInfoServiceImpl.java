@@ -1,16 +1,20 @@
 package com.ltmap.halobiosmaintain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.base.Strings;
 import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
 import com.ltmap.halobiosmaintain.mapper.work.MonitorStationInfoMapper;
 import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,14 +31,62 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
     private MonitorStationInfoMapper monitorStationInfoMapper;
 
     /**
+     * 保存站位信息
+     * @param monitorStationInfo
+     * @return
+     */
+    public Long addMonitorStation(MonitorStationInfo monitorStationInfo){
+        LambdaQueryWrapper<MonitorStationInfo> lqw = Wrappers.lambdaQuery();
+        lqw.eq(MonitorStationInfo::getStationName,monitorStationInfo.getStationName());
+        lqw.eq(MonitorStationInfo::getReportId,monitorStationInfo.getReportId());
+        MonitorStationInfo monitorStationResp = getOne(lqw);
+
+        if(ObjectUtils.isEmpty(monitorStationResp)){
+            boolean saveFlag = save(monitorStationInfo);
+            return monitorStationInfo.getStationId();
+        }else {
+            String dataTypeStr = monitorStationResp.getDataType();
+            String[] dataTypeArray = dataTypeStr.split(";");
+            if(!(Arrays.asList(dataTypeArray).contains(monitorStationInfo.getDataType()))){
+                monitorStationResp.setDataType(dataTypeStr+";"+monitorStationInfo.getDataType());
+                updateById(monitorStationResp);
+
+            }
+            return monitorStationResp.getStationId();
+        }
+
+    }
+
+    /**
      * 根据填报id删除所有站位信息
      * @param reportId
      * @return
      */
-    public Boolean deleteByReportId(Long reportId){
+    public Boolean deleteByReportId(Long reportId,String dataType){
         LambdaQueryWrapper<MonitorStationInfo> lqw = Wrappers.lambdaQuery();
         lqw.eq(MonitorStationInfo::getReportId,reportId);
-        boolean removeFlag = remove(lqw);
+        List<MonitorStationInfo> monitorStationInfoList = monitorStationInfoMapper.selectList(lqw);
+
+        if(CollectionUtils.isEmpty(monitorStationInfoList)){
+            return true;
+        }
+
+        for (MonitorStationInfo monitorStationInfo : monitorStationInfoList) {
+            //先执行删除操作 如果无法删除则说明此站位被其他数据类型使用着->更新此站位的dataType字段
+            try {
+                boolean removeFlag = removeById(monitorStationInfo.getStationId());
+            } catch (DataIntegrityViolationException e) {
+                String[] dataTypeArray = monitorStationInfo.getDataType().split(";");
+                List<String> dataTypeList = new ArrayList<String>(Arrays.asList(dataTypeArray));
+                if(dataTypeList.contains(dataType)){
+                    dataTypeList.remove(dataType);
+                }
+                String dataTypeStr = StringUtils.join(dataTypeList.toArray(), ";");
+                monitorStationInfo.setDataType(dataTypeStr);
+                updateById(monitorStationInfo);
+            }
+        }
+
         return true;
     }
 

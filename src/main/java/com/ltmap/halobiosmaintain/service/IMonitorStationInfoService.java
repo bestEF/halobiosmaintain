@@ -32,5 +32,12 @@ public interface IMonitorStationInfoService extends IService<MonitorStationInfo>
      * @param reportId
      * @return
      */
-    Boolean deleteByReportId(Long reportId);
+    Boolean deleteByReportId(Long reportId,String dataType);
+
+    /**
+     * 保存站位信息
+     * @param monitorStationInfo
+     * @return
+     */
+    Long addMonitorStation(MonitorStationInfo monitorStationInfo);
 }

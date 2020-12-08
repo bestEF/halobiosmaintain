@@ -1,9 +1,9 @@
 # 服务器配置
 server:
   #端口号
-  port: 9092
+  port: 6101
   #ip
-  ip: http://localhost:9092
+  ip: http://localhost:6101
   #工程访问上下文名称
   servlet:
     context-path: /halobiosmaintain
@@ -36,3 +36,16 @@ mybatis-plus:
   type-aliases-package: com.ltmap.halobiosmaintain.entity
   configuration:
     map-underscore-to-camel-case: true
+
+#16种excel模板下载路径
+excel-template:
+  fisheggQuantitativeTemp: /excelTemplate/42429典型海洋生态系统监测-鱼卵定量-渤海湾-国家海洋局天津海洋环境监测中心站-20180501.xls
+
+#excel校验相关配置
+config:
+  # Excel规则配置文件
+  excelRules: /Config/ExcelRules/
+  # Excel上传文件缓存路径（自定义）
+  excelUpLoad: /Config/ExcelUpLoad
+  # Json缓存目录
+  excelJson: /Config/excelJson/

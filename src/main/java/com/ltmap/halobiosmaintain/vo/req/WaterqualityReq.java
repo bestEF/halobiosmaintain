@@ -165,6 +165,21 @@ public class WaterqualityReq {
      */
     private BigDecimal cr;
 
+    /**
+     * 备用字段1
+     */
+    private String byzd1;
+
+    /**
+     * 备用字段2
+     */
+    private String byzd2;
+
+    /**
+     * 备用字段3
+     */
+    private String byzd3;
+
 
 
     //监测站位信息表
