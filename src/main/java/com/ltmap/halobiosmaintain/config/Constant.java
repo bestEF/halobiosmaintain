@@ -11,10 +11,22 @@ public class Constant {
     public static String serverServletContext="";
 
     //16种excel模板模板路径
-    /**
-     * 鱼卵定量
-     */
-    public static String fisheggQuantitativePath = "";
+    public static String biologicalQualityPath="";
+    public static String fisheggQualitativePath="";
+    public static String fisheggQuantitativePath="";
+    public static String hydrometeorologicalPath="";
+    public static String intertidalzonebiologicalQuantitativePath="";
+    public static String largezooplanktonInetPath="";
+    public static String macrobenthosQualitativePath="";
+    public static String macrobenthosQuantitativePath="";
+    public static String phytoplanktonPath="";
+    public static String sedimentPath="";
+    public static String sedimentgrainPath="";
+    public static String smallfishQualitativePath="";
+    public static String smallfishQuantitativePath="";
+    public static String smallzooplanktonIinetPath="";
+    public static String swimminganimalIdentificationPath="";
+    public static String waterqualityPath="";
 
 
     //================以下为直接定义的静态常量========================

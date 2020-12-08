@@ -3,7 +3,6 @@ package com.ltmap.halobiosmaintain.controller;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.common.utils.ShiroUtils;
-import com.ltmap.halobiosmaintain.common.utils.excel_import.DateUtils;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.ExcelCheck;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.FileTestDataUtil;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.JsonUtils;
@@ -17,16 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
 
 /**
@@ -136,7 +131,7 @@ public class ExcelDataImportController {
     @ApiOperation(value = "Excel校验")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "files",value = "文件",required = true),
-            @ApiImplicitParam(name = "excelType",value = "excel类别 1-鱼卵定量",required = true),
+            @ApiImplicitParam(name = "dataType",value = "excel类别 1-生物质量 2-鱼卵定性 3-鱼卵定量 4-水文气象 5-潮间带生物定量 6-浮游动物（I型网） 7-大型底栖动物定性 8-大型底栖动物定量 9-浮游植物 10-沉积物 11-沉积物粒度 12-鱼卵定性 13-鱼卵定量 14-浮游动物（II型网） 15-游泳动物 16-水质",required = true),
             @ApiImplicitParam(name = "year",value = "年份",required = true),
             @ApiImplicitParam(name = "voyage",value = "航次",required = true)
     })
@@ -217,11 +212,41 @@ public class ExcelDataImportController {
      */
     @PostMapping("downTemplate")
     @ApiOperation(value = "excel模板下载")
-    @ApiImplicitParam(name = "excelType",value = "excel模板类型 1-鱼卵定量",dataType = "int",required = true)
+    @ApiImplicitParam(name = "excelType",value = "excel模板类型 1-生物质量 2-鱼卵定性 3-鱼卵定量 4-水文气象 5-潮间带生物定量 6-浮游动物（I型网） 7-大型底栖动物定性 8-大型底栖动物定量 9-浮游植物 10-沉积物 11-沉积物粒度 12-鱼卵定性 13-鱼卵定量 14-浮游动物（II型网） 15-游泳动物 16-水质",dataType = "int",required = true)
     public Response<String> downTemplate(Integer excelType){
         switch (excelType){
+            case Constant.biologicalQualityType:
+                return Responses.or(Constant.serverServletContext+Constant.biologicalQualityPath);
+            case Constant.fisheggQualitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.fisheggQualitativePath);
             case Constant.fisheggQuantitativeType:
                 return Responses.or(Constant.serverServletContext+Constant.fisheggQuantitativePath);
+            case Constant.hydrometeorologicalType:
+                return Responses.or(Constant.serverServletContext+Constant.hydrometeorologicalPath);
+            case Constant.intertidalzonebiologicalQuantitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.intertidalzonebiologicalQuantitativePath);
+            case Constant.largezooplanktonInetType:
+                return Responses.or(Constant.serverServletContext+Constant.largezooplanktonInetPath);
+            case Constant.macrobenthosQualitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.macrobenthosQualitativePath);
+            case Constant.macrobenthosQuantitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.macrobenthosQuantitativePath);
+            case Constant.phytoplanktonType:
+                return Responses.or(Constant.serverServletContext+Constant.phytoplanktonPath);
+            case Constant.sedimentType:
+                return Responses.or(Constant.serverServletContext+Constant.sedimentPath);
+            case Constant.sedimentgrainType:
+                return Responses.or(Constant.serverServletContext+Constant.sedimentgrainPath);
+            case Constant.smallfishQualitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.smallfishQualitativePath);
+            case Constant.smallfishQuantitativeType:
+                return Responses.or(Constant.serverServletContext+Constant.smallfishQuantitativePath);
+            case Constant.smallzooplanktonIinetType:
+                return Responses.or(Constant.serverServletContext+Constant.smallzooplanktonIinetPath);
+            case Constant.swimminganimalIdentificationType:
+                return Responses.or(Constant.serverServletContext+Constant.swimminganimalIdentificationPath);
+            case Constant.waterqualityType:
+                return Responses.or(Constant.serverServletContext+Constant.waterqualityPath);
             default:
                 break;
         }

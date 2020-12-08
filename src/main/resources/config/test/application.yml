@@ -39,7 +39,22 @@ mybatis-plus:
 
 #16种excel模板下载路径
 excel-template:
-  fisheggQuantitativeTemp: /excelTemplate/42429典型海洋生态系统监测-鱼卵定量-渤海湾-国家海洋局天津海洋环境监测中心站-20180501.xls
+  biologicalQualityTemp: /excelTemplate/生物质量.xls
+  fisheggQualitativeTemp: /excelTemplate/鱼卵定性.xls
+  fisheggQuantitativeTemp: /excelTemplate/鱼卵定量.xls
+  hydrometeorologicalTemp: /excelTemplate/水文气象.xls
+  intertidalzonebiologicalQuantitativeTemp: /excelTemplate/潮间带生物定量.xls
+  largezooplanktonInetTemp: /excelTemplate/浮游动物（I型网）.xls
+  macrobenthosQualitativeTemp: /excelTemplate/大型底栖动物定性.xls
+  macrobenthosQuantitativeTemp: /excelTemplate/大型底栖动物定量.xls
+  phytoplanktonTemp: /excelTemplate/浮游植物.xls
+  sedimentTemp: /excelTemplate/沉积物.xls
+  sedimentgrainTemp: /excelTemplate/沉积物粒度.xls
+  smallfishQualitativeTemp: /excelTemplate/仔鱼定性.xls
+  smallfishQuantitativeTemp: /excelTemplate/仔鱼定量.xls
+  smallzooplanktonIinetTemp: /excelTemplate/浮游动物（II型网）.xls
+  swimminganimalIdentificationTemp: /excelTemplate/游泳动物.xls
+  waterqualityTemp: /excelTemplate/水质.xls
 
 #excel校验相关配置
 config:

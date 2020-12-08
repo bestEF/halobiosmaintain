@@ -22,11 +22,38 @@ public class ApplicationEnvironmentInit {
     public String serverServletContext;
 
     //16种excel模板
-    /**
-     * 鱼卵定量模板
-     */
+    @Value("${excel-template.biologicalQualityTemp}")
+    public String biologicalQualityPath="";
+    @Value("${excel-template.fisheggQualitativeTemp}")
+    public String fisheggQualitativePath="";
     @Value("${excel-template.fisheggQuantitativeTemp}")
-    public String fisheggQuantitativePath;
+    public String fisheggQuantitativePath="";
+    @Value("${excel-template.hydrometeorologicalTemp}")
+    public String hydrometeorologicalPath="";
+    @Value("${excel-template.intertidalzonebiologicalQuantitativeTemp}")
+    public String intertidalzonebiologicalQuantitativePath="";
+    @Value("${excel-template.largezooplanktonInetTemp}")
+    public String largezooplanktonInetPath="";
+    @Value("${excel-template.macrobenthosQualitativeTemp}")
+    public String macrobenthosQualitativePath="";
+    @Value("${excel-template.macrobenthosQuantitativeTemp}")
+    public String macrobenthosQuantitativePath="";
+    @Value("${excel-template.phytoplanktonTemp}")
+    public String phytoplanktonPath="";
+    @Value("${excel-template.sedimentTemp}")
+    public String sedimentPath="";
+    @Value("${excel-template.sedimentgrainTemp}")
+    public String sedimentgrainPath="";
+    @Value("${excel-template.smallfishQualitativeTemp}")
+    public String smallfishQualitativePath="";
+    @Value("${excel-template.smallfishQuantitativeTemp}")
+    public String smallfishQuantitativePath="";
+    @Value("${excel-template.smallzooplanktonIinetTemp}")
+    public String smallzooplanktonIinetPath="";
+    @Value("${excel-template.swimminganimalIdentificationTemp}")
+    public String swimminganimalIdentificationPath="";
+    @Value("${excel-template.waterqualityTemp}")
+    public String waterqualityPath="";
 
     /**
      * @PostConstruct java注释 用于需要执行相关性注入后执行任何初始化的方法
@@ -35,6 +62,23 @@ public class ApplicationEnvironmentInit {
     @PostConstruct
     public void init(){
         Constant.serverServletContext=serverServletContext;
+
+        Constant.fisheggQuantitativePath=fisheggQuantitativePath;;
+        Constant.biologicalQualityPath=biologicalQualityPath;
+        Constant.fisheggQualitativePath=fisheggQualitativePath;
         Constant.fisheggQuantitativePath=fisheggQuantitativePath;
+        Constant.hydrometeorologicalPath=hydrometeorologicalPath;
+        Constant.intertidalzonebiologicalQuantitativePath=intertidalzonebiologicalQuantitativePath;
+        Constant.largezooplanktonInetPath=largezooplanktonInetPath;
+        Constant.macrobenthosQualitativePath=macrobenthosQualitativePath;
+        Constant.macrobenthosQuantitativePath=macrobenthosQuantitativePath;
+        Constant.phytoplanktonPath=phytoplanktonPath;
+        Constant.sedimentPath=sedimentPath;
+        Constant.sedimentgrainPath=sedimentgrainPath;
+        Constant.smallfishQualitativePath=smallfishQualitativePath;
+        Constant.smallfishQuantitativePath=smallfishQuantitativePath;
+        Constant.smallzooplanktonIinetPath=smallzooplanktonIinetPath;
+        Constant.swimminganimalIdentificationPath=swimminganimalIdentificationPath;
+        Constant.waterqualityPath=waterqualityPath;
     }
 }

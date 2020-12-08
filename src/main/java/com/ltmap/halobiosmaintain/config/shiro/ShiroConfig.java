@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.annotations.Cacheable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Shiro配置类
  * @author fjh
@@ -32,6 +35,12 @@ public class ShiroConfig {
 
         //注入安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        Map<String,String> map =  new LinkedHashMap<>();
+        map.put("/static/**", "anon");
+        map.put("/login", "anon");
+    	//配置认证和授权规则
+    	shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+
 
         return shiroFilterFactoryBean;
     }

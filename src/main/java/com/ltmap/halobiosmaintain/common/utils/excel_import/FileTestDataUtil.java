@@ -256,6 +256,41 @@ public class FileTestDataUtil {
             totalCells = sheet.getRow(titleRows).getPhysicalNumberOfCells();
         }
 
+//        switch (excelType){
+//            case "BiologicalQualityExcelRule":
+//                break;
+//            case "FisheggQualitativeExcelRule":
+//                break;
+//            case "FisheggQuantitativeExcelRule":
+//                break;
+//            case "HydrometeorologicalExcelRule":
+//                break;
+//            case "IntertidalzonebiologicalQuantitativeExcelRule":
+//                break;
+//            case "LargezooplanktonInetExcelRule":
+//                break;
+//            case "MacrobenthosQualitativeExcelRule":
+//                break;
+//            case "MacrobenthosQuantitativeExcelRule":
+//                break;
+//            case "PhytoplanktonExcelRule":
+//                break;
+//            case "SedimentExcelRule":
+//                break;
+//            case "SedimentgrainExcelRule":
+//                break;
+//            case "SmallfishQualitativeExcelRule":
+//                break;
+//            case "SmallfishQuantitativeExcelRule":
+//                break;
+//            case "SmallzooplanktonIinetExcelRule":
+//                break;
+//            case "SwimminganimalIdentificationExcelRule":
+//                break;
+//            case "WaterqualityExcelRule":
+//                break;
+//        }
+
         String[] differTblHead={"SedimentgrainExcelRule"};
         boolean isHeadRight=false;
         if(Arrays.asList(differTblHead).contains(excelType)){
