@@ -59,6 +59,8 @@ public class Constant {
     public static final String smallfishQualitativeName="仔鱼定性";
     public static final String swimminganimalIdentificationName="游泳动物";
     public static final String biologicalQualityName="生物质量";
+    public static final String birdObserveRecordName="鸟类";
+    public static final String vegetationSurveyRecordName="植被";
 
     //16中excel模板固定不变的表头key信息对应的标号
     /**监控区Code**/
@@ -111,6 +113,8 @@ public class Constant {
     public static final int smallzooplanktonIinetType=14;
     public static final int swimminganimalIdentificationType=15;
     public static final int waterqualityType=16;
+    public static final int birdObserveRecordType=17;
+    public static final int vegetationSurveyRecordType=18;
 
     //0 1标志
     /**

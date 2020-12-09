@@ -15,4 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IBirdObserveService extends IService<BirdObserve> {
 
     IPage<BirdObserve> listBirdObserve(Integer current, Integer size, String protecName, String place, String startDate, String endDate);
+
+    /**
+     * 保存鸟类主表
+     * @param birdObserve
+     * @return
+     */
+    Long addBirdObserve(BirdObserve birdObserve);
 }
