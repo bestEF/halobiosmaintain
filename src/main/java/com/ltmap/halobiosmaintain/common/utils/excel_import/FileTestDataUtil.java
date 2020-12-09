@@ -21,6 +21,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -59,6 +60,7 @@ public class FileTestDataUtil {
     static String err6="含有不存在的站位信息；";
     static String err7="存在与已有数据冲突的数据；";
     static String err8="存在不合法的小数格式；";
+    static String err9="存在不合法的时间格式，请输入例如HH:mm";
 
     String msg1="上传文件中存在与数据库重复的数据；";
     String msg2="上传文件中存在格式错误数据；";
@@ -308,6 +310,17 @@ public class FileTestDataUtil {
             case "WaterqualityExcelRule":
                 isHeadRight = readSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
                 break;
+            case "BirdObserveRecordRule":
+                isHeadRight = readBirdSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                realDataFlag=10;
+                break;
+            case "VegetationSurveyRecordRule":
+                isHeadRight = readVegetationSheetHeadData(sheet,entityName,totalRows,totalCells,titleType,excelType);
+                realDataFlag=8;
+                totalRows=totalRows+1;
+                break;
+            default:
+                break;
         }
 
 
@@ -317,7 +330,7 @@ public class FileTestDataUtil {
 
                 List<String> returnList=new ArrayList<>();
 
-                //从第5+1行读数据 对有些表特殊处理从第6+1行读数据
+                //从第5+1行读数据 对有些表特殊处理
                 //-2是因为计算机从0开始计数所以-1 又因为有一行填报人等信息所以再次-1
                 //-1是因为最后一行填的是填报人等信息
                 for (int r = realDataFlag-2; r < totalRows-1; r++) {//for (int r = 1; r < totalRows; r++) {
@@ -544,13 +557,790 @@ public class FileTestDataUtil {
                 list = waterqualityExcelRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
                 list.add("1");
                 break;
+            case "BirdObserveRecordRule":
+                list = birdObserveRecordRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
+            case "VegetationSurveyRecordRule":
+                list = vegetationSurveyRecordRule(totalCells,totalRows,row,headMap,entityName,r,allMapList,sheet);
+                list.add("1");
+                break;
             default:
                 break;
         }
         return list;
     }
 
-    //鱼卵定量数据表
+    //植被数据表
+    private List<String> vegetationSurveyRecordRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        VegetationSurveyRecordReq vegetationSurveyRecordReq = new VegetationSurveyRecordReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //对种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingVegetationSurveyRecord(sheet,headMap,entityName,vegetationSurveyRecordReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(r);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+
+            if(c==8){
+                continue;
+            }
+
+            Cell cell = row.getCell(c);
+
+            String headTitle="";
+            if(c==9){
+                headTitle = headMap.get(16+c-1).toString();
+            }else {
+                headTitle = headMap.get(16+c).toString();
+            }
+
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(16+c==16){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    vegetationSurveyRecordReq.setNo(cell.getStringCellValue());
+                } else if(16+c==17){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setChineseName(cellValue);
+                    }
+                }  else if(16+c==18){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setLatinName(cellValue);
+                    }
+                } else if(16+c==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setNumber(new BigDecimal(cellValue));
+                    }
+                } else if(16+c==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setCoverage(new BigDecimal(cellValue));
+                    }
+                }else if(16+c==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setHeight(new BigDecimal(cellValue));
+                    }
+                }else if(16+c==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setChestDiameter(new BigDecimal(cellValue));
+                    }
+                }else if(16+c==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setThreatenedFactors2(cellValue);
+                    }
+                }else if(16+c-1==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        vegetationSurveyRecordReq.setRemark(cellValue);
+                    }
+                }
+            }
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(vegetationSurveyRecordReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        VegetationSurveyRecordReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("VegetationSurveyRecordRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(VegetationSurveyRecordReq)obj;
+                    if(
+                            item.getProtecName().equals(vegetationSurveyRecordReq.getProtecName()) &&
+                            item.getSurveyDate().equals(vegetationSurveyRecordReq.getSurveyDate()) &&
+                            item.getWeather().equals(vegetationSurveyRecordReq.getWeather()) &&
+                            item.getPlace().equals(vegetationSurveyRecordReq.getPlace()) &&
+                            item.getNum().equals(vegetationSurveyRecordReq.getNum()) &&
+                            item.getArea().equals(vegetationSurveyRecordReq.getArea()) &&
+                            item.getHigh().equals(vegetationSurveyRecordReq.getHigh()) &&
+                            item.getLon().equals(vegetationSurveyRecordReq.getLon()) &&
+                            item.getLat().equals(vegetationSurveyRecordReq.getLat()) &&
+                            item.getHabitatType().equals(vegetationSurveyRecordReq.getHabitatType()) &&
+                            item.getHumanType().equals(vegetationSurveyRecordReq.getHumanType()) &&
+                            item.getHumanIntensity().equals(vegetationSurveyRecordReq.getHumanIntensity()) &&
+                            item.getThreatenedFactors().equals(vegetationSurveyRecordReq.getThreatenedFactors()) &&
+                            item.getVegetationType().equals(vegetationSurveyRecordReq.getVegetationType()) &&
+                            item.getDominantSpecies().equals(vegetationSurveyRecordReq.getDominantSpecies()) &&
+                            item.getTotalCoverage().equals(vegetationSurveyRecordReq.getTotalCoverage()) &&
+                            item.getSurveyName().equals(vegetationSurveyRecordReq.getSurveyName())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(vegetationSurveyRecordReq);
+            excelDataImportController.excelDataList.add(vegetationSurveyRecordReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对植被-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param vegetationSurveyRecordReq
+     */
+    public void specialHandlingVegetationSurveyRecord(Sheet sheet,Map headMap,String entityName,VegetationSurveyRecordReq vegetationSurveyRecordReq,Integer totalRows) {
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+        int temp = 0;
+
+        //读取表头value值
+        //取第1+1行
+        Row row1 = sheet.getRow(1);
+        //取第2+1列
+        Cell cell = row1.getCell(2);
+        String headTitle = headMap.get(0).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(1 + 1, 2 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setProtecName(cell.getStringCellValue());
+        }
+
+        //取第4+1列
+        cell = row1.getCell(4);
+        headTitle = headMap.get(1).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(1 + 1, 4 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {
+            //判断该日期在excel表格的格式是否是日期格式
+            if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+            }
+
+            try{
+                String strDate=getStringCellValue(cell);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                LocalDate localDate=null;
+                if(strDate.contains("-")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains(".")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else if(strDate.contains("/")){
+                    dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                    localDate=LocalDate.parse(strDate,dtf);
+                }else{
+                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+                vegetationSurveyRecordReq.setSurveyDate(localDate);
+            } catch (Exception e){
+                vegetationSurveyRecordReq.setSurveyDate(null);
+            }
+        }
+
+        //取第6+1列
+        cell = row1.getCell(6);
+        headTitle = headMap.get(2).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(1 + 1, 6 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setWeather(cell.getStringCellValue());
+        }
+
+        //取第8+1列
+        cell = row1.getCell(8);
+        headTitle = headMap.get(3).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(1 + 1, 8 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setPlace(cell.getStringCellValue());
+        }
+
+
+        //取第2+1行
+        row1 = sheet.getRow(2);
+        //取第2+1列
+        cell = row1.getCell(2);
+        headTitle = headMap.get(4).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(2 + 1, 2 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setNum(cell.getStringCellValue());
+        }
+
+        //取第4+1列
+        cell = row1.getCell(4);
+        headTitle = headMap.get(5).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(2 + 1, 4 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            String cellValue = cell.getStringCellValue();
+            vegetationSurveyRecordReq.setArea(new BigDecimal(cellValue));
+        }
+
+        //取第6+1列
+        cell = row1.getCell(6);
+        headTitle = headMap.get(6).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(2 + 1, 6 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setHigh(cell.getStringCellValue());
+        }
+
+        //取第8+1列
+        cell = row1.getCell(8);
+        headTitle = headMap.get(7).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(2 + 1, 8 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            String cellValue = cell.getStringCellValue();
+            vegetationSurveyRecordReq.setLon(new BigDecimal(cellValue));
+        }
+        //取第9+1列
+        cell = row1.getCell(9);
+        headTitle = headMap.get(7).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(2 + 1, 9 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            String cellValue = cell.getStringCellValue();
+            vegetationSurveyRecordReq.setLat(new BigDecimal(cellValue));
+        }
+
+
+        //取第3+1行
+        row1 = sheet.getRow(3);
+        //取第2+1列
+        cell = row1.getCell(2);
+        headTitle = headMap.get(8).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(3 + 1, 2 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setHabitatType(cell.getStringCellValue());
+        }
+
+        //取第4+1列
+        cell = row1.getCell(4);
+        headTitle = headMap.get(9).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(3 + 1, 4 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setHumanType(cell.getStringCellValue());
+        }
+
+        //取第6+1列
+        cell = row1.getCell(6);
+        headTitle = headMap.get(10).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(3 + 1, 6 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setHumanIntensity(cell.getStringCellValue());
+        }
+
+        //取第8+1列
+        cell = row1.getCell(8);
+        headTitle = headMap.get(11).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(3 + 1, 8 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setThreatenedFactors(cell.getStringCellValue());
+        }
+
+
+        //取第4+1行
+        row1 = sheet.getRow(4);
+        //取第2+1列
+        cell = row1.getCell(2);
+        headTitle = headMap.get(12).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(4 + 1, 2 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setVegetationType(cell.getStringCellValue());
+        }
+
+        //取第4+1列
+        cell = row1.getCell(4);
+        headTitle = headMap.get(13).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(4 + 1, 4 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setDominantSpecies(cell.getStringCellValue());
+        }
+
+        //取第6+1列
+        cell = row1.getCell(6);
+        headTitle = headMap.get(14).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(4 + 1, 6 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setTotalCoverage(cell.getStringCellValue());
+        }
+
+        //取第8+1列
+        cell = row1.getCell(8);
+        headTitle = headMap.get(15).toString();        /**按规则验证cell格式**/
+        validaterst = validateCellData(4 + 1, 8 + 1, cell, entityName, headTitle);
+        totalRst += validaterst;
+        if (totalRst == 0 && cell != null) {             // 定制
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+            vegetationSurveyRecordReq.setSurveyName(cell.getStringCellValue());
+        }
+
+    }
+
+    //鸟类数据表
+    private List<String> birdObserveRecordRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
+        List<String> returnList=new ArrayList<>();
+        BirdObserveRecordReq birdObserveRecordReq = new BirdObserveRecordReq();
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+
+        //对种特殊表头value值 按xml规则校验，并写入对象
+        specialHandlingBirdObserve(sheet,headMap,entityName,birdObserveRecordReq,totalRows);
+
+        //取
+        Row excelheadRow1 = sheet.getRow(r);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+
+        // 循环row的列，按xml规则校验，并写入对象
+        for (int c = 0; c < excelLastCellNum; c++) {
+            Cell cell = row.getCell(c);
+            String headTitle = headMap.get(19+c).toString();
+            /**按规则验证cell格式**/
+            validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+            totalRst += validaterst;
+
+            if(totalRst == 0 && cell != null) {             // 定制
+                //6代表xml文件第6个 下面同理
+                if(19+c==19){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    birdObserveRecordReq.setNo(cell.getStringCellValue());
+                } else if(19+c==20){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setChineseName(cellValue);
+                    }
+                }  else if(19+c==21){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setLatinName(cellValue);
+                    }
+                } else if(19+c==22){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setAdultNumber(new BigDecimal(cellValue));
+                    }
+                } else if(19+c==23){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setLarvaeNumber(new BigDecimal(cellValue));
+                    }
+                } else if(19+c==24){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setTotalNumber(new BigDecimal(cellValue));
+                    }
+                }else if(19+c==25){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setCredential(cellValue);
+                    }
+                }else if(19+c==26){
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                    String cellValue = cell.getStringCellValue();
+                    if(StringUtils.isNotBlank(cellValue)) {
+                        birdObserveRecordReq.setRemark(cellValue);
+                    }
+                }
+            }
+        }
+
+        //数据库更新 注意返回false代表更新成功
+//        MonitorDataReport monitorDataReport = new MonitorDataReport();
+//        BeanUtils.copyProperties(birdObserveRecordReq,monitorDataReport);
+        boolean dataExist=false; //= monitorDataReportService.updateData(monitorDataReport, Constant.fisheggQuantitativeType);
+        returnList.add(String.valueOf(dataExist));
+
+        // Excel文件列表查重(遍历allMapList中底栖站位多样性数据，检索是否已包含当前数据)
+        boolean sameInfo=false;
+        BirdObserveRecordReq item;
+        for(Map<String,Object> map:allMapList){//for(Map<String,Object> map:dominantSpeciesController.allMapList){
+            if(map.get("excelType")!=null && map.get("excelType").toString().equals("BirdObserveRecordRule")) {
+                for(Object obj:(List<Object>)map.get("data")) {
+                    item=(BirdObserveRecordReq)obj;
+                    if(
+                            item.getProtecName().equals(birdObserveRecordReq.getProtecName()) &&
+                            item.getObserveDate().equals(birdObserveRecordReq.getObserveDate()) &&
+                            item.getWeather().equals(birdObserveRecordReq.getWeather()) &&
+                            item.getTem().equals(birdObserveRecordReq.getTem()) &&
+                            item.getPlace().equals(birdObserveRecordReq.getPlace()) &&
+                            item.getHigh().equals(birdObserveRecordReq.getHigh()) &&
+                            item.getObserveName().equals(birdObserveRecordReq.getObserveName()) &&
+                            item.getRecordName().equals(birdObserveRecordReq.getRecordName()) &&
+                            item.getSplineNumber().equals(birdObserveRecordReq.getSplineNumber()) &&
+                            item.getSplineLength().equals(birdObserveRecordReq.getSplineLength()) &&
+                            //item.getStartTime().equals(birdObserveRecordReq.getStartTime()) &&
+                            //item.getEndTime().equals(birdObserveRecordReq.getEndTime()) &&
+                            item.getStartLon().equals(birdObserveRecordReq.getStartLon()) &&
+                            item.getEndLon().equals(birdObserveRecordReq.getEndLon()) &&
+                            item.getStartLat().equals(birdObserveRecordReq.getStartLat()) &&
+                            item.getEndLat().equals(birdObserveRecordReq.getEndLat()) &&
+                            item.getTotalSpecies().equals(birdObserveRecordReq.getTotalSpecies()) &&
+                            item.getHabitatType().equals(birdObserveRecordReq.getHabitatType()) &&
+                            item.getHumanType().equals(birdObserveRecordReq.getHumanType()) &&
+                            item.getHumanIntensity().equals(birdObserveRecordReq.getHumanIntensity()) &&
+                            item.getThreatenedFactors().equals(birdObserveRecordReq.getThreatenedFactors())) {
+                        sameInfo = true;
+                    }
+                }
+            }
+        }
+        returnList.add(String.valueOf(sameInfo));
+
+        // 校验合格：写入dataList
+        if(totalRst==0){
+            dataList1.add(birdObserveRecordReq);
+            excelDataImportController.excelDataList.add(birdObserveRecordReq);
+        }
+        return returnList;
+    }
+
+    /**
+     * 对鸟类-9种特殊表头value值 按xml规则校验，并写入对象
+     * @param sheet
+     * @param headMap
+     * @param entityName
+     * @param birdObserveRecordReq
+     */
+    public void specialHandlingBirdObserve(Sheet sheet,Map headMap,String entityName,BirdObserveRecordReq birdObserveRecordReq,Integer totalRows){
+        int totalRst = 0;//每行格式错误单元格的数目
+        int validaterst = 0;
+        int temp=0;
+
+        //读取表头value值
+        for(int r=1;r<=6;r++){
+            //取第r行
+            Row row = sheet.getRow(r);
+            if(r==1||r==2||r==3||r==5){
+                for(int c=1;c<=7;c=c+2){
+
+                    if(r==1){
+                        temp=(c-1)/2;
+                    }else if(r==2){
+                        temp=4+(c-1)/2;
+                    }else if(r==3){
+                        temp=8+(c-1)/2;
+                    }else if(r==5){
+                        temp=15+(c-1)/2;
+                    }
+
+                    Cell cell = row.getCell(c);
+                    String headTitle = headMap.get(temp).toString();        /**按规则验证cell格式**/
+                    validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
+                    totalRst += validaterst;
+
+                    if(totalRst == 0 && cell != null) {             // 定制
+                        switch (temp) {
+                            case 0:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setProtecName(cell.getStringCellValue());
+                                break;
+                            case 1:
+                                //判断该日期在excel表格的格式是否是日期格式
+                                if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                                }
+
+                                try{
+                                    String strDate=getStringCellValue(cell);
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                                    LocalDate localDate=null;
+                                    if(strDate.contains("-")){
+                                        dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                        localDate=LocalDate.parse(strDate,dtf);
+                                    }else if(strDate.contains(".")){
+                                        dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+                                        localDate=LocalDate.parse(strDate,dtf);
+                                    }else if(strDate.contains("/")){
+                                        dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                                        localDate=LocalDate.parse(strDate,dtf);
+                                    }else{
+                                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                                        localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                                    }
+                                    birdObserveRecordReq.setObserveDate(localDate);
+                                } catch (Exception e){
+                                    birdObserveRecordReq.setObserveDate(null);
+                                }
+                                break;
+                            case 2:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setWeather(cell.getStringCellValue());
+                                break;
+                            case 3:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setTem(cell.getStringCellValue());
+                                break;
+                            case 4:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setPlace(cell.getStringCellValue());
+                                break;
+                            case 5:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setHigh(cell.getStringCellValue());
+                                break;
+                            case 6:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setObserveName(cell.getStringCellValue());
+                                break;
+                            case 7:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setRecordName(cell.getStringCellValue());
+                                break;
+                            case 8:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setSplineNumber(cell.getStringCellValue());
+                                break;
+                            case 9:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setSplineLength(cell.getStringCellValue());
+                                break;
+                            case 10:
+                                //判断该日期在excel表格的格式是否是日期格式
+                                if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                                }
+
+                                try{
+                                    String strDate=getStringCellValue(cell);
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+                                    LocalTime localTime=null;
+                                    if(strDate.contains("-")){
+                                        dtf = DateTimeFormatter.ofPattern("HH-mm");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else if(strDate.contains(".")){
+                                        dtf = DateTimeFormatter.ofPattern("HH:mm");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else if(strDate.contains("/")){
+                                        dtf = DateTimeFormatter.ofPattern("HH/mm");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else{
+                                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                                        localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                    }
+                                    birdObserveRecordReq.setStartTime(localTime);
+                                } catch (Exception e){
+                                    birdObserveRecordReq.setStartTime(null);
+                                }
+                                break;
+                            case 11:
+                                //判断该日期在excel表格的格式是否是日期格式
+                                if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
+                                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                                }
+
+                                try{
+                                    String strDate=getStringCellValue(cell);
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                                    LocalTime localTime=null;
+                                    if(strDate.contains("-")){
+                                        dtf = DateTimeFormatter.ofPattern("HH-mm-ss");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else if(strDate.contains(".")){
+                                        dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else if(strDate.contains("/")){
+                                        dtf = DateTimeFormatter.ofPattern("HH/mm/ss");
+                                        localTime = LocalTime.parse(strDate);
+                                    }else{
+                                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
+                                        localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                    }
+                                    birdObserveRecordReq.setEndTime(localTime);
+                                } catch (Exception e){
+                                    birdObserveRecordReq.setEndTime(null);
+                                }
+                                break;
+                            case 15:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setHabitatType(cell.getStringCellValue());
+                                break;
+                            case 16:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setHumanType(cell.getStringCellValue());
+                                break;
+                            case 17:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setHumanIntensity(cell.getStringCellValue());
+                                break;
+                            case 18:
+                                cell.setCellType(Cell.CELL_TYPE_STRING);
+                                if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                                birdObserveRecordReq.setThreatenedFactors(cell.getStringCellValue());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+
+                }
+            }
+            else if(r==4){
+                for(int c=1;c<=7;c=c+3){
+                    if(c==1) {
+                        Cell cell = row.getCell(c);
+                        String headTitle = headMap.get(12 + (c - 1) / 3).toString();        /**按规则验证cell格式**/
+                        validaterst = validateCellData(r + 1, c + 1, cell, entityName, headTitle);
+                        totalRst += validaterst;
+                        if (totalRst == 0 && cell != null) {             // 定制
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                            String cellValue = cell.getStringCellValue();
+                            birdObserveRecordReq.setStartLon(new BigDecimal(cellValue));
+                        }
+
+                        cell = row.getCell(c + 1);
+                        validaterst = validateCellData(r + 1, c + 1, cell, entityName, headTitle);
+                        totalRst += validaterst;
+                        if (totalRst == 0 && cell != null) {             // 定制
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                            String cellValue = cell.getStringCellValue();
+                            birdObserveRecordReq.setEndLon(new BigDecimal(cellValue));
+                        }
+                    }else if(c==4){
+                        Cell cell = row.getCell(c);
+                        String headTitle = headMap.get(12 + (c - 1) / 3).toString();        /**按规则验证cell格式**/
+                        validaterst = validateCellData(r + 1, c + 1, cell, entityName, headTitle);
+                        totalRst += validaterst;
+                        if (totalRst == 0 && cell != null) {             // 定制
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                            String cellValue = cell.getStringCellValue();
+                            birdObserveRecordReq.setStartLat(new BigDecimal(cellValue));
+                        }
+
+                        cell = row.getCell(c + 1);
+                        validaterst = validateCellData(r + 1, c + 1, cell, entityName, headTitle);
+                        totalRst += validaterst;
+                        if (totalRst == 0 && cell != null) {             // 定制
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                            String cellValue = cell.getStringCellValue();
+                            birdObserveRecordReq.setEndLat(new BigDecimal(cellValue));
+                        }
+                    }else if(c==7){
+                        Cell cell = row.getCell(c);
+                        String headTitle = headMap.get(12 + (c - 1) / 3).toString();        /**按规则验证cell格式**/
+                        validaterst = validateCellData(r + 1, c + 1, cell, entityName, headTitle);
+                        totalRst += validaterst;
+                        if (totalRst == 0 && cell != null) {             // 定制
+                            cell.setCellType(Cell.CELL_TYPE_STRING);
+                            if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
+                            String cellValue = cell.getStringCellValue();
+                            birdObserveRecordReq.setTotalSpecies(Integer.parseInt(cellValue));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //水质数据表
     private List<String> waterqualityExcelRule(Integer totalCells,Integer totalRows,Row row,Map headMap,String entityName,int r,List<Map<String, Object>> allMapList,Sheet sheet){
         List<String> returnList=new ArrayList<>();
         WaterqualityReq waterqualityReq = new WaterqualityReq();
@@ -853,7 +1643,7 @@ public class FileTestDataUtil {
     }
 
     /**
-     * 对鱼卵定量-9种特殊表头value值 按xml规则校验，并写入对象
+     * 对水质-9种特殊表头value值 按xml规则校验，并写入对象
      * @param sheet
      * @param headMap
      * @param entityName
@@ -6881,6 +7671,18 @@ public class FileTestDataUtil {
                         }
                     }
                 }
+                //规则6：是否是时间格式：HH:mm
+                else if(rulName.equals(ParseConstans.RULE_NAME_Time)){
+                    if(colCell.getCellStyle().getDataFormat()!=20){
+                        if(!errorString.toString().contains(err9)) errorString.append(err9);
+                        errorMap.put("curRow", curRow);
+                        errorMap.put("curCol", curCol);
+                        errorMap.put("rulMsg", rulMsg);
+                        errorList.add(errorMap);
+                        result = -1;
+                        break;
+                    }
+                }
             }
         }
         return result;
@@ -6972,6 +7774,254 @@ public class FileTestDataUtil {
     /** get set方法 **/
     public static Map getCurEntityHeadMap() {
         return curEntityHeadMap;
+    }
+
+    /**
+     * 读取设置植被表头
+     * @param sheet
+     * @param entityName
+     * @param totalRows
+     * @param totalCells
+     * @param titleType
+     * @param excelType
+     * @return
+     */
+    private boolean readVegetationSheetHeadData(Sheet sheet, String entityName, int totalRows, int totalCells, boolean titleType, String excelType){
+        Map headMap = new HashMap();
+        curEntityHeadMap = new HashMap();
+        //存放所有表头
+        Map<String,Map<String,String>> columnMap = parseXmlUtil.getColumnMap();
+        //存放读取的表头
+        String headTitle = "";
+        int temp=0;
+
+
+        Row excelheadRow1 = sheet.getRow(0);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+        if(!(excelLastCellNum == ParseXMLUtil.headMap.size()-15)) {
+            return false;
+        }
+
+
+        //读取第1+1到4+1行表头key值
+        for(int r=1;r<=4;r++){
+            //获得当前行
+            Row row = sheet.getRow(r);
+            for(int c=0;c<=7;c=c+2){
+
+                if(r==1){
+                    if(c==0){
+                        temp=0;
+                    }else{
+                        temp=(c-1)/2;
+                    }
+                }else if(r==2){
+                    if(c==0){
+                        temp=4;
+                    }else{
+                        temp=4+(c-1)/2;
+                    }
+                }else if(r==3){
+                    if(c==0){
+                        temp=8;
+                    }else{
+                        temp=8+(c-1)/2;
+                    }
+                }else if(r==4){
+                    if(c==0){
+                        temp=12;
+                    }else{
+                        temp=12+(c-1)/2;
+                    }
+                }
+
+                Cell cell = null;
+                cell = row.getCell(c);
+                cell.setCellType(Cell.CELL_TYPE_STRING);
+                headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                if (columnMap.get(entityName + "_" + headTitle) != null) {
+                    if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+
+                    if(temp==23){
+                        headTitle=headTitle+2;
+                    }
+
+                    if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(temp + "")) {
+                        return false;
+                    }
+
+                } else {
+                    return false;
+                }
+
+                headMap.put(temp, headTitle);
+
+                if(c==0){
+                    c=c+1;
+                }
+
+            }
+            curEntityHeadMap.put(getCurEntityCode(), headMap);
+        }
+
+        //获得当前行
+        Row row = sheet.getRow(5);
+        for(int c=0;c<=9;c++){
+
+            if(c==8){
+                continue;
+            }
+            temp=16+c;
+            if(c==9){
+                temp=16+c-1;
+            }
+
+            Cell cell = null;
+            cell = row.getCell(c);
+            cell.setCellType(Cell.CELL_TYPE_STRING);
+            headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+            if (columnMap.get(entityName + "_" + headTitle) != null) {
+                if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+
+                if(temp==23){
+                    headTitle=headTitle+2;
+                }
+
+                if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(temp + "")) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            headMap.put(temp, headTitle);
+        }
+
+        return true;
+    }
+
+    /**
+     * 读取设置鸟类表头
+     * @param sheet
+     * @param entityName
+     * @param totalRows
+     * @param totalCells
+     * @param titleType
+     * @param excelType
+     * @return
+     */
+    private boolean readBirdSheetHeadData(Sheet sheet, String entityName, int totalRows, int totalCells, boolean titleType, String excelType){
+        Map headMap = new HashMap();
+        curEntityHeadMap = new HashMap();
+        //
+        int temp=0;
+
+
+        Row excelheadRow1 = sheet.getRow(0);
+        int excelLastCellNum = excelheadRow1.getLastCellNum();
+        if(!(excelLastCellNum == ParseXMLUtil.headMap.size()-19)) {
+            return false;
+        }
+
+        //鸟类表头从1+1行开始 到6+1行结束
+        for(int r=1;r<=7;r++){
+            //存放所有表头
+            Map<String,Map<String,String>> columnMap = parseXmlUtil.getColumnMap();
+            //存放读取的表头
+            String headTitle = "";
+            //如果当前位于1 2 3 5行那么采用这种读取方式
+            if(r==1||r==2||r==3||r==5){
+                //获得当前行
+                Row row = sheet.getRow(r);
+                //分别读取第0 2 4 6列表头信息
+                for (int c=0;c<=7;c=c+2){
+
+                    //
+                    if(r==1){
+                        temp=c/2;
+                    }else if(r==2){
+                        temp=4+c/2;
+                    }else if(r==3){
+                        temp=8+c/2;
+                    }else if(r==5){
+                        temp=15+c/2;
+                    }
+
+                    Cell cell = null;
+                    cell = row.getCell(c);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                    if (columnMap.get(entityName + "_" + headTitle) != null) {
+                        if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(temp + "")) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+
+                    headMap.put(temp, headTitle);
+                }
+                curEntityHeadMap.put(getCurEntityCode(), headMap);
+            }else if(r==4){
+                //获得当前行
+                Row row = sheet.getRow(r);
+                //分别读取第0 3 6列表头信息
+                for (int c=0;c<=7;c=c+3){
+                    Cell cell = null;
+                    cell = row.getCell(c);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                    headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                    if (columnMap.get(entityName + "_" + headTitle) != null) {
+                        if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                        if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(12+c/3 + "")) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                    headMap.put(12+c/3, headTitle);
+                }
+                curEntityHeadMap.put(getCurEntityCode(), headMap);
+            }else if(r==6){
+                //获得当前行
+                Row row = sheet.getRow(r);
+                for(int c=0;c<=7;c++){
+                    if(c==3||c==4){
+                        Cell cell = null;
+                        Row row7 = sheet.getRow(7);
+                        cell = row7.getCell(c);
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                        if (columnMap.get(entityName + "_" + headTitle) != null) {
+                            if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                            if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(19+c + "")) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                        headMap.put(19+c, headTitle);
+                    }else{
+                        Cell cell = null;
+                        cell = row.getCell(c);
+                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        headTitle = getStringCellValue(cell).replaceAll(" ", "");//headTitle = getStringCellValue(cell).trim();
+                        if (columnMap.get(entityName + "_" + headTitle) != null) {
+                            if (headTitle.equals("")) continue;// wt20190715针对Excel两行标题修改
+                            if (!columnMap.get(entityName + "_" + headTitle).get("code").equals(19+c + "")) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                        headMap.put(19+c, headTitle);
+                    }
+                }
+                curEntityHeadMap.put(getCurEntityCode(), headMap);
+            }
+
+        }
+        return true;
     }
 
     /**

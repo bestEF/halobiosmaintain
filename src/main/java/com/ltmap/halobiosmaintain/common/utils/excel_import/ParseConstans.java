@@ -21,6 +21,7 @@ public class ParseConstans {
     public static String RULE_NAME_MATCH = "checkMatch";//校验试样编号与委托单位匹配性
     public static String RULE_NAME_EXIST = "existData";//是否与存在的数据相符
     public static String RULE_NAME_DIGIT = "isDigit";//是否为整数
+    public static String RULE_NAME_Time = "checkTime";//是否为整数
 
     /**excel 中的模板数据错误**/
     public static String ERROR_EXCEL_NULL="excel中数据为空!<br>";

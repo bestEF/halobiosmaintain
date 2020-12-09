@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <excel>
     <entity name="Sheet1" code="FisheggQuantitativeExcelRule">
-        <column name="湿地/保护区名称：" code="0" type="String">
+        <column name="湿地/保护区名称" code="0" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
@@ -123,58 +123,50 @@
         </column>
         <column name="种名" code="17" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="拉丁学名" code="18" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
                 <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="数量" code="19" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="盖度（%）" code="20" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="高度" code="21" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="胸径（cm）" code="22" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="length" length="50" message="滤水量长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="受威胁因素" code="23" type="String">
+        <column name="受威胁因素2" code="23" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="滤水量长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="备注" code="24" type="String">
             <rules>
-                <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="滤水量长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
     </entity>

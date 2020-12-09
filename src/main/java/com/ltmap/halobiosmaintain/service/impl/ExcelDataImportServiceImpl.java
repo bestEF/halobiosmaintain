@@ -34,6 +34,10 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
     private IMonitorDataReportService monitorDataReportService;
     @Resource
     private IMonitorStationInfoService monitorStationInfoService;
+    @Resource
+    private IBirdObserveService birdObserveService;
+    @Resource
+    private IVegetationSurveyService vegetationSurveyService;
 
     @Resource
     private IBiologicalQualityService biologicalQualityService;
@@ -67,6 +71,10 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
     private ISwimminganimalIdentificationService swimminganimalIdentificationService;
     @Resource
     private IWaterqualityService waterqualityService;
+    @Resource
+    private IBirdObserveRecordService birdObserveRecordService;
+    @Resource
+    private IVegetationSurveyRecordService vegetationSurveyRecordService;
 
 
     /**
@@ -913,6 +921,45 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
                                     returnList.add(it);
                                 }
                                 testDataList15=null;
+                                break;
+                            case "BirdObserveRecordRule":
+                                List<BirdObserveRecordReq> testDataList16 = new ArrayList<>((List<BirdObserveRecordReq>) data);
+
+                                //鸟类lsit
+                                List<BirdObserveRecord> birdObserveRecordList = new ArrayList<>();
+                                //鸟类主表
+                                BirdObserve birdObserve = new BirdObserve();
+
+                                //将扩展类对拷到相应的鸟类主表
+                                Long birdObserveId=-1L;
+                                if(CollectionUtils.isNotEmpty(testDataList16)){
+                                    BeanUtils.copyProperties(testDataList16.get(0),birdObserve);
+                                    //保存鸟类主表
+                                    birdObserveId = birdObserveService.addBirdObserve(birdObserve);
+                                }
+
+                                //将扩展类对拷到相应的实体类
+                                for (BirdObserveRecordReq birdObserveRecordReq : testDataList16) {
+                                    BirdObserveRecord birdObserveRecord = new BirdObserveRecord();
+                                    BeanUtils.copyProperties(birdObserveRecordReq,birdObserveRecord);
+                                    birdObserveRecord.setId(birdObserveId);
+                                    birdObserveRecordList.add(birdObserveRecord);
+                                }
+
+                                if(testDataList16.size()>0){
+                                    it=new IdText();
+                                    it.setId(Integer.valueOf(code0));
+                                    if(birdObserveRecordService.saveBatch(birdObserveRecordList)) {
+                                        sb.append(code0+",");
+                                        it.setText("true");
+                                        //日志
+                                        //sysLogService.saveLog(ShiroUtils.getUserId(),Constant.manualSurveyDataImport,"水体数据导入");
+                                    }else {
+                                        it.setText("false");
+                                    }
+                                    returnList.add(it);
+                                }
+                                testDataList16=null;
                                 break;
                             default:
                                 break;
