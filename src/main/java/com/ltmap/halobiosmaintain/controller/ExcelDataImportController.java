@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -138,6 +139,11 @@ public class ExcelDataImportController {
     @RequiresAuthentication
     public Response<Object> checkExcel(MultipartFile[] files, Integer dataType, String year, String voyage) throws IOException {
         Response<Object> res = new Response<>();
+
+        if(ObjectUtils.isEmpty(dataType)||StringUtils.isBlank(year)){
+            res.setError("年份和航次未填写");
+            return res;
+        }
 
         //定义excel校验结果返回集合
         List<ExcelCheck> checkList=new ArrayList<>();

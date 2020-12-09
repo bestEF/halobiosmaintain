@@ -1702,7 +1702,7 @@ public class FileTestDataUtil {
                 }
                 waterqualityReq.setTaskDate(localDate);
             } catch (Exception e){
-                waterqualityReq.setTaskDate(null);
+                waterqualityReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -1767,7 +1767,7 @@ public class FileTestDataUtil {
                 }
                 waterqualityReq.setReportDate(localDate);
             } catch (Exception e){
-                waterqualityReq.setReportDate(null);
+                waterqualityReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -2062,7 +2062,7 @@ public class FileTestDataUtil {
                 }
                 swimminganimalIdentificationReq.setTaskDate(localDate);
             } catch (Exception e){
-                swimminganimalIdentificationReq.setTaskDate(null);
+                swimminganimalIdentificationReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -2127,7 +2127,7 @@ public class FileTestDataUtil {
                 }
                 swimminganimalIdentificationReq.setReportDate(localDate);
             } catch (Exception e){
-                swimminganimalIdentificationReq.setReportDate(null);
+                swimminganimalIdentificationReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -2414,7 +2414,7 @@ public class FileTestDataUtil {
                 }
                 smallzooplanktonIinetReq.setTaskDate(localDate);
             } catch (Exception e){
-                smallzooplanktonIinetReq.setTaskDate(null);
+                smallzooplanktonIinetReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -2479,7 +2479,7 @@ public class FileTestDataUtil {
                 }
                 smallzooplanktonIinetReq.setReportDate(localDate);
             } catch (Exception e){
-                smallzooplanktonIinetReq.setReportDate(null);
+                smallzooplanktonIinetReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -2780,7 +2780,7 @@ public class FileTestDataUtil {
                 }
                 smallfishQuantitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                smallfishQuantitativeReq.setTaskDate(null);
+                smallfishQuantitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -2845,7 +2845,7 @@ public class FileTestDataUtil {
                 }
                 smallfishQuantitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                smallfishQuantitativeReq.setReportDate(null);
+                smallfishQuantitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -3146,7 +3146,7 @@ public class FileTestDataUtil {
                 }
                 smallfishQualitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                smallfishQualitativeReq.setTaskDate(null);
+                smallfishQualitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -3211,7 +3211,7 @@ public class FileTestDataUtil {
                 }
                 smallfishQualitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                smallfishQualitativeReq.setReportDate(null);
+                smallfishQualitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -3610,7 +3610,7 @@ public class FileTestDataUtil {
                 }
                 sedimentgrainReq.setTaskDate(localDate);
             } catch (Exception e){
-                sedimentgrainReq.setTaskDate(null);
+                sedimentgrainReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -3675,7 +3675,7 @@ public class FileTestDataUtil {
                 }
                 sedimentgrainReq.setReportDate(localDate);
             } catch (Exception e){
-                sedimentgrainReq.setReportDate(null);
+                sedimentgrainReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -4025,7 +4025,7 @@ public class FileTestDataUtil {
                 }
                 sedimentReq.setTaskDate(localDate);
             } catch (Exception e){
-                sedimentReq.setTaskDate(null);
+                sedimentReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -4090,7 +4090,7 @@ public class FileTestDataUtil {
                 }
                 sedimentReq.setReportDate(localDate);
             } catch (Exception e){
-                sedimentReq.setReportDate(null);
+                sedimentReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -4383,7 +4383,7 @@ public class FileTestDataUtil {
                 }
                 phytoplanktonReq.setTaskDate(localDate);
             } catch (Exception e){
-                phytoplanktonReq.setTaskDate(null);
+                phytoplanktonReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -4448,7 +4448,7 @@ public class FileTestDataUtil {
                 }
                 phytoplanktonReq.setReportDate(localDate);
             } catch (Exception e){
-                phytoplanktonReq.setReportDate(null);
+                phytoplanktonReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -4770,7 +4770,7 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQuantitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                macrobenthosQuantitativeReq.setTaskDate(null);
+                macrobenthosQuantitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -4835,7 +4835,7 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQuantitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                macrobenthosQuantitativeReq.setReportDate(null);
+                macrobenthosQuantitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -5143,7 +5143,7 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQualitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                macrobenthosQualitativeReq.setTaskDate(null);
+                macrobenthosQualitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -5208,7 +5208,7 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQualitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                macrobenthosQualitativeReq.setReportDate(null);
+                macrobenthosQualitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -5502,7 +5502,7 @@ public class FileTestDataUtil {
                 }
                 largezooplanktonInetReq.setTaskDate(localDate);
             } catch (Exception e){
-                largezooplanktonInetReq.setTaskDate(null);
+                largezooplanktonInetReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -5567,7 +5567,7 @@ public class FileTestDataUtil {
                 }
                 largezooplanktonInetReq.setReportDate(localDate);
             } catch (Exception e){
-                largezooplanktonInetReq.setReportDate(null);
+                largezooplanktonInetReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -5887,7 +5887,7 @@ public class FileTestDataUtil {
                 }
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                intertidalzonebiologicalQuantitativeReq.setTaskDate(null);
+                intertidalzonebiologicalQuantitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -5952,7 +5952,7 @@ public class FileTestDataUtil {
                 }
                 intertidalzonebiologicalQuantitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                intertidalzonebiologicalQuantitativeReq.setReportDate(null);
+                intertidalzonebiologicalQuantitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -6225,7 +6225,7 @@ public class FileTestDataUtil {
                 }
                 hydrometeorologicalReq.setTaskDate(localDate);
             } catch (Exception e){
-                hydrometeorologicalReq.setTaskDate(null);
+                hydrometeorologicalReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -6290,7 +6290,7 @@ public class FileTestDataUtil {
                 }
                 hydrometeorologicalReq.setReportDate(localDate);
             } catch (Exception e){
-                hydrometeorologicalReq.setReportDate(null);
+                hydrometeorologicalReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -6591,7 +6591,7 @@ public class FileTestDataUtil {
                 }
                 fisheggQualitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                fisheggQualitativeReq.setTaskDate(null);
+                fisheggQualitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -6656,7 +6656,7 @@ public class FileTestDataUtil {
                 }
                 fisheggQualitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                fisheggQualitativeReq.setReportDate(null);
+                fisheggQualitativeReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -7039,7 +7039,7 @@ public class FileTestDataUtil {
                 }
                 biologicalQualityReq.setTaskDate(localDate);
             } catch (Exception e){
-                biologicalQualityReq.setTaskDate(null);
+                biologicalQualityReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -7104,7 +7104,7 @@ public class FileTestDataUtil {
                 }
                 biologicalQualityReq.setReportDate(localDate);
             } catch (Exception e){
-                biologicalQualityReq.setReportDate(null);
+                biologicalQualityReq.setReportDate(LocalDate.now());
             }
         }
 
@@ -7405,7 +7405,7 @@ public class FileTestDataUtil {
                 }
                 fisheggQuantitativeReq.setTaskDate(localDate);
             } catch (Exception e){
-                fisheggQuantitativeReq.setTaskDate(null);
+                fisheggQuantitativeReq.setTaskDate(LocalDate.now());
             }
         }
 
@@ -7470,7 +7470,7 @@ public class FileTestDataUtil {
                 }
                 fisheggQuantitativeReq.setReportDate(localDate);
             } catch (Exception e){
-                fisheggQuantitativeReq.setReportDate(null);
+                fisheggQuantitativeReq.setReportDate(LocalDate.now());
             }
         }
 
