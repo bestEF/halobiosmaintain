@@ -76,7 +76,7 @@
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="checkDate" message="监测日期：请输入合法格式 YYYY-MM-DD"></rule>
+                <rule name="checkTime" message="监测日期：请输入合法格式 YYYY-MM-DD"></rule>
                 <rule name="length" length="50" message="监测日期长度超出单元格限制"></rule>
             </rules>
         </column>
@@ -84,7 +84,7 @@
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
                 <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
-                <rule name="checkDate" message="监测日期：请输入合法格式 YYYY-MM-DD"></rule>
+                <rule name="checkTime" message="监测日期：请输入合法格式 YYYY-MM-DD"></rule>
                 <rule name="length" length="50" message="监测日期长度超出单元格限制"></rule>
             </rules>
         </column>

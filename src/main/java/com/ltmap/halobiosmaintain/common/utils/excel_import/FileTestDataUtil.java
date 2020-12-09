@@ -20,6 +20,8 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -60,7 +62,7 @@ public class FileTestDataUtil {
     static String err6="含有不存在的站位信息；";
     static String err7="存在与已有数据冲突的数据；";
     static String err8="存在不合法的小数格式；";
-    static String err9="存在不合法的时间格式，请输入例如HH:mm";
+    static String err9="开始时间或结束时间格式不正确 请输入格式如08:00：";
 
     String msg1="上传文件中存在与数据库重复的数据；";
     String msg2="上传文件中存在格式错误数据；";
@@ -1196,60 +1198,46 @@ public class FileTestDataUtil {
                                 birdObserveRecordReq.setSplineLength(cell.getStringCellValue());
                                 break;
                             case 10:
-                                //判断该日期在excel表格的格式是否是日期格式
-                                if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
-                                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                                }
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                short df = cell.getCellStyle().getDataFormat();
 
-                                try{
-                                    String strDate=getStringCellValue(cell);
-                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-                                    LocalTime localTime=null;
-                                    if(strDate.contains("-")){
-                                        dtf = DateTimeFormatter.ofPattern("HH-mm");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else if(strDate.contains(".")){
-                                        dtf = DateTimeFormatter.ofPattern("HH:mm");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else if(strDate.contains("/")){
-                                        dtf = DateTimeFormatter.ofPattern("HH/mm");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else{
-                                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
-                                        localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-                                    }
+                                if(df==20){
+                                    Date date = cell.getDateCellValue();
+                                    LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
                                     birdObserveRecordReq.setStartTime(localTime);
-                                } catch (Exception e){
+                                }else if(cell.getCellType()==Cell.CELL_TYPE_STRING){
+                                    try {
+                                        Date date = sdf.parse(cell.getStringCellValue());
+                                        LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                        birdObserveRecordReq.setStartTime(localTime);
+                                    } catch (ParseException e) {
+                                        birdObserveRecordReq.setStartTime(null);
+                                    }
+                                }else {
                                     birdObserveRecordReq.setStartTime(null);
                                 }
+
                                 break;
                             case 11:
-                                //判断该日期在excel表格的格式是否是日期格式
-                                if(!(cell.getCellType()==Cell.CELL_TYPE_NUMERIC)){
-                                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                                }
+                                sdf = new SimpleDateFormat("HH:mm");
 
-                                try{
-                                    String strDate=getStringCellValue(cell);
-                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-                                    LocalTime localTime=null;
-                                    if(strDate.contains("-")){
-                                        dtf = DateTimeFormatter.ofPattern("HH-mm-ss");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else if(strDate.contains(".")){
-                                        dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else if(strDate.contains("/")){
-                                        dtf = DateTimeFormatter.ofPattern("HH/mm/ss");
-                                        localTime = LocalTime.parse(strDate);
-                                    }else{
-                                        Date date = HSSFDateUtil.getJavaDate(Double.valueOf(strDate));
-                                        localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-                                    }
+                                df = cell.getCellStyle().getDataFormat();
+                                if(df==20){
+                                    Date date = cell.getDateCellValue();
+                                    LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
                                     birdObserveRecordReq.setEndTime(localTime);
-                                } catch (Exception e){
+                                }else if(cell.getCellType()==Cell.CELL_TYPE_STRING){
+                                    try {
+                                        Date date = sdf.parse(cell.getStringCellValue());
+                                        LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                        birdObserveRecordReq.setEndTime(localTime);
+                                    } catch (ParseException e) {
+                                        birdObserveRecordReq.setEndTime(null);
+                                    }
+                                }else {
                                     birdObserveRecordReq.setEndTime(null);
                                 }
+
                                 break;
                             case 15:
                                 cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -7674,13 +7662,18 @@ public class FileTestDataUtil {
                 //规则6：是否是时间格式：HH:mm
                 else if(rulName.equals(ParseConstans.RULE_NAME_Time)){
                     if(colCell.getCellStyle().getDataFormat()!=20){
-                        if(!errorString.toString().contains(err9)) errorString.append(err9);
-                        errorMap.put("curRow", curRow);
-                        errorMap.put("curCol", curCol);
-                        errorMap.put("rulMsg", rulMsg);
-                        errorList.add(errorMap);
-                        result = -1;
-                        break;
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                            Date parse = sdf.parse(cellValue);
+                        } catch (ParseException e) {
+                            if(!errorString.toString().contains(err9)) errorString.append(err9);
+                            errorMap.put("curRow", curRow);
+                            errorMap.put("curCol", curCol);
+                            errorMap.put("rulMsg", rulMsg);
+                            errorList.add(errorMap);
+                            result = -1;
+                            break;
+                        }
                     }
                 }
             }
