@@ -54,6 +54,10 @@ public class ApplicationEnvironmentInit {
     public String swimminganimalIdentificationPath="";
     @Value("${excel-template.waterqualityTemp}")
     public String waterqualityPath="";
+    @Value("${excel-template.birdObserveRecordTemp}")
+    public String birdObserveRecordPath="";
+    @Value("${excel-template.vegetationSurveyRecordTemp}")
+    public String vegetationSurveyRecordPath="";
 
     /**
      * @PostConstruct java注释 用于需要执行相关性注入后执行任何初始化的方法
@@ -80,5 +84,7 @@ public class ApplicationEnvironmentInit {
         Constant.smallzooplanktonIinetPath=smallzooplanktonIinetPath;
         Constant.swimminganimalIdentificationPath=swimminganimalIdentificationPath;
         Constant.waterqualityPath=waterqualityPath;
+        Constant.birdObserveRecordPath=birdObserveRecordPath;
+        Constant.vegetationSurveyRecordPath=vegetationSurveyRecordPath;
     }
 }

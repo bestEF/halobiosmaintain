@@ -556,7 +556,7 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
             String result=resultStr.substring(0,resultStr.length()-1);
             HashMap<String, String> valueMap1 = new HashMap<>();
             valueMap1.put("resultStr", result);
-            resultMap.put("resultStr", valueMap1);
+            resultMap.put("value", valueMap1);
         }
 //        //水质标准类别占比
 //        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfo(year, voyage);

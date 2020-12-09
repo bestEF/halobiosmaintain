@@ -55,6 +55,8 @@ excel-template:
   smallzooplanktonIinetTemp: /excelTemplate/浮游动物（II型网）.xls
   swimminganimalIdentificationTemp: /excelTemplate/游泳动物.xls
   waterqualityTemp: /excelTemplate/水质.xls
+  birdObserveRecordTemp: /excelTemplate/鸟类.xls
+  vegetationSurveyRecordTemp: /excelTemplate/植被.xls
 
 #excel校验相关配置
 config:

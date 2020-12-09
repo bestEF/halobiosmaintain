@@ -253,6 +253,10 @@ public class ExcelDataImportController {
                 return Responses.or(Constant.serverServletContext+Constant.swimminganimalIdentificationPath);
             case Constant.waterqualityType:
                 return Responses.or(Constant.serverServletContext+Constant.waterqualityPath);
+            case Constant.birdObserveRecordType:
+                return Responses.or(Constant.serverServletContext+Constant.birdObserveRecordPath);
+            case Constant.vegetationSurveyRecordType:
+                return Responses.or(Constant.serverServletContext+Constant.vegetationSurveyRecordPath);
             default:
                 break;
         }

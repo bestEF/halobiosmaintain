@@ -27,6 +27,8 @@ public class Constant {
     public static String smallzooplanktonIinetPath="";
     public static String swimminganimalIdentificationPath="";
     public static String waterqualityPath="";
+    public static String birdObserveRecordPath="";
+    public static String vegetationSurveyRecordPath="";
 
 
     //================以下为直接定义的静态常量========================

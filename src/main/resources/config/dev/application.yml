@@ -1,9 +1,9 @@
 # 服务器配置
 server:
   #端口号
-  port: 9092
+  port: 9091
   #ip
-  ip: http://192.168.2.108:9092
+  ip: http://192.168.2.108:9091
   #工程访问上下文名称
   servlet:
     context-path: /halobiosmaintain
@@ -56,6 +56,8 @@ excel-template:
   smallzooplanktonIinetTemp: /excelTemplate/浮游动物（II型网）.xls
   swimminganimalIdentificationTemp: /excelTemplate/游泳动物.xls
   waterqualityTemp: /excelTemplate/水质.xls
+  birdObserveRecordTemp: /excelTemplate/鸟类.xls
+  vegetationSurveyRecordTemp: /excelTemplate/植被.xls
 
 #excel校验相关配置
 config:
