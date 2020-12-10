@@ -51,8 +51,8 @@ public class SwimminganimalIdentificationController {
     @PostMapping("/listSwimminganimalIdentification")
     public Response<IPage<SwimminganimalIdentification>> listSwimminganimalIdentification(@RequestParam(defaultValue = "1")Integer current,
                                                                                    @RequestParam(defaultValue = "10")Integer size,
-                                                                                   String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<SwimminganimalIdentification> swimminganimalIdentificationIPage= swimminganimalIdentificationService.listSwimminganimalIdentification(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                                   String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<SwimminganimalIdentification> swimminganimalIdentificationIPage= swimminganimalIdentificationService.listSwimminganimalIdentification(current,size,stationName,biologicalChineseName,startDate,endDate, reportId);
         return Responses.or(swimminganimalIdentificationIPage);
     }
 
@@ -81,7 +81,7 @@ public class SwimminganimalIdentificationController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("游泳动物")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

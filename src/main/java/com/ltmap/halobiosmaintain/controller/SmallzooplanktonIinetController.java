@@ -52,8 +52,8 @@ public class SmallzooplanktonIinetController {
     @PostMapping("/listSmallzooplanktonIinet")
     public Response<IPage<SmallzooplanktonIinet>> listSmallzooplanktonIinet(@RequestParam(defaultValue = "1")Integer current,
                                                                             @RequestParam(defaultValue = "10")Integer size,
-                                                                            String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<SmallzooplanktonIinet> smallzooplanktonIinets= smallzooplanktonIinetService.listSmallzooplanktonIinet(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                            String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<SmallzooplanktonIinet> smallzooplanktonIinets= smallzooplanktonIinetService.listSmallzooplanktonIinet(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(smallzooplanktonIinets);
     }
 
@@ -82,7 +82,7 @@ public class SmallzooplanktonIinetController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("浮游动物（II型网）")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

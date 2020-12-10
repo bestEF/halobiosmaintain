@@ -50,8 +50,8 @@ public class SedimentgrainController {
     @PostMapping("/listSediment")
     public Response<IPage<Sedimentgrain>> listSedimentgrain(@RequestParam(defaultValue = "1")Integer current,
                                                             @RequestParam(defaultValue = "10")Integer size,
-                                                            String stationName, String startDate, String endDate){
-        IPage<Sedimentgrain> sediments= sedimentgrainService.listSedimentgrain(current,size,stationName,startDate,endDate);
+                                                            String stationName, String startDate, String endDate,Long reportId){
+        IPage<Sedimentgrain> sediments= sedimentgrainService.listSedimentgrain(current,size,stationName,startDate,endDate,reportId);
         return Responses.or(sediments);
     }
 
@@ -80,7 +80,7 @@ public class SedimentgrainController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("沉积物粒度")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

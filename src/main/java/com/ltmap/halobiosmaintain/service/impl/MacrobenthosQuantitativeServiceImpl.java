@@ -225,9 +225,9 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
      * @Date: 2020/12/4 8:42
      */
     @Override
-    public IPage<MacrobenthosQuantitative> listMacrobenthosQuantitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<MacrobenthosQuantitative> listMacrobenthosQuantitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return macrobenthosQuantitativeMapper.listMacrobenthosQuantitative(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return macrobenthosQuantitativeMapper.listMacrobenthosQuantitative(page,stationName,  biologicalChineseName,  startDate,  endDate, reportId);
     }
 
 }

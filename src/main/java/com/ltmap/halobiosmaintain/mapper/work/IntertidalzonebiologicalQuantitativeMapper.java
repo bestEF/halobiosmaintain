@@ -21,6 +21,6 @@ public interface IntertidalzonebiologicalQuantitativeMapper extends BaseMapper<I
 
     List<IntertidalzonebiologicalQuantitative> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 
-    IPage<IntertidalzonebiologicalQuantitative> listIntertidalzonebiologicalQuantitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<IntertidalzonebiologicalQuantitative> listIntertidalzonebiologicalQuantitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

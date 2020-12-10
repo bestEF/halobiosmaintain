@@ -27,7 +27,7 @@ public interface ISmallzooplanktonIinetService extends IService<Smallzooplankton
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 
-    IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

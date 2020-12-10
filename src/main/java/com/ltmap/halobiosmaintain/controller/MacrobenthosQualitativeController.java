@@ -51,8 +51,8 @@ public class MacrobenthosQualitativeController {
     @PostMapping("/listMacrobenthosQualitative")
     public Response<IPage<MacrobenthosQualitative>> listMacrobenthosQualitative(@RequestParam(defaultValue = "1")Integer current,
                                                                                 @RequestParam(defaultValue = "10")Integer size,
-                                                                                String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<MacrobenthosQualitative> macrobenthosQualitatives= macrobenthosQualitativeService.listMacrobenthosQualitative(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                                String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<MacrobenthosQualitative> macrobenthosQualitatives= macrobenthosQualitativeService.listMacrobenthosQualitative(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(macrobenthosQualitatives);
     }
 
@@ -81,7 +81,7 @@ public class MacrobenthosQualitativeController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("大型底栖动物定性")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

@@ -23,7 +23,7 @@ public interface IWaterqualityService extends IService<Waterquality> {
 
     HashMap<String,HashMap<String,BigDecimal>> waterQualityOrder(String year, String voyage);
 
-    IPage<Waterquality> listWaterquality(Integer current, Integer size,String stationName, String startDate, String endDate);
+    IPage<Waterquality> listWaterquality(Integer current, Integer size,String stationName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

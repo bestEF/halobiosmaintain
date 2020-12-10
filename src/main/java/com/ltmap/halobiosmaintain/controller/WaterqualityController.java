@@ -91,8 +91,8 @@ public class WaterqualityController {
     @PostMapping("/listWaterquality")
     public Response<IPage<Waterquality>> listWaterquality(@RequestParam(defaultValue = "1")Integer current,
                                                           @RequestParam(defaultValue = "10")Integer size,
-                                                          String stationName, String startDate, String endDate){
-        IPage<Waterquality> waterqualities= waterqualityService.listWaterquality(current,size,stationName,startDate,endDate);
+                                                          String stationName, String startDate, String endDate,Long reportId){
+        IPage<Waterquality> waterqualities= waterqualityService.listWaterquality(current,size,stationName,startDate,endDate,reportId);
         return Responses.or(waterqualities);
     }
 
@@ -121,7 +121,7 @@ public class WaterqualityController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("水质")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

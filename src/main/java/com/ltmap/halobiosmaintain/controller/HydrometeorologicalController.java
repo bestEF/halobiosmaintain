@@ -112,7 +112,7 @@ public class HydrometeorologicalController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("水文气象")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

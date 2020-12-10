@@ -88,8 +88,8 @@ public class BiologicalQualityController {
     @PostMapping("/listBiologicalQuality")
     public Response<IPage<BiologicalQuality>> listBiologicalQuality(@RequestParam(defaultValue = "1")Integer current,
                                                                    @RequestParam(defaultValue = "10")Integer size,
-                                                                   String stationName,String biologicalChineseName,String startDate,String endDate){
-        IPage<BiologicalQuality> biologicalQualities= biologicalQualityService.listBiologicalQuality(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                   String stationName,String biologicalChineseName,String startDate,String endDate,Long reportId){
+        IPage<BiologicalQuality> biologicalQualities= biologicalQualityService.listBiologicalQuality(current,size,stationName,biologicalChineseName,startDate,endDate, reportId);
         return Responses.or(biologicalQualities);
     }
 
@@ -118,7 +118,7 @@ public class BiologicalQualityController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("生物质量")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

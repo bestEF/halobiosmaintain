@@ -160,9 +160,9 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
      * @Date: 2020/12/8 17:10
      */
     @Override
-    public IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<FisheggQuantitative> page=new Page<>(current, size);
-        return fisheggQuantitativeMapper.listFisheggQuantitative(page,stationName,biologicalChineseName,startDate,endDate);
+        return fisheggQuantitativeMapper.listFisheggQuantitative(page,stationName,biologicalChineseName,startDate,endDate,reportId);
     }
 
 }

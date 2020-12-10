@@ -20,6 +20,6 @@ public interface SmallzooplanktonIinetMapper extends BaseMapper<Smallzooplankton
 
     List<SmallzooplanktonIinet> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 
-    IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

@@ -21,7 +21,7 @@ public interface SedimentMapper extends BaseMapper<Sediment> {
 
     List<Sediment> sedimentstatisticOneYear(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<Sediment> listSediment(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<Sediment> listSediment(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
     List<Sediment> sedimentStationOneYear(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId")Long stationId);
 }

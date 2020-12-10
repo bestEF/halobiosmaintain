@@ -228,8 +228,8 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
      * @Date: 2020/12/4 8:46
      */
     @Override
-    public IPage<IntertidalzonebiologicalQuantitative> listIntertidalzonebiologicalQuantitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<IntertidalzonebiologicalQuantitative> listIntertidalzonebiologicalQuantitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return intertidalzonebiologicalQuantitativeMapper.listIntertidalzonebiologicalQuantitative(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return intertidalzonebiologicalQuantitativeMapper.listIntertidalzonebiologicalQuantitative(page,stationName,  biologicalChineseName,  startDate,  endDate,reportId);
     }
 }

@@ -35,7 +35,7 @@ public interface IMacrobenthosQuantitativeService extends IService<MacrobenthosQ
     HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage);
 
 
-    IPage<MacrobenthosQuantitative> listMacrobenthosQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<MacrobenthosQuantitative> listMacrobenthosQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

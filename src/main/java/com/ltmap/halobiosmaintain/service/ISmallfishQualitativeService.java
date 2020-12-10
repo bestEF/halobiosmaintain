@@ -19,7 +19,7 @@ public interface ISmallfishQualitativeService extends IService<SmallfishQualitat
     List<SmallfishQualitative> queryBiologicalType(String year, String voyage);
     List<String> statisticTypeFromOneMap(String year, String voyage);
 
-    IPage<SmallfishQualitative> listSmallfishQualitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<SmallfishQualitative> listSmallfishQualitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

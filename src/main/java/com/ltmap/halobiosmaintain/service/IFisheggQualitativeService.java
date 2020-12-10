@@ -21,7 +21,7 @@ public interface IFisheggQualitativeService extends IService<FisheggQualitative>
     List<FisheggQualitative> queryBiologicalType(String year, String voyage);
     List<String> statisticTypeFromOneMap(String year, String voyage);
 
-    IPage<FisheggQualitative> listFisheggQualitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<FisheggQualitative> listFisheggQualitative(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

@@ -18,6 +18,6 @@ import java.util.List;
  */
 public interface SedimentgrainMapper extends BaseMapper<Sedimentgrain> {
 
-    IPage<Sedimentgrain> listSedimentgrain(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<Sedimentgrain> listSedimentgrain(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

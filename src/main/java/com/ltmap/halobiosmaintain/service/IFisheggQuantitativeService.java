@@ -35,5 +35,5 @@ public interface IFisheggQuantitativeService extends IService<FisheggQuantitativ
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 
-    IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<FisheggQuantitative> listFisheggQuantitative(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 }

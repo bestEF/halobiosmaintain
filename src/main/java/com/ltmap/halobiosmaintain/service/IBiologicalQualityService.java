@@ -23,7 +23,7 @@ public interface IBiologicalQualityService extends IService<BiologicalQuality> {
 
     HashMap<String, HashMap<String, String>> biologicalQualityOrder(String year, String voyage);
 
-    IPage<BiologicalQuality> listBiologicalQuality(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<BiologicalQuality> listBiologicalQuality(Integer current, Integer size, String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     /**
      * 根据填报id删除对应所有数据

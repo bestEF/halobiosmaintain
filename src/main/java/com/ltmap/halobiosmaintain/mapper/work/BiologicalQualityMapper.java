@@ -20,7 +20,7 @@ public interface BiologicalQualityMapper extends BaseMapper<BiologicalQuality> {
 
     List<BiologicalQuality> biologicalQualityRangeOneYear(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<BiologicalQuality> listBiologicalQuality(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<BiologicalQuality> listBiologicalQuality(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId")Long reportId);
 
     List<BiologicalQuality> biologicalQualityStationOneYear(@Param("year") String year, @Param("voyage") String voyage, @Param("stationId")Long stationId);
 

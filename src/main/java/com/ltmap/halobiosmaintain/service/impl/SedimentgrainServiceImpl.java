@@ -45,8 +45,8 @@ public class SedimentgrainServiceImpl extends ServiceImpl<SedimentgrainMapper, S
      * @Date: 2020/12/4 8:49
      */
     @Override
-    public IPage<Sedimentgrain> listSedimentgrain(Integer current,Integer size,String stationName, String startDate, String endDate){
+    public IPage<Sedimentgrain> listSedimentgrain(Integer current,Integer size,String stationName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return sedimentgrainMapper.listSedimentgrain(page,stationName,  startDate,  endDate);
+        return sedimentgrainMapper.listSedimentgrain(page,stationName,  startDate,  endDate,reportId);
     }
 }

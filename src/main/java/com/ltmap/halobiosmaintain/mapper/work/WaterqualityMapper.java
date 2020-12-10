@@ -21,7 +21,7 @@ public interface WaterqualityMapper extends BaseMapper<Waterquality> {
 
     List<Waterquality>  waterQualitystatisticOneYear(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<Waterquality> listWaterquality(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<Waterquality> listWaterquality(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
     List<Waterquality> waterQualitystatisticStationOneYear(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId")Long stationId);
 

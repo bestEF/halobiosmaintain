@@ -50,8 +50,8 @@ public class IntertidalzonebiologicalQuantitativeController {
     @PostMapping("/listIntertidalzonebiologicalQuantitative")
     public Response<IPage<IntertidalzonebiologicalQuantitative>> listIntertidalzonebiologicalQuantitative(@RequestParam(defaultValue = "1")Integer current,
                                                                                                           @RequestParam(defaultValue = "10")Integer size,
-                                                                                                          String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitatives= iIntertidalzonebiologicalQuantitativeService.listIntertidalzonebiologicalQuantitative(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                                                          String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitatives= iIntertidalzonebiologicalQuantitativeService.listIntertidalzonebiologicalQuantitative(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(intertidalzonebiologicalQuantitatives);
     }
 
@@ -81,7 +81,7 @@ public class IntertidalzonebiologicalQuantitativeController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("潮间带生物定量")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

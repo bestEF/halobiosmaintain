@@ -87,9 +87,9 @@ public class SwimminganimalIdentificationServiceImpl extends ServiceImpl<Swimmin
      * @Date: 2020/12/4 8:52
      */
     @Override
-    public IPage<SwimminganimalIdentification> listSwimminganimalIdentification(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<SwimminganimalIdentification> listSwimminganimalIdentification(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return swimminganimalIdentificationMapper.listSwimminganimalIdentification(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return swimminganimalIdentificationMapper.listSwimminganimalIdentification(page,stationName,  biologicalChineseName,  startDate,  endDate, reportId);
     }
 
 }

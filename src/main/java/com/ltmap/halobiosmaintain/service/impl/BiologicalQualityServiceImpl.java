@@ -726,9 +726,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
      * @Date: 2020/12/4 8:43
      */
     @Override
-    public IPage<BiologicalQuality> listBiologicalQuality(Integer current,Integer size,String stationName,String biologicalChineseName,String startDate,String endDate){
+    public IPage<BiologicalQuality> listBiologicalQuality(Integer current,Integer size,String stationName,String biologicalChineseName,String startDate,String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return biologicalQualityMapper.listBiologicalQuality(page,stationName,biologicalChineseName,startDate,endDate);
+        return biologicalQualityMapper.listBiologicalQuality(page,stationName,biologicalChineseName,startDate,endDate,reportId);
     }
 
 

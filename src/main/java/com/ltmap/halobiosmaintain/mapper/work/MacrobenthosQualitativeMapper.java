@@ -21,7 +21,7 @@ public interface MacrobenthosQualitativeMapper extends BaseMapper<MacrobenthosQu
 
     List<MacrobenthosQualitative> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 
-    IPage<MacrobenthosQualitative> listMacrobenthosQualitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<MacrobenthosQualitative> listMacrobenthosQualitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 
 }

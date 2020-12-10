@@ -21,6 +21,6 @@ public interface LargezooplanktonInetMapper extends BaseMapper<LargezooplanktonI
 
     List<LargezooplanktonInet> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 
-    IPage<LargezooplanktonInet> listLargezooplanktonInet(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<LargezooplanktonInet> listLargezooplanktonInet(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

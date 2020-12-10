@@ -20,6 +20,6 @@ public interface SmallfishQuantitativeMapper extends BaseMapper<SmallfishQuantit
 
     List<SmallfishQuantitative> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage,@Param("stationId") Long stationId);
 
-    IPage<SmallfishQuantitative> listSmallfishQuantitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<SmallfishQuantitative> listSmallfishQuantitative(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

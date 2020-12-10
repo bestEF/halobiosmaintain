@@ -813,8 +813,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
      * @Date: 2020/12/4 8:53
      */
     @Override
-    public IPage<Waterquality> listWaterquality(Integer current,Integer size,String stationName, String startDate, String endDate){
+    public IPage<Waterquality> listWaterquality(Integer current,Integer size,String stationName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return waterqualityMapper.listWaterquality(page,stationName,  startDate,  endDate);
+        return waterqualityMapper.listWaterquality(page,stationName,  startDate,  endDate, reportId);
     }
 }

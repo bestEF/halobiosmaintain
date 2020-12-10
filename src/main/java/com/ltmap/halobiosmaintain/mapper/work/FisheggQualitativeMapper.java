@@ -21,6 +21,6 @@ public interface FisheggQualitativeMapper extends BaseMapper<FisheggQualitative>
 
     List<FisheggQualitative> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<FisheggQualitative> listFisheggQualitative(IPage page,@Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<FisheggQualitative> listFisheggQualitative(IPage page,@Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

@@ -52,8 +52,8 @@ public class SmallfishQualitativeController {
     @PostMapping("/listSmallfishQualitative")
     public Response<IPage<SmallfishQualitative>> listSmallfishQualitative(@RequestParam(defaultValue = "1")Integer current,
                                                                           @RequestParam(defaultValue = "10")Integer size,
-                                                                          String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<SmallfishQualitative> smallfishQualitatives= smallfishQualitativeService.listSmallfishQualitative(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                          String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<SmallfishQualitative> smallfishQualitatives= smallfishQualitativeService.listSmallfishQualitative(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(smallfishQualitatives);
     }
 
@@ -82,7 +82,7 @@ public class SmallfishQualitativeController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("仔鱼定性")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

@@ -31,7 +31,7 @@ public interface ILargezooplanktonInetService extends IService<LargezooplanktonI
 
     HashMap<String,BigDecimal> queryBiologicalBiomassOneYear(String year, String voyage);
 
-    IPage<LargezooplanktonInet> listLargezooplanktonInet(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<LargezooplanktonInet> listLargezooplanktonInet(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

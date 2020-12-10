@@ -20,6 +20,6 @@ public interface PhytoplanktonMapper extends BaseMapper<Phytoplankton> {
 
     List<Phytoplankton> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<Phytoplankton> listPhytoplankton(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<Phytoplankton> listPhytoplankton(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }

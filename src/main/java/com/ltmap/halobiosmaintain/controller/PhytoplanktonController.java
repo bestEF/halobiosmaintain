@@ -51,8 +51,8 @@ public class PhytoplanktonController {
     @PostMapping("/listPhytoplankton")
     public Response<IPage<Phytoplankton>> listPhytoplankton(@RequestParam(defaultValue = "1")Integer current,
                                                             @RequestParam(defaultValue = "10")Integer size,
-                                                            String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<Phytoplankton> phytoplanktons= phytoplanktonService.listPhytoplankton(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                            String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<Phytoplankton> phytoplanktons= phytoplanktonService.listPhytoplankton(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(phytoplanktons);
     }
 
@@ -81,7 +81,7 @@ public class PhytoplanktonController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("浮游植物")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

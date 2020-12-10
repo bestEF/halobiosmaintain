@@ -89,8 +89,8 @@ public class PhytoplanktonServiceImpl extends ServiceImpl<PhytoplanktonMapper, P
      * @Date: 2020/12/4 8:49
      */
     @Override
-    public IPage<Phytoplankton> listPhytoplankton(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<Phytoplankton> listPhytoplankton(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return phytoplanktonMapper.listPhytoplankton(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return phytoplanktonMapper.listPhytoplankton(page,stationName,  biologicalChineseName,  startDate,  endDate, reportId);
     }
 }

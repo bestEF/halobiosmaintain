@@ -51,8 +51,8 @@ public class FisheggQualitativeController {
     @PostMapping("/listFisheggQualitative")
     public Response<IPage<FisheggQualitative>> listFisheggQualitative(@RequestParam(defaultValue = "1")Integer current,
                                                                       @RequestParam(defaultValue = "10")Integer size,
-                                                                      String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<FisheggQualitative> fisheggQualitatives= fisheggQualitativeService.listFisheggQualitative(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                      String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<FisheggQualitative> fisheggQualitatives= fisheggQualitativeService.listFisheggQualitative(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(fisheggQualitatives);
     }
 
@@ -80,7 +80,7 @@ public class FisheggQualitativeController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("鱼卵定性")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

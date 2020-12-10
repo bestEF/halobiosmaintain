@@ -84,9 +84,9 @@ public class SmallfishQualitativeServiceImpl extends ServiceImpl<SmallfishQualit
      * @Date: 2020/12/4 8:50
      */
     @Override
-    public IPage<SmallfishQualitative> listSmallfishQualitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<SmallfishQualitative> listSmallfishQualitative(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return smallfishQualitativeMapper.listSmallfishQualitative(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return smallfishQualitativeMapper.listSmallfishQualitative(page,stationName,  biologicalChineseName,  startDate,  endDate, reportId);
     }
 
 }

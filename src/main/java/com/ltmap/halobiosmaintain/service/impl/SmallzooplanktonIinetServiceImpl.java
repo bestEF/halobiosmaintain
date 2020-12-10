@@ -158,8 +158,8 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
      * @Date: 2020/12/4 8:52
      */
     @Override
-    public IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate){
+    public IPage<SmallzooplanktonIinet> listSmallzooplanktonIinet(Integer current,Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return smallzooplanktonIinetMapper.listSmallzooplanktonIinet(page,stationName,  biologicalChineseName,  startDate,  endDate);
+        return smallzooplanktonIinetMapper.listSmallzooplanktonIinet(page,stationName,  biologicalChineseName,  startDate,  endDate,reportId);
     }
 }

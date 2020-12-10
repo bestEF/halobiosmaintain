@@ -92,8 +92,8 @@ public class SedimentController {
     @PostMapping("/listSediment")
     public Response<IPage<Sediment>> listSediment(@RequestParam(defaultValue = "1")Integer current,
                                                   @RequestParam(defaultValue = "10")Integer size,
-                                                  String stationName, String startDate, String endDate){
-        IPage<Sediment> sediments= sedimentService.listSediment(current,size,stationName,startDate,endDate);
+                                                  String stationName, String startDate, String endDate,Long reportId){
+        IPage<Sediment> sediments= sedimentService.listSediment(current,size,stationName,startDate,endDate,reportId);
         return Responses.or(sediments);
     }
 
@@ -122,7 +122,7 @@ public class SedimentController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("沉积物")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

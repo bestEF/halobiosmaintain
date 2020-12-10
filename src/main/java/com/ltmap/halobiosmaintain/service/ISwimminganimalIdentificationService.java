@@ -23,7 +23,7 @@ public interface ISwimminganimalIdentificationService extends IService<Swimminga
     List<SwimminganimalIdentification> queryBiologicalType(String year, String voyage);
     HashMap<String,Integer> statisticTypeFromOneMap(String year, String voyage);
 
-    IPage<SwimminganimalIdentification> listSwimminganimalIdentification(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate);
+    IPage<SwimminganimalIdentification> listSwimminganimalIdentification(Integer current, Integer size,String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId);
 
     Boolean deleteByReportId(Long reportId);
 }

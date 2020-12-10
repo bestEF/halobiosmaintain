@@ -51,8 +51,8 @@ public class LargezooplanktonInetController {
     @PostMapping("/listLargezooplanktonInet")
     public Response<IPage<LargezooplanktonInet>> listLargezooplanktonInet(@RequestParam(defaultValue = "1")Integer current,
                                                                           @RequestParam(defaultValue = "10")Integer size,
-                                                                          String stationName, String biologicalChineseName, String startDate, String endDate){
-        IPage<LargezooplanktonInet> intertidalzonebiologicalQuantitatives= largezooplanktonInetService.listLargezooplanktonInet(current,size,stationName,biologicalChineseName,startDate,endDate);
+                                                                          String stationName, String biologicalChineseName, String startDate, String endDate,Long reportId){
+        IPage<LargezooplanktonInet> intertidalzonebiologicalQuantitatives= largezooplanktonInetService.listLargezooplanktonInet(current,size,stationName,biologicalChineseName,startDate,endDate,reportId);
         return Responses.or(intertidalzonebiologicalQuantitatives);
     }
 
@@ -82,7 +82,7 @@ public class LargezooplanktonInetController {
                 for (String item:dataType
                 ) {
                     if (!item.equals("浮游动物（I型网）")) {
-                        dataTypeNew +=item;
+                        dataTypeNew +=item+";";
                     }
                 }
                 if(!Strings.isNullOrEmpty(dataTypeNew)){

@@ -20,6 +20,6 @@ public interface SwimminganimalIdentificationMapper extends BaseMapper<Swimminga
 
     List<SwimminganimalIdentification> queryBiologicalType(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<SwimminganimalIdentification> listSwimminganimalIdentification(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<SwimminganimalIdentification> listSwimminganimalIdentification(IPage page, @Param("stationName")String stationName, @Param("biologicalChineseName")String biologicalChineseName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId") Long reportId);
 
 }
