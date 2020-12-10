@@ -15,7 +15,7 @@ server:
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=UTC
+      url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai
       username: root
       password: root
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,6 +29,7 @@ spring:
       cache: false    #页面不加载缓存，修改即时生效
   profiles:
     active: dev
+
 
 
 mybatis-plus:
