@@ -63,6 +63,7 @@ public class FileTestDataUtil {
     static String err7="存在与已有数据冲突的数据；";
     static String err8="存在不合法的小数格式；";
     static String err9="开始时间或结束时间格式不正确 请输入格式如08:00：";
+    static String err10="选择的年份与excel表格中任务日期年份不符：";
 
     String msg1="上传文件中存在与数据库重复的数据；";
     String msg2="上传文件中存在格式错误数据；";
@@ -1701,6 +1702,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 waterqualityReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 waterqualityReq.setTaskDate(LocalDate.now());
             }
@@ -2061,6 +2070,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 swimminganimalIdentificationReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 swimminganimalIdentificationReq.setTaskDate(LocalDate.now());
             }
@@ -2413,6 +2430,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 smallzooplanktonIinetReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 smallzooplanktonIinetReq.setTaskDate(LocalDate.now());
             }
@@ -2779,6 +2804,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 smallfishQuantitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 smallfishQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -3145,6 +3178,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 smallfishQualitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 smallfishQualitativeReq.setTaskDate(LocalDate.now());
             }
@@ -3609,6 +3650,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 sedimentgrainReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 sedimentgrainReq.setTaskDate(LocalDate.now());
             }
@@ -4024,6 +4073,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 sedimentReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 sedimentReq.setTaskDate(LocalDate.now());
             }
@@ -4382,6 +4439,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 phytoplanktonReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 phytoplanktonReq.setTaskDate(LocalDate.now());
             }
@@ -4769,6 +4834,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 macrobenthosQuantitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 macrobenthosQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -5142,6 +5215,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 macrobenthosQualitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 macrobenthosQualitativeReq.setTaskDate(LocalDate.now());
             }
@@ -5501,6 +5582,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 largezooplanktonInetReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 largezooplanktonInetReq.setTaskDate(LocalDate.now());
             }
@@ -5886,6 +5975,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -6224,6 +6321,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 hydrometeorologicalReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 hydrometeorologicalReq.setTaskDate(LocalDate.now());
             }
@@ -6590,6 +6695,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 fisheggQualitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 fisheggQualitativeReq.setTaskDate(LocalDate.now());
             }
@@ -7038,6 +7151,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 biologicalQualityReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 biologicalQualityReq.setTaskDate(LocalDate.now());
             }
@@ -7404,6 +7525,14 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 fisheggQuantitativeReq.setTaskDate(localDate);
+
+                //校验年份和航次是否与任务日期相同
+                dtf = DateTimeFormatter.ofPattern("yyyy");
+                String year = localDate.format(dtf);
+                if(!(FileTestDataUtil.YEAR.equals(year))){
+                    if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+
             } catch (Exception e){
                 fisheggQuantitativeReq.setTaskDate(LocalDate.now());
             }
