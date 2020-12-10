@@ -160,9 +160,21 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                         }
 
                     }
-                    map.put("children",childrenList);
                 }
-                permList.add(map);
+
+                //判断二级节点是否为空 如果为空 那么再判断一级节点是否为该角色权限
+                if(CollectionUtils.isNotEmpty(childrenList)){
+                    map.put("children",childrenList);
+                    permList.add(map);
+                }else {
+                    for (RolePermission rolePermission:rolePermissionList){
+                        if(map.get("permissionId").equals(rolePermission.getPermissionId())){
+                            map.put("children",childrenList);
+                            permList.add(map);
+                        }
+                    }
+                }
+
             }
         }
 
