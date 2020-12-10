@@ -1990,7 +1990,6 @@ public class FileTestDataUtil {
                     item=(SwimminganimalIdentificationReq)obj;
                     if(
                             item.getMonitoringArea().equals(swimminganimalIdentificationReq.getMonitoringArea()) &&
-                                    item.getEcologicalType().equals(swimminganimalIdentificationReq.getEcologicalType()) &&
                                     item.getTaskDate().equals(swimminganimalIdentificationReq.getTaskDate()) &&
                                     item.getMonitorCompany().equals(swimminganimalIdentificationReq.getMonitorCompany()) &&
                                     item.getOrganizationCompany().equals(swimminganimalIdentificationReq.getOrganizationCompany()) &&
