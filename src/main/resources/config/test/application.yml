@@ -63,6 +63,6 @@ config:
   # Excel规则配置文件
   excelRules: /Config/ExcelRules/
   # Excel上传文件缓存路径（自定义）
-  excelUpLoad: /Config/ExcelUpLoad
+  excelUpLoad: /Config/ExcelUpLoad/
   # Json缓存目录
   excelJson: /Config/excelJson/

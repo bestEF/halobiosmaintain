@@ -15,4 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IVegetationSurveyService extends IService<VegetationSurvey> {
 
     IPage<VegetationSurvey> listVegetationSurvey(Integer current, Integer size, String protecName, String place, String startDate, String endDate);
+
+    /**
+     * 保存植被主表
+     * @param vegetationSurvey
+     * @return
+     */
+    Long addBirdObserve(VegetationSurvey vegetationSurvey);
 }

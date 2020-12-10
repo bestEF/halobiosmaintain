@@ -1062,8 +1062,8 @@ public class FileTestDataUtil {
                             item.getRecordName().equals(birdObserveRecordReq.getRecordName()) &&
                             item.getSplineNumber().equals(birdObserveRecordReq.getSplineNumber()) &&
                             item.getSplineLength().equals(birdObserveRecordReq.getSplineLength()) &&
-                            //item.getStartTime().equals(birdObserveRecordReq.getStartTime()) &&
-                            //item.getEndTime().equals(birdObserveRecordReq.getEndTime()) &&
+                            item.getStartTime().equals(birdObserveRecordReq.getStartTime()) &&
+                            item.getEndTime().equals(birdObserveRecordReq.getEndTime()) &&
                             item.getStartLon().equals(birdObserveRecordReq.getStartLon()) &&
                             item.getEndLon().equals(birdObserveRecordReq.getEndLon()) &&
                             item.getStartLat().equals(birdObserveRecordReq.getStartLat()) &&

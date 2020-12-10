@@ -934,6 +934,11 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
                                 Long birdObserveId=-1L;
                                 if(CollectionUtils.isNotEmpty(testDataList16)){
                                     BeanUtils.copyProperties(testDataList16.get(0),birdObserve);
+
+                                    //如果数据库中有和此填报表一样的数据 那么执行删除操作（删除主表+记录表）
+                                    //monitorDataReportService.updateData(monitorDataReport15, Constant.waterqualityType,testDataList15.get(0).getDataType());
+
+
                                     //保存鸟类主表
                                     birdObserveId = birdObserveService.addBirdObserve(birdObserve);
                                 }
@@ -952,14 +957,49 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
                                     if(birdObserveRecordService.saveBatch(birdObserveRecordList)) {
                                         sb.append(code0+",");
                                         it.setText("true");
-                                        //日志
-                                        //sysLogService.saveLog(ShiroUtils.getUserId(),Constant.manualSurveyDataImport,"水体数据导入");
                                     }else {
                                         it.setText("false");
                                     }
                                     returnList.add(it);
                                 }
                                 testDataList16=null;
+                                break;
+                            case "VegetationSurveyRecordRule":
+                                List<VegetationSurveyRecordReq> testDataList17 = new ArrayList<>((List<VegetationSurveyRecordReq>) data);
+
+                                //植被lsit
+                                List<VegetationSurveyRecord> vegetationSurveyRecordList = new ArrayList<>();
+                                //植被主表
+                                VegetationSurvey vegetationSurvey = new VegetationSurvey();
+
+                                //将扩展类对拷到相应的鸟类主表
+                                Long vegetationSurveyId=-1L;
+                                if(CollectionUtils.isNotEmpty(testDataList17)){
+                                    BeanUtils.copyProperties(testDataList17.get(0),vegetationSurvey);
+                                    //保存植被主表
+                                    vegetationSurveyId = vegetationSurveyService.addBirdObserve(vegetationSurvey);
+                                }
+
+                                //将扩展类对拷到相应的实体类
+                                for (VegetationSurveyRecordReq vegetationSurveyRecordReq : testDataList17) {
+                                    VegetationSurveyRecord vegetationSurveyRecord = new VegetationSurveyRecord();
+                                    BeanUtils.copyProperties(vegetationSurveyRecordReq,vegetationSurveyRecord);
+                                    vegetationSurveyRecord.setId(vegetationSurveyId);
+                                    vegetationSurveyRecordList.add(vegetationSurveyRecord);
+                                }
+
+                                if(testDataList17.size()>0){
+                                    it=new IdText();
+                                    it.setId(Integer.valueOf(code0));
+                                    if(vegetationSurveyRecordService.saveBatch(vegetationSurveyRecordList)) {
+                                        sb.append(code0+",");
+                                        it.setText("true");
+                                    }else {
+                                        it.setText("false");
+                                    }
+                                    returnList.add(it);
+                                }
+                                testDataList17=null;
                                 break;
                             default:
                                 break;
