@@ -58,7 +58,11 @@
             <if test="endDate!=null and endDate.trim() neq ''">
                 and date_format(a.monitor_date,'%Y-%m-%d') &lt;= str_to_date(#{endDate},'%Y-%m-%d')
             </if>
+            <if test="reportId!=null and reportId!=''">
+                and a.report_id = #{reportId}
+            </if>
         </where>
+        order by a.monitor_date desc
     </select>
 
 

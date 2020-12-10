@@ -44,7 +44,7 @@
                 <![CDATA[and a.user_id =#{userId} ]]>
             </if>
             <if test="userName!=null and userName!=''">
-                <![CDATA[and a.user_name =#{userName} ]]>
+                <![CDATA[and a.user_name like concat('%',#{userName},'%') ]]>
             </if>
         </where>
     </select>

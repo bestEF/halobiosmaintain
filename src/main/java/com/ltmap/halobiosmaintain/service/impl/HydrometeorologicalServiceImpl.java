@@ -119,8 +119,8 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
      * @Date: 2020/12/4 8:46
      */
     @Override
-    public IPage<Hydrometeorological> listHydrometeorological(Integer current,Integer size,String stationName, String startDate, String endDate){
+    public IPage<Hydrometeorological> listHydrometeorological(Integer current,Integer size,String stationName, String startDate, String endDate,Long reportId){
         IPage<BiologicalQuality> page=new Page<>(current, size);
-        return hydrometeorologicalMapper.listHydrometeorological(page,stationName,startDate,endDate);
+        return hydrometeorologicalMapper.listHydrometeorological(page,stationName,startDate,endDate,reportId);
     }
 }

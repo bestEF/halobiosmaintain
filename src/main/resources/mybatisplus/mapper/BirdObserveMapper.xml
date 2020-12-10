@@ -47,5 +47,6 @@
                 and date_format(a.observe_date,'%Y-%m-%d') &lt;= str_to_date(#{endDate},'%Y-%m-%d')
             </if>
         </where>
+        order by observe_date desc
     </select>
 </mapper>

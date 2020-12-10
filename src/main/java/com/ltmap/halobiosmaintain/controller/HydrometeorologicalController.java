@@ -82,8 +82,8 @@ public class HydrometeorologicalController {
     @PostMapping("/listHydrometeorological")
     public Response<IPage<Hydrometeorological>> listHydrometeorological(@RequestParam(defaultValue = "1")Integer current,
                                                                         @RequestParam(defaultValue = "10")Integer size,
-                                                                        String stationName, String startDate, String endDate){
-        IPage<Hydrometeorological> hydrometeorologicals= hydrometeorologicalService.listHydrometeorological(current,size,stationName,startDate,endDate);
+                                                                        String stationName, String startDate, String endDate,Long reportId){
+        IPage<Hydrometeorological> hydrometeorologicals= hydrometeorologicalService.listHydrometeorological(current,size,stationName,startDate,endDate,reportId);
         return Responses.or(hydrometeorologicals);
     }
 

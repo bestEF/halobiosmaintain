@@ -20,6 +20,6 @@ public interface HydrometeorologicalMapper extends BaseMapper<Hydrometeorologica
 
     List<Hydrometeorological> hydrometeorologicalRangeOneYear(@Param("year") String year, @Param("voyage") String voyage);
 
-    IPage<Hydrometeorological> listHydrometeorological(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate);
+    IPage<Hydrometeorological> listHydrometeorological(IPage page, @Param("stationName")String stationName, @Param("startDate")String startDate, @Param("endDate")String endDate,@Param("reportId")Long reportId);
 
 }
