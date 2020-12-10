@@ -7070,7 +7070,6 @@ public class FileTestDataUtil {
                     item=(BiologicalQualityReq)obj;
                     if(
                             item.getMonitoringArea().equals(biologicalQualityReq.getMonitoringArea()) &&
-                                    item.getEcologicalType().equals(biologicalQualityReq.getEcologicalType()) &&
                                     item.getTaskDate().equals(biologicalQualityReq.getTaskDate()) &&
                                     item.getMonitorCompany().equals(biologicalQualityReq.getMonitorCompany()) &&
                                     item.getOrganizationCompany().equals(biologicalQualityReq.getOrganizationCompany()) &&
