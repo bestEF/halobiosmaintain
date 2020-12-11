@@ -14,9 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
@@ -64,8 +62,6 @@ public class FileTestDataUtil {
     static String err7="存在与已有数据冲突的数据；";
     static String err8="存在不合法的小数格式；";
     static String err9="开始时间或结束时间格式不正确 请输入格式如08:00：";
-    static String err10="选择的年份与excel表格中任务日期年份不符：";
-    static String err11="选择的航次与excel表格中任务日期月份不符：";
 
     String msg1="上传文件中存在与数据库重复的数据；";
     String msg2="上传文件中存在格式错误数据；";
@@ -87,38 +83,6 @@ public class FileTestDataUtil {
     public static Map curEntityHeadMap;
     /**当前实体类的code**/
     public static String curEntityCode;
-
-    /**
-     * 根据日期获取季节
-     * @param localDate
-     * @return
-     */
-    private String gainSeasonByDate(LocalDate localDate){
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
-        String month = localDate.format(dtf);
-
-        switch (month) {						// 判断月份属于哪个季节
-            case "12":
-            case "01":
-            case "02":
-                return "冬季";
-            case "03":
-            case "04":
-            case "05":
-                return "春季";
-            case "06":
-            case "07":
-            case "08":
-                return "夏季";
-            case "09":
-            case "10":
-            case "11":
-                return "秋季";
-            default:
-                return null;
-        }
-    }
 
     /**
      * @title createExcel
@@ -2063,20 +2027,6 @@ public class FileTestDataUtil {
                 }
                 waterqualityReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 waterqualityReq.setTaskDate(LocalDate.now());
             }
@@ -2437,20 +2387,6 @@ public class FileTestDataUtil {
                 }
                 swimminganimalIdentificationReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 swimminganimalIdentificationReq.setTaskDate(LocalDate.now());
             }
@@ -2803,20 +2739,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 smallzooplanktonIinetReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 smallzooplanktonIinetReq.setTaskDate(LocalDate.now());
@@ -3185,20 +3107,6 @@ public class FileTestDataUtil {
                 }
                 smallfishQuantitativeReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 smallfishQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -3565,20 +3473,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 smallfishQualitativeReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 smallfishQualitativeReq.setTaskDate(LocalDate.now());
@@ -4045,20 +3939,6 @@ public class FileTestDataUtil {
                 }
                 sedimentgrainReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 sedimentgrainReq.setTaskDate(LocalDate.now());
             }
@@ -4475,20 +4355,6 @@ public class FileTestDataUtil {
                 }
                 sedimentReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 sedimentReq.setTaskDate(LocalDate.now());
             }
@@ -4847,20 +4713,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 phytoplanktonReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 phytoplanktonReq.setTaskDate(LocalDate.now());
@@ -5250,20 +5102,6 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQuantitativeReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 macrobenthosQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -5638,20 +5476,6 @@ public class FileTestDataUtil {
                 }
                 macrobenthosQualitativeReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 macrobenthosQualitativeReq.setTaskDate(LocalDate.now());
             }
@@ -6011,20 +5835,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 largezooplanktonInetReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 largezooplanktonInetReq.setTaskDate(LocalDate.now());
@@ -6412,20 +6222,6 @@ public class FileTestDataUtil {
                 }
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(LocalDate.now());
             }
@@ -6764,20 +6560,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 hydrometeorologicalReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 hydrometeorologicalReq.setTaskDate(LocalDate.now());
@@ -7145,20 +6927,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 fisheggQualitativeReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 fisheggQualitativeReq.setTaskDate(LocalDate.now());
@@ -7608,20 +7376,6 @@ public class FileTestDataUtil {
                 }
                 biologicalQualityReq.setTaskDate(localDate);
 
-                //校验年份是否与任务日期年份相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
-
             } catch (Exception e){
                 biologicalQualityReq.setTaskDate(LocalDate.now());
             }
@@ -7988,20 +7742,6 @@ public class FileTestDataUtil {
                     localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 }
                 fisheggQuantitativeReq.setTaskDate(localDate);
-
-                //校验年份和航次是否与任务日期相同
-                dtf = DateTimeFormatter.ofPattern("yyyy");
-                String year = localDate.format(dtf);
-                if(!(FileTestDataUtil.YEAR.equals(year))){
-                    if (!errorString.toString().contains(err10)) errorString.append(err10);
-                }
-                //校验航次是否与任务日期月份相同
-                String season = gainSeasonByDate(localDate);
-                if(StringUtils.isNotBlank(season)){
-                    if(!season.equals(VOYAGE)){
-                        if (!errorString.toString().contains(err11)) errorString.append(err11);
-                    }
-                }
 
             } catch (Exception e){
                 fisheggQuantitativeReq.setTaskDate(LocalDate.now());
