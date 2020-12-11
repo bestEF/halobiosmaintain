@@ -116,6 +116,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                 map.put("permissionId",permissionF.getPermissionId());
                 map.put("label",permissionF.getPermissionName());
                 map.put("name",permissionF.getPermissionCode());
+                map.put("order",permissionF.getPermissionOrder());
                 map.put("icon","default");
 
                 //查询第二级节点
@@ -127,6 +128,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                         mapSecod.put("permissionId",permissionS.getPermissionId());
                         mapSecod.put("label",permissionS.getPermissionName());
                         mapSecod.put("name",permissionS.getPermissionCode());
+                        mapSecod.put("order",permissionS.getPermissionOrder());
                         mapSecod.put("path","/"+permissionF.getPermissionCode()+"/"+permissionS.getPermissionCode());
 
                         //查询第三级节点
@@ -139,6 +141,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                                         Map<String, Object> operateMap = new HashMap<>();
                                         operateMap.put("permissionId",permissionT.getPermissionId());
                                         operateMap.put("name",permissionT.getPermissionCode());
+                                        operateMap.put("order",permissionT.getPermissionOrder());
                                         operateMap.put("label",permissionT.getPermissionName());
                                         operateList.add(operateMap);
                                     }
@@ -201,6 +204,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                 map.put("permissionId",permissionF.getPermissionId());
                 map.put("label",permissionF.getPermissionName());
                 map.put("name",permissionF.getPermissionCode());
+                map.put("order",permissionF.getPermissionOrder());
                 map.put("icon","default");
 
                 //查询第二级节点
@@ -212,6 +216,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                         mapSecod.put("permissionId",permissionS.getPermissionId());
                         mapSecod.put("label",permissionS.getPermissionName());
                         mapSecod.put("name",permissionS.getPermissionCode());
+                        mapSecod.put("order",permissionS.getPermissionOrder());
                         mapSecod.put("path","/"+permissionF.getPermissionCode()+"/"+permissionS.getPermissionCode());
 
                         //查询第三级节点
@@ -223,6 +228,7 @@ public class PermissionInfoServiceImpl extends ServiceImpl<PermissionInfoMapper,
                                 operateMap.put("permissionId",permissionT.getPermissionId());
                                 operateMap.put("name",permissionT.getPermissionCode());
                                 operateMap.put("label",permissionT.getPermissionName());
+                                operateMap.put("order",permissionT.getPermissionOrder());
                                 operateList.add(operateMap);
                             }
                         }

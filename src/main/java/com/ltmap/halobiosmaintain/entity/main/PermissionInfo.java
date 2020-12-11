@@ -37,6 +37,18 @@ public class PermissionInfo extends Model<PermissionInfo> {
      */
     private String parent;
 
+    /**
+     * 权限序号
+     */
+    private Integer permissionOrder;
+
+    public Integer getPermissionOrder() {
+        return permissionOrder;
+    }
+
+    public void setPermissionOrder(Integer permissionOrder) {
+        this.permissionOrder = permissionOrder;
+    }
 
     public String getPermissionId() {
         return permissionId;

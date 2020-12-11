@@ -8,11 +8,12 @@
         <result column="permission_code" property="permissionCode" />
         <result column="permission_name" property="permissionName" />
         <result column="parent" property="parent" />
+        <result column="permission_order" property="permissionOrder" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        permission_id, permission_code, permission_name, parent
+        permission_id, permission_code, permission_name, parent, permission_order
     </sql>
 
 </mapper>
