@@ -77,12 +77,13 @@ public class MonitorDataReportController {
     @PostMapping("/yearList")
     public Response<List<String>> yearList(){
         List<String> yearList=new ArrayList();
-        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(null,null,null,null,null,null);
+        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(null,null,null,null,null,null,null);
         for (int i = 0; i <monitorDataReports.size() ; i++) {
             yearList.add(monitorDataReports.get(i).getYear());
         }
         LinkedHashSet<String> hashSet = new LinkedHashSet<>(yearList);
-        ArrayList<String> listWithoutDuplicates = new ArrayList<>(hashSet);
+        List<String> listWithoutDuplicates = new ArrayList<>(hashSet);
+        listWithoutDuplicates= listWithoutDuplicates.stream().filter(x->x!=null).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 
         return Responses.or(listWithoutDuplicates);
     }
@@ -91,13 +92,38 @@ public class MonitorDataReportController {
     @PostMapping("/voyageList")
     public Response<List<String>> voyageList(String year){
         List<String> voyageList=new ArrayList();
-        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(null,null,null,null,null,year);
+        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(null,null,null,null,null,year,null);
         for (int i = 0; i <monitorDataReports.size() ; i++) {
             voyageList.add(monitorDataReports.get(i).getVoyage());
         }
         LinkedHashSet<String> hashSet = new LinkedHashSet<>(voyageList);
-        ArrayList<String> listWithoutDuplicates = new ArrayList<>(hashSet);
-        return Responses.or(listWithoutDuplicates);
+        List<String> listWithoutDuplicates = new ArrayList<>(hashSet);
+
+        List<String> result=new ArrayList<>();
+        String chun="";
+        String xia="";
+        String qiu="";
+        String dong="";
+        for (int i = 0; i < listWithoutDuplicates.size(); i++) {
+            if(listWithoutDuplicates.get(i).equals("春季")){
+                chun="春季";
+            }
+            if(listWithoutDuplicates.get(i).equals("夏季")){
+                xia="夏季";
+            }
+            if(listWithoutDuplicates.get(i).equals("秋季")){
+                qiu="秋季";
+            }
+            if(listWithoutDuplicates.get(i).equals("冬季")){
+                dong="冬季";
+            }
+        }
+        result.add(chun);
+        result.add(xia);
+        result.add(qiu);
+        result.add(dong);
+        result= result.stream().filter(x->x!="").collect(Collectors.toList());
+        return Responses.or(result);
     }
 
 
@@ -105,12 +131,12 @@ public class MonitorDataReportController {
     @PostMapping("/queryMonitorDataReport")
     public Response<HashMap<String,Object>> queryMonitorDataReport(@RequestParam(defaultValue = "1")Integer current,
                                                                     @RequestParam(defaultValue = "10")Integer size,
-                                                                    String monitoringArea,String ecologicalType,String monitorCompany,  String dataType,String startDate,String endDate ){
+                                                                    String monitoringArea,String ecologicalType,String monitorCompany,  String dataType,String year,String voyage,String startDate,String endDate ){
 
         HashMap<String,Object> hashMap=new HashMap<>();
         List<MonitorDataReport> monitorDataReportsResult=new ArrayList<>();
 
-        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(monitoringArea,ecologicalType,monitorCompany,startDate,endDate,null);
+        List<MonitorDataReport> monitorDataReports=monitorDataReportService.monitorDataReportInfo(monitoringArea,ecologicalType,monitorCompany,startDate,endDate,year,voyage);
         for (int i = 0; i < monitorDataReports.size(); i++) {
             Long reportId = monitorDataReports.get(i).getReportId();
 

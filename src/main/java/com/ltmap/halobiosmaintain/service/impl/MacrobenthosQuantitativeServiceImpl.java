@@ -69,7 +69,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
         for (int i = 0; i < macrobenthosQuantitativeList.size(); i++) {
             density = density.add(macrobenthosQuantitativeList.get(i).getDensity());
         }
-        density=density.subtract(new BigDecimal(macrobenthosQuantitativeList.size()));
+        density=density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
         return density;
     }
     /*
@@ -122,7 +122,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
                 biomass = biomass.add(macrobenthosQuantitativeList.get(i).getBiomass());
             }
         }
-        biomass=biomass.subtract(new BigDecimal(macrobenthosQuantitativeList.size()));
+        biomass=biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
         return biomass;
     }
     /*
@@ -192,7 +192,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
                 density = density.add(macrobenthosQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(macrobenthosQuantitativeList.size()));
+        density=density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
         return density;
     }
 
@@ -212,7 +212,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             if (macrobenthosQuantitativeList.get(i).getBiomass() != null) {
             biomass = biomass.add(macrobenthosQuantitativeList.get(i).getBiomass());
         }}
-        biomass=biomass.subtract(new BigDecimal(macrobenthosQuantitativeList.size()));
+        biomass=biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
         return biomass;
     }
 

@@ -90,7 +90,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
                 density = density.add(largezooplanktonInetList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(largezooplanktonInetList.size()));
+        density=density.divide(new BigDecimal(largezooplanktonInetList.size()));
         return density;
     }
 
@@ -140,7 +140,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             if(largezooplanktonInetList.get(i).getTotalBiomass()!=null){
             biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
         }}
-        biomass=biomass.subtract(new BigDecimal(largezooplanktonInetList.size()));
+        biomass=biomass.divide(new BigDecimal(largezooplanktonInetList.size()));
         return biomass;
     }
     /*
@@ -191,7 +191,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             if(largezooplanktonInetList.get(i).getDensity()!=null){
             density = density.add(largezooplanktonInetList.get(i).getDensity());
         }}
-        density=density.subtract(new BigDecimal(largezooplanktonInetList.size()));
+        density=density.divide(new BigDecimal(largezooplanktonInetList.size()));
         return density;
     }
 
@@ -212,7 +212,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
                 biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
             }
         }
-        biomass=biomass.subtract(new BigDecimal(largezooplanktonInetList.size()));
+        biomass=biomass.divide(new BigDecimal(largezooplanktonInetList.size()));
         return biomass;
     }
 

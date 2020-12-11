@@ -94,7 +94,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
                 density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        density=density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return density;
     }
 
@@ -145,7 +145,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
                 biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
             }
         }
-        biomass=biomass.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        biomass=biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return biomass;
     }
 
@@ -196,7 +196,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
             density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
         }}
-        density=density.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        density=density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return density;
     }
 
@@ -216,7 +216,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
             biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
         }}
-        biomass=biomass.subtract(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        biomass=biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
         return biomass;
     }
 

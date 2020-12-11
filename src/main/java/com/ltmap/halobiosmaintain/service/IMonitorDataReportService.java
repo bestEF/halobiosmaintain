@@ -23,7 +23,8 @@ public interface IMonitorDataReportService extends IService<MonitorDataReport> {
      * @return
      */
     boolean updateData(MonitorDataReport monitorDataReport, int fisheggQuantitativeType,String dataType);
-    List<MonitorDataReport> monitorDataReportInfo(String monitoringArea,String ecologicalType,String monitorCompany,String startDate,String endDate,String year);
+
+    List<MonitorDataReport> monitorDataReportInfo(String monitoringArea,String ecologicalType,String monitorCompany,String startDate,String endDate,String year,String voyage);
 
     /**
      * 保存填报信息

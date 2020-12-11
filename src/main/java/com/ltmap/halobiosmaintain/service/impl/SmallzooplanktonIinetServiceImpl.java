@@ -93,7 +93,7 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
                 density = density.add(smallzooplanktonIinetList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(smallzooplanktonIinetList.size()));
+        density=density.divide(new BigDecimal(smallzooplanktonIinetList.size()));
         return density;
     }
 
@@ -146,7 +146,7 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
                 density = density.add(smallzooplanktonIinetList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(smallzooplanktonIinetList.size()));
+        density=density.divide(new BigDecimal(smallzooplanktonIinetList.size()));
         return density;
     }
 

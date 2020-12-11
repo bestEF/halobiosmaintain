@@ -93,7 +93,7 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
                 density = density.add(smallfishQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
+        density=density.divide(new BigDecimal(smallfishQuantitativeList.size()));
         return density;
     }
 
@@ -145,7 +145,7 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
                 density = density.add(smallfishQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.subtract(new BigDecimal(smallfishQuantitativeList.size()));
+        density=density.divide(new BigDecimal(smallfishQuantitativeList.size()));
         return density;
     }
 

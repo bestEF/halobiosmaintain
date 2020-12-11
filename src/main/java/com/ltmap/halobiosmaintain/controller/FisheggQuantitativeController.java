@@ -93,11 +93,11 @@ public class FisheggQuantitativeController {
                     lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, fisheggQuantitatives.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
                     monitorStationInfoService.update(null, lambdaUpdateWrapper);
                 }
-                monitorStationInfoService.removeByMap(map2);
+                Boolean deleted2=  monitorStationInfoService.removeByMap(map2);
             }
 
             //删除填报数据
-            monitorDataReportService.removeById(reportId);
+            Boolean deleted3=  monitorDataReportService.removeById(reportId);
             return Responses.or(deleted);
         }
         catch (Exception e){
