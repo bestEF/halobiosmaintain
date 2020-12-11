@@ -86,6 +86,9 @@ public class MonitorDataReportServiceImpl extends ServiceImpl<MonitorDataReportM
         MonitorDataReport monitorDataReport = getOne(lqw);
 
         if(Objects.isNull(monitorDataReport)){
+            monitorDataReport0.setByzd1(null);
+            monitorDataReport0.setByzd2(null);
+            monitorDataReport0.setByzd3(null);
             boolean saveFlag = save(monitorDataReport0);
             return monitorDataReport0.getReportId();
         }else {

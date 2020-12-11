@@ -42,6 +42,9 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
         MonitorStationInfo monitorStationResp = getOne(lqw);
 
         if(ObjectUtils.isEmpty(monitorStationResp)){
+            monitorStationInfo.setByzd1(null);
+            monitorStationInfo.setByzd2(null);
+            monitorStationInfo.setByzd3(null);
             boolean saveFlag = save(monitorStationInfo);
             return monitorStationInfo.getStationId();
         }else {
