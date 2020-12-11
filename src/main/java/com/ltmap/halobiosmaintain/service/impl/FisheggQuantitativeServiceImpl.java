@@ -91,7 +91,9 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
                 density = density.add(fisheggQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.divide(new BigDecimal(fisheggQuantitativeList.size()));
+        if(fisheggQuantitativeList.size()!=0){
+            density=density.divide(new BigDecimal(fisheggQuantitativeList.size()));
+        }
         return density;
     }
 
@@ -143,7 +145,9 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
             if(fisheggQuantitativeList.get(i).getDensity()!=null){
             density = density.add(fisheggQuantitativeList.get(i).getDensity());
         }}
-        density=density.divide(new BigDecimal(fisheggQuantitativeList.size()));
+        if(fisheggQuantitativeList.size()!=0) {
+            density = density.divide(new BigDecimal(fisheggQuantitativeList.size()));
+        }
         return density;
     }
 

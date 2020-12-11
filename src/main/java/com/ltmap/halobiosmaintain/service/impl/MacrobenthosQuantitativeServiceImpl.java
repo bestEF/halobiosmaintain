@@ -69,7 +69,9 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
         for (int i = 0; i < macrobenthosQuantitativeList.size(); i++) {
             density = density.add(macrobenthosQuantitativeList.get(i).getDensity());
         }
-        density=density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        if(macrobenthosQuantitativeList.size()!=0) {
+            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        }
         return density;
     }
     /*
@@ -122,7 +124,9 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
                 biomass = biomass.add(macrobenthosQuantitativeList.get(i).getBiomass());
             }
         }
-        biomass=biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        if(macrobenthosQuantitativeList.size()!=0) {
+            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        }
         return biomass;
     }
     /*
@@ -192,7 +196,9 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
                 density = density.add(macrobenthosQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        if(macrobenthosQuantitativeList.size()!=0) {
+            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        }
         return density;
     }
 
@@ -212,7 +218,9 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             if (macrobenthosQuantitativeList.get(i).getBiomass() != null) {
             biomass = biomass.add(macrobenthosQuantitativeList.get(i).getBiomass());
         }}
-        biomass=biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        if(macrobenthosQuantitativeList.size()!=0) {
+            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+        }
         return biomass;
     }
 

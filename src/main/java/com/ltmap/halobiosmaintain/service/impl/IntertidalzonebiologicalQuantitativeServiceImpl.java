@@ -94,7 +94,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
                 density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
             }
         }
-        density=density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
+            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        }
         return density;
     }
 
@@ -145,7 +147,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
                 biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
             }
         }
-        biomass=biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
+            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        }
         return biomass;
     }
 
@@ -196,7 +200,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
             density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
         }}
-        density=density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
+            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        }
         return density;
     }
 
@@ -216,7 +222,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
             biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
         }}
-        biomass=biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
+            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+        }
         return biomass;
     }
 
