@@ -3,6 +3,8 @@ package com.ltmap.halobiosmaintain.service;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -40,4 +42,14 @@ public interface ExcelDataImportService {
      * @return
      */
     Response<Object> fileInsert(List<Map<String, Object>> allMapList, String codes, String userId, String userName);
+
+    /**
+     * excel错误信息导出
+     * @param allMapList
+     * @param code
+     * @param response
+     * @param fileFolder
+     * @return
+     */
+    String errorExport(List<Map<String, Object>> allMapList, String code, HttpServletResponse response, String fileFolder);
 }

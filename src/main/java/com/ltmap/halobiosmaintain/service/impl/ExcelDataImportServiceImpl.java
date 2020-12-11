@@ -14,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -76,6 +78,33 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
     @Resource
     private IVegetationSurveyRecordService vegetationSurveyRecordService;
 
+    /**
+     * excel错误信息导出
+     * @param allMapList
+     * @param code
+     * @param response
+     * @param fileFolder
+     * @return
+     */
+    @Override
+    public String errorExport(List<Map<String,Object>> allMapList, String code, HttpServletResponse response, String fileFolder) {
+        Map<String,Object> errorMap = new HashMap<>();
+        String getCode = null;
+        boolean result;
+        int errorCode;
+        String fileName = "";
+        for(int i=0; i<allMapList.size(); i++){
+            errorMap = (Map<String, Object>)allMapList.get(i);
+            result = (boolean)errorMap.get("result");
+            if(result) continue;
+            code = String.valueOf(errorMap.get("code"));//code = (int)errorMap.get("code")+"";
+            errorCode = (int)errorMap.get("errorCode");
+            if(!result && code.equals(code) && errorCode == 3) {
+                fileName = FileTestDataUtil.createExcel(errorMap, response, fileFolder);
+            }
+        }
+        return fileName;
+    }
 
     /**
      * 文件入库
@@ -1094,7 +1123,6 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
     }
 
     /**
-     *
      * @param absolutePath
      * @param no
      * @param excelType

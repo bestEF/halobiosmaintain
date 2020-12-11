@@ -3,6 +3,7 @@ package com.ltmap.halobiosmaintain.controller;
 import com.ltmap.halobiosmaintain.common.result.Response;
 import com.ltmap.halobiosmaintain.common.result.Responses;
 import com.ltmap.halobiosmaintain.common.utils.ShiroUtils;
+import com.ltmap.halobiosmaintain.common.utils.excel_import.Config;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.ExcelCheck;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.FileTestDataUtil;
 import com.ltmap.halobiosmaintain.common.utils.excel_import.JsonUtils;
@@ -15,13 +16,18 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -38,6 +44,8 @@ public class ExcelDataImportController {
     private FileTestDataUtil fileTestDataUtil;
     @Resource
     private ExcelDataImportService excelDataImportService;
+    @Resource
+    private Config config;
 
     //选择文件一次性选择的多个文件数据查重使用
     public static List<Object> excelDataList;
@@ -118,6 +126,29 @@ public class ExcelDataImportController {
             List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
             String userName = ShiroUtils.getAdminEntity().getUserName();
             return excelDataImportService.fileInsert(allMapList,codes,userId,userName);
+    }
+
+    /**
+     * 下载批注，导出错误信息
+     * @param code
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "errorExport")
+    @ApiImplicitParam(name = "code",value = "需要导出的批注文件对应的code",required = true)
+    @RequiresAuthentication
+    public String errorExport(String code, HttpServletResponse response) {
+        String userId= ShiroUtils.getUserId();
+        if(userId==null) return "";
+        List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
+        String fileFolder = "";
+        File directory = new File("");
+        try {
+            fileFolder = directory.getCanonicalPath()+config.getExcelExport();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return excelDataImportService.errorExport(allMapList, code, response,fileFolder);
     }
 
     /**

@@ -9,14 +9,15 @@ import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
 import com.ltmap.halobiosmaintain.vo.req.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -64,6 +65,7 @@ public class FileTestDataUtil {
     static String err8="存在不合法的小数格式；";
     static String err9="开始时间或结束时间格式不正确 请输入格式如08:00：";
     static String err10="选择的年份与excel表格中任务日期年份不符：";
+    static String err11="选择的航次与excel表格中任务日期月份不符：";
 
     String msg1="上传文件中存在与数据库重复的数据；";
     String msg2="上传文件中存在格式错误数据；";
@@ -86,6 +88,364 @@ public class FileTestDataUtil {
     /**当前实体类的code**/
     public static String curEntityCode;
 
+    /**
+     * 根据日期获取季节
+     * @param localDate
+     * @return
+     */
+    private String gainSeasonByDate(LocalDate localDate){
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
+        String month = localDate.format(dtf);
+
+        switch (month) {						// 判断月份属于哪个季节
+            case "12":
+            case "01":
+            case "02":
+                return "冬季";
+            case "03":
+            case "04":
+            case "05":
+                return "春季";
+            case "06":
+            case "07":
+            case "08":
+                return "夏季";
+            case "09":
+            case "10":
+            case "11":
+                return "秋季";
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * @title createExcel
+     * @description 创建Excel文件
+     * @author LiLu
+     * @date 2018年9月10日 下午2:03:00
+     * @param errorMap (code,result,errorList,filePath,error)
+     * @param response
+     */
+    @SuppressWarnings("unchecked")
+    public static String createExcel(Map<String,Object> errorMap, HttpServletResponse response, String fileFolder) {
+        int r;//行
+        int c;//列
+        String errorMsg = null;//错误提示信息
+        String absolutePath = (String)errorMap.get("filePath");
+
+        List<Map<String,Object>> errorFormatList = (List<Map<String, Object>>)errorMap.get("errorFormatList");
+        List<Integer> errorExisList = (List<Integer>)errorMap.get("errorExisList");
+
+        String[] pathArr = absolutePath.split("/");
+        int pathLength = pathArr.length;
+        String originalName = pathArr[pathLength-1];
+
+        String fileName = null;// 导出的excel文件名
+        OutputStream fOut = null;// 文件输出流
+        try {
+            fileName = "批注-"+originalName.substring(14,originalName.length());
+            // String userAgent = request.getHeader("User-Agent");
+            // 针对IE或者以IE为内核的浏览器：
+//            if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+//                fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
+//            } else {
+//                // 非IE浏览器的处理：
+//                fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+//            }
+//            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+//            response.setHeader("content-disposition", "attachment;filename=" + fileName);
+//            response.setCharacterEncoding("UTF-8");
+
+            //判断Excel格式（.xls还是.xlsx）
+            boolean isExcel2003 = validateExcel(absolutePath);
+
+            if( isExcel2003 ) {
+                //从存储路径得到工作表
+                HSSFWorkbook workbook = (HSSFWorkbook)getWorkBook(absolutePath, isExcel2003);
+                // 产生工作表对象
+                HSSFSheet sheet = workbook.getSheetAt(0);
+
+                int rowNum = sheet.getLastRowNum();
+                rowNum++;
+                int rowLength = sheet.getRow(0).getLastCellNum();
+
+                //重复数据改变背景色
+                if(errorExisList!=null && errorExisList.size()>0) {
+                    HSSFCell cell;
+                    // Aqua background
+                    List<HSSFCellStyle> styleList = new ArrayList<>();
+                    List<HSSFCellStyle> blankStyleList = new ArrayList<>();
+                    for(int num=0;num<rowLength;num++) {
+                        HSSFCell headCell = sheet.getRow(2).getCell(num);///?????//////
+                        if(headCell == null) {
+                            headCell = sheet.getRow(2).createCell(num);////????/////
+                        }
+                        //要加背景色的行
+                        HSSFCellStyle style = workbook.createCellStyle();
+                        style.cloneStyleFrom(headCell.getCellStyle());
+                        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+                        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+                        styleList.add(style);
+                        //不要加背景色的行
+                        HSSFCellStyle blankStyle = workbook.createCellStyle();
+                        blankStyle.cloneStyleFrom(headCell.getCellStyle());
+                        //blankStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+                        blankStyle.setFillPattern(HSSFCellStyle.NO_FILL);
+                        blankStyleList.add(blankStyle);
+                    }
+
+                    int num = 0;
+                    for(int i=1; i<rowNum && num<errorExisList.size(); i++) {
+                        HSSFRow row = sheet.getRow(i);
+                        if(row!=null) {
+                            if(i == errorExisList.get(num)) {
+                                for(int j=0; j<rowLength; j++) {
+                                    if(row.getCell(j) == null) {
+                                        cell = row.createCell(j);
+                                        //style.cloneStyleFrom(sheet.getRow(0).getCell(j).getCellStyle());
+                                    }else {
+                                        cell = row.getCell(j);
+                                        //style.cloneStyleFrom(cell.getCellStyle());
+                                    }
+                                    cell.setCellStyle(styleList.get(j));
+                                }
+                                num++;
+                            }else {
+                                for(int j=0; j<rowLength; j++) {
+                                    if(row.getCell(j) == null) {
+                                        cell = row.createCell(j);
+                                    }else {
+                                        cell = row.getCell(j);
+                                    }
+                                    cell.setCellStyle(blankStyleList.get(j));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //为了二次导入的文件，删除之前加的批注
+                for(int iCmn = 1;iCmn < rowNum;iCmn++) {
+                    HSSFRow row = sheet.getRow(iCmn);
+                    if(row != null) {
+                        for(int jCmn=0;jCmn<rowLength;jCmn++) {
+                            HSSFCell cell = row.getCell(jCmn);
+                            //HSSFComment comment = cell.getCellComment();
+                            if(cell != null) {
+                                cell.removeCellComment();
+                            }
+                        }
+                    }
+                }
+                //校验不通过单元格添加批注
+                if( errorFormatList!=null && errorFormatList.size()>0 ) {
+                    //创建绘图对象
+                    HSSFPatriarch p = sheet.createDrawingPatriarch();
+                    for(int i=0;i<errorFormatList.size();i++) {
+                        r = (int)errorFormatList.get(i).get("curRow") - 1;
+                        c = (int)errorFormatList.get(i).get("curCol") - 1;
+                        errorMsg = ((String)errorFormatList.get(i).get("rulMsg"));//.split("：")[1];
+                        /*if(errorMsg.split("：").length==3) {
+                            errorMsg = errorMsg.split("：")[2];
+                        }else {
+                            errorMsg = errorMsg.split("：")[1];
+                        }*/
+                        //创建单元格对象,批注插入到r行,c列
+                        HSSFCell cell = sheet.getRow(r).getCell(c);
+                        if(cell == null) {
+                            cell = sheet.getRow(r).createCell(c);
+                            cell.setCellValue("");
+                        }
+                        //获取批注对象
+                        //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
+                        //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
+                        HSSFComment comment = p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,5));
+                        //输入批注信息
+                        comment.setString(new HSSFRichTextString(errorMsg));
+                        //将批注添加到单元格对象中
+                        cell.setCellComment(comment);
+                    }
+                }
+                fOut = response.getOutputStream();
+                workbook.write(fOut);
+            }else {  //Excel2007
+                //从存储路径得到工作表
+                XSSFWorkbook workbook = (XSSFWorkbook)getWorkBook(absolutePath, isExcel2003);
+                // 产生工作表对象
+                XSSFSheet sheet = workbook.getSheetAt(0);
+
+                int rowNum = sheet.getLastRowNum();
+                rowNum++;//这到底是为什么
+                int rowLength = sheet.getRow(0).getLastCellNum();
+
+                // 删除背景色
+                XSSFCell cell1;
+                List<XSSFCellStyle> blankStyleList1 = new ArrayList<>();
+                for(int num=0;num<rowLength;num++) {
+                    XSSFCell headCell = sheet.getRow(1).getCell(num);
+                    if(headCell == null) {
+                        headCell = sheet.getRow(1).createCell(num);
+                    }
+                    //不要加背景色的行
+                    XSSFCellStyle blankStyle = workbook.createCellStyle();
+                    blankStyle.cloneStyleFrom(headCell.getCellStyle());
+                    //blankStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+                    blankStyle.setFillPattern(HSSFCellStyle.NO_FILL);
+                    blankStyleList1.add(blankStyle);
+                }
+                int num1 = 0;
+                for(int i=1; i<rowNum; i++) {
+                    XSSFRow row = sheet.getRow(i);
+                    if(row!=null) {
+                        for(int j=0; j<rowLength; j++) {
+                            if(row.getCell(j) == null) {
+                                cell1 = row.createCell(j);
+                            }else {
+                                cell1 = row.getCell(j);
+                            }
+                            cell1.setCellStyle(blankStyleList1.get(j));
+                        }
+                    }
+                }
+
+
+                //重复数据改变背景色
+                if( errorExisList!=null && errorExisList.size()>0 ) {
+                    XSSFCell cell;
+                    // Aqua background
+                    List<XSSFCellStyle> styleList = new ArrayList<>();
+                    List<XSSFCellStyle> blankStyleList = new ArrayList<>();
+                    for(int num=0;num<rowLength;num++) {
+                        XSSFCell headCell = sheet.getRow(1).getCell(num);
+                        if(headCell == null) {
+                            headCell = sheet.getRow(1).createCell(num);
+                        }
+                        //要加背景色的行
+                        XSSFCellStyle style = workbook.createCellStyle();
+                        style.cloneStyleFrom(headCell.getCellStyle());
+                        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+                        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+                        styleList.add(style);
+                        //不要加背景色的行
+                        XSSFCellStyle blankStyle = workbook.createCellStyle();
+                        blankStyle.cloneStyleFrom(headCell.getCellStyle());
+                        //blankStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+                        blankStyle.setFillPattern(HSSFCellStyle.NO_FILL);
+                        blankStyleList.add(blankStyle);
+                    }
+                    int num = 0;
+                    for(int i=1; i<rowNum && num<errorExisList.size(); i++) {
+                        XSSFRow row = sheet.getRow(i);
+                        if(row!=null) {
+                            if(i == errorExisList.get(num)) {
+                                for(int j=0; j<rowLength; j++) {
+                                    if(row.getCell(j) == null) {
+                                        cell = row.createCell(j);
+                                        //style.cloneStyleFrom(sheet.getRow(0).getCell(j).getCellStyle());
+                                    }else {
+                                        cell = row.getCell(j);
+                                        //style.cloneStyleFrom(cell.getCellStyle());
+                                    }
+                                    cell.setCellStyle(styleList.get(j));
+                                }
+                                num++;
+                            }else {
+                                for(int j=0; j<rowLength; j++) {
+                                    if(row.getCell(j) == null) {
+                                        cell = row.createCell(j);
+                                    }else {
+                                        cell = row.getCell(j);
+                                    }
+                                    cell.setCellStyle(blankStyleList.get(j));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //为了二次导入的文件，删除之前加的批注
+                for(int iCmn = 1;iCmn < rowNum;iCmn++) {
+                    XSSFRow row = sheet.getRow(iCmn);
+                    if(row != null) {
+                        for(int jCmn=0;jCmn<rowLength;jCmn++) {
+                            XSSFCell cell = row.getCell(jCmn);
+                            //HSSFComment comment = cell.getCellComment();
+                            if(cell != null) {
+                                cell.removeCellComment();
+                            }
+                        }
+                    }
+                }
+
+                //校验不通过单元格添加批注
+                if( errorFormatList!=null && errorFormatList.size()>0 ) {
+                    //创建绘图对象
+                    XSSFDrawing p = sheet.createDrawingPatriarch();
+                    for(int i=0;i<errorFormatList.size();i++) {
+                        r = (int)errorFormatList.get(i).get("curRow") - 1;
+                        c = (int)errorFormatList.get(i).get("curCol") - 1;
+                        errorMsg = ((String)errorFormatList.get(i).get("rulMsg"));//.split("：")[1];
+                        /*if(errorMsg.split("：").length==3) {
+                            errorMsg = errorMsg.split("：")[2];
+                        }else {
+                            errorMsg = errorMsg.split("：")[0];//errorMsg = errorMsg.split("：")[1];
+                        }*/
+                        //创建单元格对象,批注插入到r行,c列
+                        XSSFCell cell = sheet.getRow(r).getCell(c);
+                        if(cell == null) {
+                            cell = sheet.getRow(r).createCell(c);
+                            cell.setCellValue("");
+                        }
+
+                        try{
+                            //获取批注对象
+                            //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
+                            //cell.removeCellComment();
+                            XSSFComment comment;
+                            XSSFClientAnchor xssfClientAnchor;
+                            if(cell.getCellComment()==null){
+                                //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
+                                xssfClientAnchor=new XSSFClientAnchor(0,0,0,0,(short)4,0,(short)7,7);//0,0,0,0,4,4,7,7
+                                comment = p.createCellComment(xssfClientAnchor);
+
+                                //输入批注信息
+                                comment.setString(new XSSFRichTextString(errorMsg));
+                            }else{
+                                comment=cell.getCellComment();
+                            }
+                            //将批注添加到单元格对象中
+                            cell.setCellComment(comment);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+                // fOut = response.getOutputStream();
+                File file =new File(fileFolder);
+                //当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．(mkdir如果父目录不存在则会抛出异常)
+                if (!file.exists() && !file.isDirectory()) {
+                    file.mkdirs();
+                }
+                file.delete();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+                OutputStream stream=null;
+                Date date = new Date();
+                stream = new FileOutputStream(new File(file, fileName));
+                workbook.write(stream);
+                return fileName;
+            }
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+            return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return "";
+    }
 
     /**
      * 将前台传过来的文件在服务器/本地持久化
@@ -1709,6 +2069,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 waterqualityReq.setTaskDate(LocalDate.now());
@@ -2076,6 +2443,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 swimminganimalIdentificationReq.setTaskDate(LocalDate.now());
@@ -2435,6 +2809,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -2810,6 +3191,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 smallfishQuantitativeReq.setTaskDate(LocalDate.now());
@@ -3183,6 +3571,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -3656,6 +4051,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 sedimentgrainReq.setTaskDate(LocalDate.now());
@@ -4079,6 +4481,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 sedimentReq.setTaskDate(LocalDate.now());
@@ -4444,6 +4853,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -4840,6 +5256,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 macrobenthosQuantitativeReq.setTaskDate(LocalDate.now());
@@ -5221,6 +5644,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 macrobenthosQualitativeReq.setTaskDate(LocalDate.now());
@@ -5587,6 +6017,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -5981,6 +6418,13 @@ public class FileTestDataUtil {
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
                 }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
+                }
 
             } catch (Exception e){
                 intertidalzonebiologicalQuantitativeReq.setTaskDate(LocalDate.now());
@@ -6326,6 +6770,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -6700,6 +7151,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -7150,11 +7608,18 @@ public class FileTestDataUtil {
                 }
                 biologicalQualityReq.setTaskDate(localDate);
 
-                //校验年份和航次是否与任务日期相同
+                //校验年份是否与任务日期年份相同
                 dtf = DateTimeFormatter.ofPattern("yyyy");
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){
@@ -7529,6 +7994,13 @@ public class FileTestDataUtil {
                 String year = localDate.format(dtf);
                 if(!(FileTestDataUtil.YEAR.equals(year))){
                     if (!errorString.toString().contains(err10)) errorString.append(err10);
+                }
+                //校验航次是否与任务日期月份相同
+                String season = gainSeasonByDate(localDate);
+                if(StringUtils.isNotBlank(season)){
+                    if(!season.equals(VOYAGE)){
+                        if (!errorString.toString().contains(err11)) errorString.append(err11);
+                    }
                 }
 
             } catch (Exception e){

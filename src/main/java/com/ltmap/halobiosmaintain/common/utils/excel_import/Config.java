@@ -17,11 +17,11 @@ public class Config {
     private String excelRules;
     private String excelUpLoad;
     private String excelJson;
+    private String excelExport;
 
     public String getExcelRules() {
         return excelRules;
     }
-
     public void setExcelRules(String excelRules) {
         this.excelRules = excelRules;
     }
@@ -33,7 +33,6 @@ public class Config {
             return null;
         }
     }
-
     public void setExcelUpLoad(String excelUpLoad) {
         this.excelUpLoad = excelUpLoad;
     }
@@ -41,8 +40,14 @@ public class Config {
     public String getExcelJson() {
         return excelJson;
     }
-
     public void setExcelJson(String excelJson) {
         this.excelJson = excelJson;
+    }
+
+    public String getExcelExport() {
+        return excelExport;
+    }
+    public void setExcelExport(String excelExport) {
+        this.excelExport = excelExport;
     }
 }
