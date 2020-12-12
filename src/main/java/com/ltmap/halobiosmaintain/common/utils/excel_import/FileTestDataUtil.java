@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -1524,46 +1525,44 @@ public class FileTestDataUtil {
                                 birdObserveRecordReq.setSplineLength(cell.getStringCellValue());
                                 break;
                             case 10:
-                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                LocalDateTime localDateTime=null;
                                 short df = cell.getCellStyle().getDataFormat();
 
                                 if(df==20){
                                     Date date = cell.getDateCellValue();
-                                    LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                    String dateStr = sdf.format(date);
+                                    localDateTime = LocalDateTime.parse(dateStr, dtf);
+                                    LocalTime localTime = localDateTime.toLocalTime();
                                     birdObserveRecordReq.setStartTime(localTime);
                                 }else if(cell.getCellType()==Cell.CELL_TYPE_STRING){
-                                    try {
-                                        Date date = sdf.parse(cell.getStringCellValue());
-                                        LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-                                        birdObserveRecordReq.setStartTime(localTime);
-                                    } catch (ParseException e) {
-                                        birdObserveRecordReq.setStartTime(null);
-                                    }
+                                    localDateTime = LocalDateTime.parse(cell.getStringCellValue(), dtf);
+                                    LocalTime localTime = localDateTime.toLocalTime();
+                                    birdObserveRecordReq.setStartTime(localTime);
                                 }else {
-                                    birdObserveRecordReq.setStartTime(null);
+                                    birdObserveRecordReq.setStartTime(LocalTime.now());
                                 }
-
                                 break;
                             case 11:
-                                sdf = new SimpleDateFormat("HH:mm");
-
+                                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                                localDateTime=null;
                                 df = cell.getCellStyle().getDataFormat();
+
                                 if(df==20){
                                     Date date = cell.getDateCellValue();
-                                    LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+                                    String dateStr = sdf.format(date);
+                                    localDateTime = LocalDateTime.parse(dateStr, dtf);
+                                    LocalTime localTime = localDateTime.toLocalTime();
                                     birdObserveRecordReq.setEndTime(localTime);
                                 }else if(cell.getCellType()==Cell.CELL_TYPE_STRING){
-                                    try {
-                                        Date date = sdf.parse(cell.getStringCellValue());
-                                        LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-                                        birdObserveRecordReq.setEndTime(localTime);
-                                    } catch (ParseException e) {
-                                        birdObserveRecordReq.setEndTime(null);
-                                    }
+                                    localDateTime = LocalDateTime.parse(cell.getStringCellValue(), dtf);
+                                    LocalTime localTime = localDateTime.toLocalTime();
+                                    birdObserveRecordReq.setEndTime(localTime);
                                 }else {
-                                    birdObserveRecordReq.setEndTime(null);
+                                    birdObserveRecordReq.setEndTime(LocalTime.now());
                                 }
-
                                 break;
                             case 15:
                                 cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -8001,19 +8000,15 @@ public class FileTestDataUtil {
                 }
                 //规则6：是否是时间格式：HH:mm
                 else if(rulName.equals(ParseConstans.RULE_NAME_Time)){
-                    if(colCell.getCellStyle().getDataFormat()!=20){
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                            Date parse = sdf.parse(cellValue);
-                        } catch (ParseException e) {
-                            if(!errorString.toString().contains(err9)) errorString.append(err9);
-                            errorMap.put("curRow", curRow);
-                            errorMap.put("curCol", curCol);
-                            errorMap.put("rulMsg", rulMsg);
-                            errorList.add(errorMap);
-                            result = -1;
-                            break;
-                        }
+                    if(cellValue.indexOf("E")>0) cellValue=customExcelNumericFormat(cellValue);
+                    if(!DateUtils.isValidDate(cellValue)) {
+                        if(!errorString.toString().contains(err9)) errorString.append(err9);
+                        //errorString.append(curColStr+curRow+"："+rulMsg+"<br>");
+                        errorMap.put("curRow", curRow);
+                        errorMap.put("curCol", curCol);
+                        errorMap.put("rulMsg", rulMsg);
+                        errorList.add(errorMap);
+                        result = -1;
                     }
                 }
             }
