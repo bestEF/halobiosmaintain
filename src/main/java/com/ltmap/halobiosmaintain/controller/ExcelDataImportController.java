@@ -89,12 +89,12 @@ public class ExcelDataImportController {
             String code;
             while (codeIterator.hasNext()){
                 code=codeIterator.next();
+                codeIterator.remove();
                 ListIterator<Map<String,Object>> mapIterator = allMapList.listIterator();
                 while (mapIterator.hasNext()) {
                     Map<String, Object> map = mapIterator.next();
                     if(map.get("code").toString().equals(code)) {
                         mapIterator.remove();
-                        codeIterator.remove();
                     }
                 }
             }

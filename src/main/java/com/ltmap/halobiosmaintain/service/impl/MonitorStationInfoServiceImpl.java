@@ -13,9 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -102,8 +100,52 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
      */
     @Override
     public List<MonitorStationInfo> queryStationInfo(String year,String voyage){
-        LambdaQueryWrapper<MonitorStationInfo> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        return monitorStationInfoMapper.queryStationInfo(year,voyage);
+        List<MonitorStationInfo> monitorStationInfos = monitorStationInfoMapper.queryStationInfo(year,voyage);
+        List<MonitorStationInfo> result=new ArrayList<>();
+        HashMap<String,String> map=new HashMap();
+
+        for (int i = 0; i < monitorStationInfos.size(); i++) {
+            MonitorStationInfo monitorStationInfo= monitorStationInfos.get(i);
+            if(map.containsKey(monitorStationInfo.getStationName())){
+               String value= map.get(monitorStationInfo.getStationName());
+               if(!value.contains(monitorStationInfo.getDataType())){
+                   value=value+";"+monitorStationInfo.getDataType();
+                   map.put(monitorStationInfo.getStationName(),value);
+               }
+            }
+            else{
+                map.put(monitorStationInfo.getStationName(),monitorStationInfo.getDataType());
+            }
+        }
+        for (int i = 0; i <monitorStationInfos.size() ; i++) {
+            //1. 调用map集合的方法keySet,所有的键存储到Set集合中
+            Set<String> set = map.keySet();
+            //2. 遍历Set集合,获取出Set集合中的所有元素 (Map中的键)
+            Iterator<String> it = set.iterator();
+            while(it.hasNext()){  // 迭代器遍历
+                //it.next返回是Set集合元素,也就是Map中的键
+                //3. 调用map集合方法get,通过键获取到值
+                String key = it.next();
+                String value = map.get(key);
+                if(monitorStationInfos.get(i).getStationName().equals(key))
+                {
+                    boolean isHave=false;
+                    for (int j = 0; j < result.size(); j++) {
+                        if(result.get(j).getStationName().equals(key)){
+                            isHave=true;
+                        }
+                    }
+                    if(!isHave){
+                        result.add(monitorStationInfos.get(i));
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < result.size(); i++) {
+            result.get(i).setDataType(map.get(result.get(i).getStationName()));
+        }
+
+        return result;
     }
 
     @Override

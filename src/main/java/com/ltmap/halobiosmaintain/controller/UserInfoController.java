@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/userInfo")
 public class UserInfoController {
-private final UserInfoServiceImpl userInfoServiceIpl ;
+    private final UserInfoServiceImpl userInfoServiceIpl ;
     @Autowired
     public UserInfoController(UserInfoServiceImpl userInfoServiceIpl) {
         this.userInfoServiceIpl = userInfoServiceIpl;
