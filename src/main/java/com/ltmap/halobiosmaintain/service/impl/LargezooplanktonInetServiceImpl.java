@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             }
         }
         if(largezooplanktonInetList.size()!=0) {
-            density = density.divide(new BigDecimal(largezooplanktonInetList.size()));
+            density = density.divide(new BigDecimal(largezooplanktonInetList.size()),2, BigDecimal.ROUND_HALF_UP);
         }
         return density;
     }
@@ -143,7 +144,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
         }}
         if(largezooplanktonInetList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()));
+            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }
@@ -196,7 +197,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             density = density.add(largezooplanktonInetList.get(i).getDensity());
         }}
         if(largezooplanktonInetList.size()!=0) {
-            density = density.divide(new BigDecimal(largezooplanktonInetList.size()));
+            density = density.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
@@ -219,7 +220,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
             }
         }
         if(largezooplanktonInetList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()));
+            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }

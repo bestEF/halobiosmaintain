@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -95,7 +96,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             }
         }
         if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
@@ -148,7 +149,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             }
         }
         if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }
@@ -201,7 +202,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
         }}
         if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
@@ -223,7 +224,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
             biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
         }}
         if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()));
+            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }

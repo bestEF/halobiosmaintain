@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -162,7 +163,7 @@ public class MonitorStationInfoController {
             //大型底栖动物定性
             BigDecimal macrobenthosQualitativeDensity=macrobenthosQualitativeService.queryBiologicalDensity(year,voyage);
             macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-            macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2));
+            macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
             result.put("macrobenthosCount",macrobenthosQuantitativeDensity);
 
             //潮间带生物
@@ -183,7 +184,7 @@ public class MonitorStationInfoController {
             //仔鱼定量
             BigDecimal smallfishQuantitativeDensity= smallfishQuantitativeService.queryBiologicalDensity(year,voyage);
             fisheggQuantitativeDensity=fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-            fisheggQuantitativeDensity=fisheggQuantitativeDensity.divide(new BigDecimal(2));
+            fisheggQuantitativeDensity=fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
             result.put("fisheggSmallCount",fisheggQuantitativeDensity);
 
             //游泳动物
@@ -199,7 +200,7 @@ public class MonitorStationInfoController {
             //大型底栖动物定性
             BigDecimal macrobenthosQualitativeBiomass=macrobenthosQualitativeService.queryBiologicalBiomass(year,voyage);
             macrobenthosQuantitativeBiomass=macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-            macrobenthosQuantitativeBiomass=macrobenthosQuantitativeBiomass.divide(new BigDecimal(2));
+            macrobenthosQuantitativeBiomass=macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
             result.put("macrobenthosCount",macrobenthosQuantitativeBiomass);
 
             //潮间带生物
@@ -300,7 +301,7 @@ public class MonitorStationInfoController {
                     //大型底栖动物定性
                     BigDecimal macrobenthosQualitativeDensity=macrobenthosQualitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
                     macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-                    macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2));
+                    macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(monitorStationInfoList.get(i).getStationId(),macrobenthosQuantitativeDensity);
                 }
                 //鱼卵仔鱼
@@ -310,7 +311,7 @@ public class MonitorStationInfoController {
                     //仔鱼定量
                     BigDecimal smallfishQuantitativeDensity = smallfishQuantitativeService.queryBiologicalDensityByStation(year, voyage, monitorStationInfoList.get(i).getStationId());
                     fisheggQuantitativeDensity = fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2));
+                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(monitorStationInfoList.get(i).getStationId(),fisheggQuantitativeDensity);
                 }
                 //潮间带生物
@@ -339,7 +340,7 @@ public class MonitorStationInfoController {
                     //大型底栖动物定性
                     BigDecimal macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
                     macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2));
+                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(monitorStationInfoList.get(i).getStationId(), macrobenthosQuantitativeBiomass);
                 }
                 //鱼卵仔鱼
@@ -402,7 +403,7 @@ public class MonitorStationInfoController {
                 //平均值
                 BigDecimal ave1 = macrobenthosQuantitativeDensityMap.get("ave");
                 BigDecimal ave2 = macrobenthosQualitativeDensityMap.get("ave");
-                ave1 = ave1.add(ave2).divide(new BigDecimal(2));
+                ave1 = ave1.add(ave2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
 
                 valuemacroMap.put("ave", ave1);
                 resultMap.put("value", valuemacroMap);
@@ -436,7 +437,7 @@ public class MonitorStationInfoController {
                 //平均值
                 BigDecimal avefish1 = fisheggQuantitativeDensityMap.get("ave");
                 BigDecimal avefish2 = smallfishQuantitativeDensityMap.get("ave");
-                avefish1 = avefish1.add(avefish2).divide(new BigDecimal(2));
+                avefish1 = avefish1.add(avefish2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
 
                 valuefishMap.put("ave", avefish1);
                 resultMap.put("value", valuefishMap);
@@ -508,7 +509,7 @@ public class MonitorStationInfoController {
                 //平均值
                 BigDecimal ave1 = macrobenthosQuantitativeBiomass.get("ave");
                 BigDecimal ave2 = macrobenthosQualitativeBiomass.get("ave");
-                ave1 = ave1.add(ave2).divide(new BigDecimal(2));
+                ave1 = ave1.add(ave2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
 
                 valuemacroMap.put("ave", ave1);
                 resultMap.put("value", valuemacroMap);
@@ -657,7 +658,7 @@ public class MonitorStationInfoController {
                     //大型底栖动物定性
                     BigDecimal macrobenthosQualitativeDensity = macrobenthosQualitativeService.queryBiologicalDensity(yearList.get(i), null);
                     macrobenthosQuantitativeDensity = macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-                    macrobenthosQuantitativeDensity = macrobenthosQuantitativeDensity.divide(new BigDecimal(2));
+                    macrobenthosQuantitativeDensity = macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(yearList.get(i), macrobenthosQuantitativeDensity);
                 }
                 resultMap.put("macrobenthosCount", result);
@@ -690,7 +691,7 @@ public class MonitorStationInfoController {
                     //仔鱼定量
                     BigDecimal smallfishQuantitativeDensity = smallfishQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
                     fisheggQuantitativeDensity = fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2));
+                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(yearList.get(i), fisheggQuantitativeDensity);
                 }
                 resultMap.put("fisheggSmallCount", result);
@@ -713,7 +714,7 @@ public class MonitorStationInfoController {
                     //大型底栖动物定性
                     BigDecimal macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomass(yearList.get(i), null);
                     macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2));
+                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
                     result.put(yearList.get(i), macrobenthosQuantitativeBiomass);
                 }
                 resultMap.put("macrobenthosCount", result);

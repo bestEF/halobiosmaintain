@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             density = density.add(macrobenthosQuantitativeList.get(i).getDensity());
         }
         if(macrobenthosQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
@@ -125,7 +126,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             }
         }
         if(macrobenthosQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }
@@ -197,7 +198,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             }
         }
         if(macrobenthosQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+            density = density.divide(new BigDecimal(macrobenthosQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
@@ -219,7 +220,7 @@ public class MacrobenthosQuantitativeServiceImpl extends ServiceImpl<Macrobentho
             biomass = biomass.add(macrobenthosQuantitativeList.get(i).getBiomass());
         }}
         if(macrobenthosQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()));
+            biomass = biomass.divide(new BigDecimal(macrobenthosQuantitativeList.size()),2, RoundingMode.HALF_UP);
         }
         return biomass;
     }
