@@ -43,77 +43,77 @@ public class SedimentgrainReq {
     /**
      * 砾石_>4(mm)
      */
-    private BigDecimal gravel1;
+    private BigDecimal gravel_1;
 
     /**
      * 砾石 _4-2(mm)
      */
-    private BigDecimal gravel2;
+    private BigDecimal gravel_2;
 
     /**
      * 砂_2-1(mm)
      */
-    private BigDecimal sand1;
+    private BigDecimal sand_1;
 
     /**
      * 砂_1-0.5(mm)
      */
-    private BigDecimal sand2;
+    private BigDecimal sand_2;
 
     /**
      * 砂_0.5-0.25(mm)
      */
-    private BigDecimal sand3;
+    private BigDecimal sand_3;
 
     /**
      * 砂_0.25-0.125(mm)
      */
-    private BigDecimal sand4;
+    private BigDecimal sand_4;
 
     /**
      * 砂_0.125-0.063(mm)
      */
-    private BigDecimal sand5;
+    private BigDecimal sand_5;
 
     /**
      * 粉砂_0.063-0.016(mm)
      */
-    private BigDecimal pinksand1;
+    private BigDecimal pinksand_1;
 
     /**
      * 粉砂_0.016-0.004(mm)
      */
-    private BigDecimal pinksand2;
+    private BigDecimal pinksand_2;
 
     /**
      * 粘土_0.004-0.001(mm)
      */
-    private BigDecimal clay1;
+    private BigDecimal clay_1;
 
     /**
      * 粘土_<0.001(mm)
      */
-    private BigDecimal clay2;
+    private BigDecimal clay_2;
 
     /**
      * 粒组含量_砾(%)
      */
-    private BigDecimal granulecontent1;
+    private BigDecimal granulecontent_1;
 
     /**
      * 粒组含量_砂(%)
      */
-    private BigDecimal granulecontent2;
+    private BigDecimal granulecontent_2;
 
     /**
      * 粒组含量_粉砂(%)
      */
-    private BigDecimal granulecontent3;
+    private BigDecimal granulecontent_3;
 
     /**
      * 粒组含量_粘土(%)
      */
-    private BigDecimal granulecontent4;
+    private BigDecimal granulecontent_4;
 
     /**
      * 名称及代号
@@ -123,17 +123,17 @@ public class SedimentgrainReq {
     /**
      * 粒组系数_Mdф
      */
-    private BigDecimal particlecoefficient1;
+    private BigDecimal particlecoefficient_1;
 
     /**
      * 粒组系数_QDф
      */
-    private BigDecimal particlecoefficient2;
+    private BigDecimal particlecoefficient_2;
 
     /**
      * 粒组系数_SKф
      */
-    private BigDecimal particlecoefficient3;
+    private BigDecimal particlecoefficient_3;
 
     /**
      * 备用字段1

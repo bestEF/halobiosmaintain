@@ -131,6 +131,7 @@ public class IntertidalzonebiologicalQuantitative extends Model<Intertidalzonebi
     /**
      * 站位所在地
      */
+    @TableField(exist = false)
     private String stationLocation;
 
     /**

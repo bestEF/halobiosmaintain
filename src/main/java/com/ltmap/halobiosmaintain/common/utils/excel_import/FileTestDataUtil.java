@@ -3676,105 +3676,105 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGravel1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGravel_1(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==14){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGravel2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGravel_2(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==15){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setSand1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setSand_1(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==16){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setSand2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setSand_2(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==17){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setSand3(new BigDecimal(cellValue));
+                        sedimentgrainReq.setSand_3(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==18){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setSand4(new BigDecimal(cellValue));
+                        sedimentgrainReq.setSand_4(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==19){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setSand5(new BigDecimal(cellValue));
+                        sedimentgrainReq.setSand_5(new BigDecimal(cellValue));
                     }
                 } else if(c+Constant.officialDataStartSign==20){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setPinksand_1(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==21){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setPinksand2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setPinksand_2(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==22){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setClay1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setClay_1(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==23){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setClay2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setClay_2(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==24){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGranulecontent1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGranulecontent_1(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==25){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGranulecontent2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGranulecontent_2(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==26){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGranulecontent3(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGranulecontent_3(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==27){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setGranulecontent4(new BigDecimal(cellValue));
+                        sedimentgrainReq.setGranulecontent_4(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==28){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -3788,46 +3788,24 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setParticlecoefficient1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setParticlecoefficient_1(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==30){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setParticlecoefficient2(new BigDecimal(cellValue));
+                        sedimentgrainReq.setParticlecoefficient_2(new BigDecimal(cellValue));
                     }
                 }else if(c+Constant.officialDataStartSign==31){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setParticlecoefficient3(new BigDecimal(cellValue));
-                    }
-                }else if(c+Constant.officialDataStartSign==32){
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-                    String cellValue = cell.getStringCellValue();
-                    if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
-                    }
-                }else if(c+Constant.officialDataStartSign==33){
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-                    String cellValue = cell.getStringCellValue();
-                    if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
-                    }
-                }else if(c+Constant.officialDataStartSign==34){
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
-                    if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
-                    String cellValue = cell.getStringCellValue();
-                    if(StringUtils.isNotBlank(cellValue)) {
-                        sedimentgrainReq.setPinksand1(new BigDecimal(cellValue));
+                        sedimentgrainReq.setParticlecoefficient_3(new BigDecimal(cellValue));
                     }
                 }
             }
-
         }
 
         //数据库更新 注意返回false代表更新成功
