@@ -17,10 +17,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -168,7 +165,7 @@ public class ExcelDataImportController {
             @ApiImplicitParam(name = "voyage",value = "航次",required = true)
     })
     @RequiresAuthentication
-    public Response<Object> checkExcel(MultipartFile[] files, Integer dataType, String year, String voyage) throws IOException {
+    public Response<Object> checkExcel(@RequestParam(value = "files", required = false) MultipartFile[] files, Integer dataType, String year, String voyage) throws IOException {
         Response<Object> res = new Response<>();
 
         if(ObjectUtils.isEmpty(dataType)||StringUtils.isBlank(year)){
