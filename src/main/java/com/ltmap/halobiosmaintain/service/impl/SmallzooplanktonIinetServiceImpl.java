@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +95,7 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
             }
         }
         if(smallzooplanktonIinetList.size()!=0) {
-            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()));
+            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()),2, RoundingMode.HALF_UP);
         }
         return density;
     }
