@@ -1,9 +1,9 @@
 # 服务器配置
 server:
   #端口号
-  port: 9093
+  port: 6101
   #ip
-  ip: http://localhost:9093
+  ip: http://localhost:6101
   #工程访问上下文名称
   servlet:
     context-path: /halobiosmaintain
@@ -15,9 +15,9 @@ server:
 spring:
   datasource:
     druid:
-      url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://localhost:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai
       username: root
-      password: root
+      password: mysql123!@#
       driver-class-name: com.mysql.cj.jdbc.Driver
       db-type: mysql
       # 初始化 最小 最大 连接数
