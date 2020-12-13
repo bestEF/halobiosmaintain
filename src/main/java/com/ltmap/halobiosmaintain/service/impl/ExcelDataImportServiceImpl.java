@@ -1014,6 +1014,7 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
                                     VegetationSurveyRecord vegetationSurveyRecord = new VegetationSurveyRecord();
                                     BeanUtils.copyProperties(vegetationSurveyRecordReq,vegetationSurveyRecord);
                                     vegetationSurveyRecord.setId(vegetationSurveyId);
+                                    vegetationSurveyRecord.setThreatenedFactors(vegetationSurveyRecordReq.getThreatenedFactors2());
                                     vegetationSurveyRecordList.add(vegetationSurveyRecord);
                                 }
 

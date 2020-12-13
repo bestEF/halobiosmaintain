@@ -1613,7 +1613,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setEndLon(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setStartLat(new BigDecimal(cellValue));
                         }
                     }else if(c==4){
                         Cell cell = row.getCell(c);
@@ -1624,7 +1624,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setStartLat(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setEndLon(new BigDecimal(cellValue));
                         }
 
                         cell = row.getCell(c + 1);
