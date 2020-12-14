@@ -1,11 +1,15 @@
 package com.ltmap.halobiosmaintain.common.utils.excel_import;
 
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -92,21 +96,27 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         boolean convertSuccess=true;
         // 指定日期格式为四位年/两位月份/两位日期，注意yyyy/MM/dd区分大小写；
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         try {
             if(str.contains("-")){
                 format = new SimpleDateFormat("yyyy-MM-dd");
+                dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             }else if(str.contains(".")){
                 format = new SimpleDateFormat("yyyy.MM.dd");
+                dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd");
             }else if(str.contains("/")){
                 format = new SimpleDateFormat("yyyy/MM/dd");
+                dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             }else if(str.length()==8){
                 str=str.substring(0,4)+"-"+str.substring(4,6)+"-"+str.substring(6,8);
                 format = new SimpleDateFormat("yyyy-MM-dd");
+                dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             }
             // 设置lenient为false. 否则SimpleDateFormat会比较宽松地验证日期，比如2007/02/29会被接受，并转换成2007/03/01
             format.setLenient(false);
-            format.parse(str);
-        } catch (ParseException e) {
+            Date parse = format.parse(str);
+            LocalDate.parse(str, dtf);
+        } catch (Exception e) {
             // e.printStackTrace();
             // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
             convertSuccess=false;
