@@ -100,6 +100,7 @@ public class HydrometeorologicalController {
         //删除生物质量数据表
         Boolean deleted= hydrometeorologicalService.removeByMap(map);
 
+        try{
         //删除站位数据表
         for (int i = 0; i < hydrometeorologicals.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
@@ -130,6 +131,10 @@ public class HydrometeorologicalController {
         monitorDataReportService.removeById(reportId);
 
         return Responses.or(deleted);
+        }
+        catch (Exception e){
+            return Responses.or(deleted);
+        }
     }
 }
 

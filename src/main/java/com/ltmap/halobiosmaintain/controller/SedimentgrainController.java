@@ -68,6 +68,7 @@ public class SedimentgrainController {
         //删除生物质量数据表
         Boolean deleted= sedimentgrainService.removeByMap(map);
 
+        try{
         //删除站位数据表
         for (int i = 0; i < sedimentgrains.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
@@ -99,6 +100,10 @@ public class SedimentgrainController {
         monitorDataReportService.removeById(reportId);
 
         return Responses.or(deleted);
+        }
+        catch (Exception e){
+            return Responses.or(deleted);
+        }
     }
 }
 

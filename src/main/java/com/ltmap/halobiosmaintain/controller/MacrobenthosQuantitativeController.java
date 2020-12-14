@@ -69,36 +69,41 @@ public class MacrobenthosQuantitativeController {
         //删除生物质量数据表
         Boolean deleted= macrobenthosQuantitativeService.removeByMap(map);
 
-        //删除站位数据表
-        for (int i = 0; i < macrobenthosQuantitatives.size(); i++) {
-            HashMap<String, Object> map2 = new HashMap<>();
-            map2.put("station_id", macrobenthosQuantitatives.get(i).getStationId());
-            //修改展位数据中的数据类型，删除大型底栖动物定量
-            List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(macrobenthosQuantitatives.get(i).getStationId(),null,null);
-            if(monitorStationInfos.size()==1){
-                String dataTypeNew="";
-                String[] dataType=monitorStationInfos.get(0).getDataType().split(";");
-                for (String item:dataType
-                ) {
-                    if (!item.equals("大型底栖动物定量")) {
-                        dataTypeNew +=item+";";
+        try {
+            //删除站位数据表
+            for (int i = 0; i < macrobenthosQuantitatives.size(); i++) {
+                HashMap<String, Object> map2 = new HashMap<>();
+                map2.put("station_id", macrobenthosQuantitatives.get(i).getStationId());
+                //修改展位数据中的数据类型，删除大型底栖动物定量
+                List<MonitorStationInfo> monitorStationInfos = monitorStationInfoService.queryStationInfoById(macrobenthosQuantitatives.get(i).getStationId(), null, null);
+                if (monitorStationInfos.size() == 1) {
+                    String dataTypeNew = "";
+                    String[] dataType = monitorStationInfos.get(0).getDataType().split(";");
+                    for (String item : dataType
+                    ) {
+                        if (!item.equals("大型底栖动物定量")) {
+                            dataTypeNew += item + ";";
+                        }
                     }
-                }
-                if(!Strings.isNullOrEmpty(dataTypeNew)){
-                    dataTypeNew=dataTypeNew.substring(0,dataTypeNew.length()-1);
-                }
+                    if (!Strings.isNullOrEmpty(dataTypeNew)) {
+                        dataTypeNew = dataTypeNew.substring(0, dataTypeNew.length() - 1);
+                    }
 
-                LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, macrobenthosQuantitatives.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
-                monitorStationInfoService.update(null,lambdaUpdateWrapper);
+                    LambdaUpdateWrapper<MonitorStationInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                    lambdaUpdateWrapper.eq(MonitorStationInfo::getStationId, macrobenthosQuantitatives.get(i).getStationId()).set(MonitorStationInfo::getDataType, dataTypeNew);
+                    monitorStationInfoService.update(null, lambdaUpdateWrapper);
+                }
+                monitorStationInfoService.removeByMap(map2);
             }
-            monitorStationInfoService.removeByMap(map2);
+
+            //删除填报数据
+            monitorDataReportService.removeById(reportId);
+
+            return Responses.or(deleted);
         }
-
-        //删除填报数据
-        monitorDataReportService.removeById(reportId);
-
-        return Responses.or(deleted);
+        catch (Exception e){
+            return Responses.or(deleted);
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ltmap.halobiosmaintain.entity.main.SysLog;
 import com.ltmap.halobiosmaintain.vo.resp.SysLogResp;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -25,9 +26,9 @@ public interface SysLogMapper extends BaseMapper<SysLog> {
      */
     IPage<SysLogResp> listSysLog(
             IPage<SysLogResp> iPage,
-            String userName,
-            String startDate,
-            String endDate);
+            @Param("userName") String userName,
+            @Param("startDate")String startDate,
+            @Param("endDate")String endDate);
 
     /**
      * 清空日志

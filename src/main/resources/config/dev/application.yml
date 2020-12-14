@@ -12,6 +12,8 @@ server:
     timeout: 3600s
 
 spring:
+  jackson:
+    time-zone: GMT+8
   datasource:
     druid:
       url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai

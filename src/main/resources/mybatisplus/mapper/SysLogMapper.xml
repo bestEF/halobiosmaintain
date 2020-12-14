@@ -26,7 +26,7 @@
         FROM sys_log JOIN user_info ON sys_log.user_id=user_info.user_id
         <where>
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userName)">
-                user_info.user_name LIKE #{userName}
+                AND user_info.user_name LIKE #{userName}
             </if>
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startDate) and @org.apache.commons.lang3.StringUtils@isNotBlank(endDate)">
                 AND (sys_log.operat_time BETWEEN #{startDate} AND #{endDate})

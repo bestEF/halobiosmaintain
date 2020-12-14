@@ -109,6 +109,7 @@ public class WaterqualityController {
         //删除生物质量数据表
         Boolean deleted= waterqualityService.removeByMap(map);
 
+        try{
         //删除站位数据表
         for (int i = 0; i < waterqualities.size(); i++) {
             HashMap<String, Object> map2 = new HashMap<>();
@@ -139,6 +140,10 @@ public class WaterqualityController {
         monitorDataReportService.removeById(reportId);
 
         return Responses.or(deleted);
+        }
+        catch (Exception e){
+            return Responses.or(deleted);
+        }
     }
 }
 

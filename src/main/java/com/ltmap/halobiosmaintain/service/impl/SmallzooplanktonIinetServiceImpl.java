@@ -150,7 +150,7 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
             }
         }
         if(smallzooplanktonIinetList.size()!=0) {
-            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()));
+            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()),2,BigDecimal.ROUND_HALF_UP);
         }
         return density;
     }
