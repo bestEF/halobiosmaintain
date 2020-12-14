@@ -32,6 +32,7 @@
                 AND (sys_log.operat_time BETWEEN #{startDate} AND #{endDate})
             </if>
         </where>
+        order by sys_log.operat_time desc
     </select>
 
     <!--清空日志-->
