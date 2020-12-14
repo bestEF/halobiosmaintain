@@ -60,9 +60,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
 
         if(waterqualities.size()==0){
             HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-            valueMap0.put("max",new BigDecimal(0));
-            valueMap0.put("min",new BigDecimal(0));
-            valueMap0.put("ave",new BigDecimal(0));
+            valueMap0.put("max",null);
+            valueMap0.put("min",null);
+            valueMap0.put("ave",null);
             resultMap.put("value",valueMap0);
             return resultMap;
         }
@@ -72,9 +72,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getaD()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -94,9 +94,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -116,9 +116,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -138,9 +138,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getCod()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -160,9 +160,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -182,9 +182,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -204,9 +204,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getGsy()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -226,9 +226,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -248,9 +248,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getDorjy()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -270,9 +270,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getHxlsy()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -292,9 +292,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -314,9 +314,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getPh()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -336,9 +336,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -358,9 +358,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getTn()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -380,9 +380,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getToc()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -402,9 +402,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getTp()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -424,9 +424,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getXfw()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -446,9 +446,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getXsyD()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -468,9 +468,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getYd()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -490,9 +490,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getYjl()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -512,9 +512,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getYlsA()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -534,9 +534,9 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getYxsyD()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -556,8 +556,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 waterqualities = waterqualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 if(waterqualities.size()==0){
                     HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
                     valueMap0.put("ave",new BigDecimal(0));
                     resultMap.put("value",valueMap0);
                     return resultMap;
@@ -598,10 +598,10 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
         BigDecimal order4=new BigDecimal(0);
         if(waterqualities.size()==0){
             HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-            valueMap0.put("第一类", order1);
-            valueMap0.put("第二类", order2);
-            valueMap0.put("第三类", order3);
-            valueMap0.put("第四类", order4);
+            valueMap0.put("第一类", null);
+            valueMap0.put("第二类", null);
+            valueMap0.put("第三类", null);
+            valueMap0.put("第四类", null);
             resultMap.put("value",valueMap0);
             return resultMap;
         }

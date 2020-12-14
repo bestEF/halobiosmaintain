@@ -21,9 +21,9 @@ public interface ISmallzooplanktonIinetService extends IService<Smallzooplankton
 
     List<SmallzooplanktonIinet> queryBiologicalType(String year, String voyage);
     List<String> statisticTypeFromOneMap(String year, String voyage);
-    BigDecimal queryBiologicalDensity(String year, String voyage);
+    HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage);
 
-    BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId);
+    HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId);
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 

@@ -23,12 +23,12 @@ public interface IMacrobenthosQualitativeService extends IService<MacrobenthosQu
 
     List<String> statisticTypeFromOneMap(String year, String voyage);
 
-    BigDecimal queryBiologicalDensity(String year, String voyage);
-    BigDecimal queryBiologicalBiomass(String year, String voyage);
+    HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage);
+    HashMap<String,BigDecimal> queryBiologicalBiomass(String year, String voyage);
 
-    BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId);
+    HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId);
 
-    BigDecimal queryBiologicalBiomassByStation(String year, String voyage,Long stationId);
+    HashMap<String,BigDecimal>  queryBiologicalBiomassByStation(String year, String voyage,Long stationId);
 
     HashMap<String,BigDecimal> queryBiologicalDensityOneYear(String year, String voyage);
 

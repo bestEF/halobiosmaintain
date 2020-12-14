@@ -57,9 +57,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
         HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
         HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
         if(sediments.size()==0){
-            valueMap0.put("max",new BigDecimal(0));
-            valueMap0.put("min",new BigDecimal(0));
-            valueMap0.put("ave",new BigDecimal(0));
+            valueMap0.put("max",null);
+            valueMap0.put("min",null);
+            valueMap0.put("ave",null);
             resultMap.put("value",valueMap0);
             return resultMap;
         }
@@ -68,9 +68,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> cDvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -89,9 +89,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> codvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getLhw()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -110,9 +110,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> crvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTcr()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -131,9 +131,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> cuvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -152,9 +152,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> gsyvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getYjt()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -173,9 +173,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> hgvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -194,9 +194,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> pbvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -215,9 +215,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> sylvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -236,9 +236,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> tnvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTn()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -257,9 +257,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> tpvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getTp()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -279,9 +279,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> yxsydvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getEh()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -300,9 +300,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> aSSvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -321,9 +321,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 HashMap<String, BigDecimal> znvalueMap = new HashMap<>();
                 sediments = sediments.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 if(sediments.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -360,9 +360,9 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
         BigDecimal order3=new BigDecimal(0);
         if(sediments.size()==0){
             HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
-            valueMap0.put("第一类", order1);
-            valueMap0.put("第二类", order2);
-            valueMap0.put("第三类", order3);
+            valueMap0.put("第一类", null);
+            valueMap0.put("第二类", null);
+            valueMap0.put("第三类", null);
             resultMap.put("value",valueMap0);
             return resultMap;
         }

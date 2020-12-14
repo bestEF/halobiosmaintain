@@ -73,7 +73,10 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
         List list = new ArrayList();
         for (int i = 0; i <smallzooplanktonIinetList.size() ; i++) {
-            list.add(smallzooplanktonIinetList.get(i).getCategory());
+            smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getCategory()!=null).collect(Collectors.toList());
+            if(smallzooplanktonIinetList.size()!=0){
+                list.add(smallzooplanktonIinetList.get(i).getCategory());
+            }
         }
         return list;
     }
@@ -86,18 +89,26 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+    public  HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
-            if (smallzooplanktonIinetList.get(i).getDensity() != null) {
-                density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(smallzooplanktonIinetList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
+                if (smallzooplanktonIinetList.get(i).getDensity() != null) {
+                    density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+                }
             }
+            if (smallzooplanktonIinetList.size() != 0) {
+                density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(smallzooplanktonIinetList.size()!=0) {
-            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()),2, RoundingMode.HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*
@@ -114,9 +125,9 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
         smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(smallzooplanktonIinetList.size()==0){
-            resultMap.put("max",new BigDecimal(0));
-            resultMap.put("min",new BigDecimal(0));
-            resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("max",null);
+            resultMap.put("min",null);
+            resultMap.put("ave",null);
             return resultMap;
         }
         //求最大值
@@ -141,18 +152,26 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
      * @Date: 2020/12/2 16:04
      */
     @Override
-    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+    public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,stationId);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
-            if (smallzooplanktonIinetList.get(i).getDensity() != null) {
-                density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(smallzooplanktonIinetList.size()==0){
+            result.put("result",new BigDecimal(0));//0代表无值的情况
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
+                if (smallzooplanktonIinetList.get(i).getDensity() != null) {
+                    density = density.add(smallzooplanktonIinetList.get(i).getDensity());
+                }
             }
+            if (smallzooplanktonIinetList.size() != 0) {
+                density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(smallzooplanktonIinetList.size()!=0) {
-            density = density.divide(new BigDecimal(smallzooplanktonIinetList.size()),2,BigDecimal.ROUND_HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*

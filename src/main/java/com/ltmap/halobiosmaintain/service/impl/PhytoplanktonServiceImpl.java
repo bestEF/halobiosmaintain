@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -71,7 +72,10 @@ public class PhytoplanktonServiceImpl extends ServiceImpl<PhytoplanktonMapper, P
         List list = new ArrayList();
         HashMap<String,Integer> phytoplanktonMap=new HashMap<String,Integer>();
         for (int i = 0; i <phytoplanktonList.size() ; i++) {
-            list.add(phytoplanktonList.get(i).getCategory());
+            phytoplanktonList=phytoplanktonList.stream().filter(x->x.getCategory()!=null).collect(Collectors.toList());
+            if(phytoplanktonList.size()!=0) {
+                list.add(phytoplanktonList.get(i).getCategory());
+            }
         }
         Set uniqueSet = new HashSet(list);
         for (Object temp:uniqueSet

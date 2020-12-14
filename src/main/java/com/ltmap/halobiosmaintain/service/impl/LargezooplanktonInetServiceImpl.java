@@ -70,7 +70,10 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         List list = new ArrayList();
         for (int i = 0; i <largezooplanktonInetList.size() ; i++) {
-            list.add(largezooplanktonInetList.get(i).getCategory());
+            largezooplanktonInetList = largezooplanktonInetList.stream().filter(x -> x.getCategory() != null).collect(Collectors.toList());
+            if (largezooplanktonInetList.size() != 0) {
+                list.add(largezooplanktonInetList.get(i).getCategory());
+            }
         }
         return list;
     }
@@ -83,18 +86,26 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+    public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            if(largezooplanktonInetList.get(i).getDensity()!=null){
-                density = density.add(largezooplanktonInetList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(largezooplanktonInetList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+                if (largezooplanktonInetList.get(i).getDensity() != null) {
+                    density = density.add(largezooplanktonInetList.get(i).getDensity());
+                }
             }
+            if (largezooplanktonInetList.size() != 0) {
+                density = density.divide(new BigDecimal(largezooplanktonInetList.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(largezooplanktonInetList.size()!=0) {
-            density = density.divide(new BigDecimal(largezooplanktonInetList.size()),2, BigDecimal.ROUND_HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*
@@ -111,9 +122,9 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(largezooplanktonInetList.size()==0){
-            resultMap.put("max",new BigDecimal(0));
-            resultMap.put("min",new BigDecimal(0));
-            resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("max",null);
+            resultMap.put("min",null);
+            resultMap.put("ave",null);
             return resultMap;
         }
         //求最大值
@@ -136,17 +147,26 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalBiomass(String year, String voyage) {
+    public  HashMap<String,BigDecimal> queryBiologicalBiomass(String year, String voyage) {
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal biomass = new BigDecimal(0);
-        for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            if(largezooplanktonInetList.get(i).getTotalBiomass()!=null){
-            biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
-        }}
-        if(largezooplanktonInetList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(largezooplanktonInetList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal biomass = new BigDecimal(0);
+            for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+                if (largezooplanktonInetList.get(i).getTotalBiomass() != null) {
+                    biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
+                }
+            }
+            if (largezooplanktonInetList.size() != 0) {
+                biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",biomass);
         }
-        return biomass;
+        return result;
     }
     /*
      * @Description:生物量-一年内统计分析
@@ -162,9 +182,10 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getTotalBiomass()!=null).collect(Collectors.toList());
         if(largezooplanktonInetList.size()==0){
-            resultMap.put("max",new BigDecimal(0));
-            resultMap.put("min",new BigDecimal(0));
-            resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("max",null);
+            resultMap.put("min",null);
+            resultMap.put("ave",null);
+            resultMap.put("result",new BigDecimal(0));
             return resultMap;
         }
         //求最大值
@@ -176,6 +197,7 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
         resultMap.put("max",max);
         resultMap.put("min",min);
         resultMap.put("ave",ave);
+        resultMap.put("result",new BigDecimal(1));
         return resultMap;
     }
 
@@ -189,17 +211,26 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
      * @Date: 2020/12/2 16:04
      */
     @Override
-    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+    public  HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,stationId);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            if(largezooplanktonInetList.get(i).getDensity()!=null){
-            density = density.add(largezooplanktonInetList.get(i).getDensity());
-        }}
-        if(largezooplanktonInetList.size()!=0) {
-            density = density.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(largezooplanktonInetList.size()==0){
+            result.put("result",new BigDecimal(0));//0代表无值的情况
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+                if (largezooplanktonInetList.get(i).getDensity() != null) {
+                    density = density.add(largezooplanktonInetList.get(i).getDensity());
+                }
+            }
+            if (largezooplanktonInetList.size() != 0) {
+                density = density.divide(new BigDecimal(largezooplanktonInetList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        return density;
+        return result;
     }
 
     /*
@@ -211,18 +242,26 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalBiomassByStation(String year, String voyage,Long stationId) {
+    public  HashMap<String,BigDecimal> queryBiologicalBiomassByStation(String year, String voyage,Long stationId) {
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year, voyage,stationId);
-        BigDecimal biomass = new BigDecimal(0);
-        for (int i = 0; i < largezooplanktonInetList.size(); i++) {
-            if (largezooplanktonInetList.get(i).getTotalBiomass() != null) {
-                biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(largezooplanktonInetList.size()==0){
+            result.put("result",new BigDecimal(0));//0代表无值的情况
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal biomass = new BigDecimal(0);
+            for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+                if (largezooplanktonInetList.get(i).getTotalBiomass() != null) {
+                    biomass = biomass.add(largezooplanktonInetList.get(i).getTotalBiomass());
+                }
             }
+            if (largezooplanktonInetList.size() != 0) {
+                biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",biomass);
         }
-        if(largezooplanktonInetList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(largezooplanktonInetList.size()),2, RoundingMode.HALF_UP);
-        }
-        return biomass;
+        return result;
     }
 
     /*

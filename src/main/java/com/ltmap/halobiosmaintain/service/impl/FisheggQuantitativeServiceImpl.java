@@ -84,18 +84,26 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+    public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
-            if(fisheggQuantitativeList.get(i).getDensity()!=null){
-                density = density.add(fisheggQuantitativeList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(fisheggQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
+                if (fisheggQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(fisheggQuantitativeList.get(i).getDensity());
+                }
             }
+            if (fisheggQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(fisheggQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(fisheggQuantitativeList.size()!=0){
-            density=density.divide(new BigDecimal(fisheggQuantitativeList.size()),2, RoundingMode.HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*
@@ -115,6 +123,7 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
             resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("result",new BigDecimal(0));
             return resultMap;
         }
         //求最大值
@@ -125,7 +134,8 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
         BigDecimal ave = fisheggQuantitativeList.stream().map(FisheggQuantitative::getDensity).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(fisheggQuantitativeList.size()), 2, BigDecimal.ROUND_HALF_UP);
         resultMap.put("max",max);
         resultMap.put("min",min);
-        resultMap.put("ave",ave);
+        resultMap.put("ave", ave);
+        resultMap.put("result", new BigDecimal(1));
         return resultMap;
     }
 
@@ -139,17 +149,26 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
      * @Date: 2020/12/2 16:04
      */
     @Override
-    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+    public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
-            if(fisheggQuantitativeList.get(i).getDensity()!=null){
-            density = density.add(fisheggQuantitativeList.get(i).getDensity());
-        }}
-        if(fisheggQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(fisheggQuantitativeList.size()),2, RoundingMode.HALF_UP);
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(fisheggQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < fisheggQuantitativeList.size(); i++) {
+                if (fisheggQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(fisheggQuantitativeList.get(i).getDensity());
+                }
+            }
+            if (fisheggQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(fisheggQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        return density;
+        return result;
     }
 
     /**

@@ -86,18 +86,26 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+    public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
-            if(smallfishQuantitativeList.get(i).getDensity()!=null){
-                density = density.add(smallfishQuantitativeList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(smallfishQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
+                if (smallfishQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(smallfishQuantitativeList.get(i).getDensity());
+                }
             }
+            if (smallfishQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(smallfishQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(smallfishQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(smallfishQuantitativeList.size()),2, RoundingMode.HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*
@@ -117,6 +125,7 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
             resultMap.put("max",new BigDecimal(0));
             resultMap.put("min",new BigDecimal(0));
             resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("result", new BigDecimal(0));
             return resultMap;
         }
         //求最大值
@@ -128,6 +137,7 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
         resultMap.put("max",max);
         resultMap.put("min",min);
         resultMap.put("ave",ave);
+        resultMap.put("result", new BigDecimal(1));
         return resultMap;
     }
     /*
@@ -140,18 +150,26 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
      * @Date: 2020/12/2 16:04
      */
     @Override
-    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+    public HashMap<String,BigDecimal>  queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
-            if (smallfishQuantitativeList.get(i).getDensity() != null) {
-                density = density.add(smallfishQuantitativeList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(smallfishQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < smallfishQuantitativeList.size(); i++) {
+                if (smallfishQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(smallfishQuantitativeList.get(i).getDensity());
+                }
             }
+            if (smallfishQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(smallfishQuantitativeList.size()), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(smallfishQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(smallfishQuantitativeList.size()),2,BigDecimal.ROUND_HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*

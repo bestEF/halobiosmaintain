@@ -87,18 +87,26 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalDensity(String year, String voyage) {
+    public HashMap<String,BigDecimal>  queryBiologicalDensity(String year, String voyage) {
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
-                density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(intertidalzonebiologicalQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+                if (intertidalzonebiologicalQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
+                }
             }
+            if (intertidalzonebiologicalQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
-        }
-        return density;
+        return result;
     }
 
     /*
@@ -115,9 +123,9 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
         intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
         if(intertidalzonebiologicalQuantitativeList.size()==0){
-            resultMap.put("max",new BigDecimal(0));
-            resultMap.put("min",new BigDecimal(0));
-            resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("max",null);
+            resultMap.put("min",null);
+            resultMap.put("ave",null);
             return resultMap;
         }
         //求最大值
@@ -140,18 +148,26 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalBiomass(String year, String voyage) {
+    public  HashMap<String,BigDecimal>  queryBiologicalBiomass(String year, String voyage) {
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
-        BigDecimal biomass = new BigDecimal(0);
-        for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
-                biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(intertidalzonebiologicalQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal biomass = new BigDecimal(0);
+            for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+                if (intertidalzonebiologicalQuantitativeList.get(i).getBiomass() != null) {
+                    biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
+                }
             }
+            if (intertidalzonebiologicalQuantitativeList.size() != 0) {
+                biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",biomass);
         }
-        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
-        }
-        return biomass;
+        return result;
     }
 
     /*
@@ -168,9 +184,10 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,null);
         intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeList.stream().filter(x->x.getBiomass()!=null).collect(Collectors.toList());
         if(intertidalzonebiologicalQuantitativeList.size()==0){
-            resultMap.put("max",new BigDecimal(0));
-            resultMap.put("min",new BigDecimal(0));
-            resultMap.put("ave",new BigDecimal(0));
+            resultMap.put("max", null);
+            resultMap.put("min",null);
+            resultMap.put("ave",null);
+            resultMap.put("result",new BigDecimal(0));
             return resultMap;
         }
         //求最大值
@@ -182,6 +199,7 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
         resultMap.put("max",max);
         resultMap.put("min",min);
         resultMap.put("ave",ave);
+        resultMap.put("result",new BigDecimal(1));
         return resultMap;
     }
     /*
@@ -194,17 +212,26 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
      * @Date: 2020/12/2 16:04
      */
     @Override
-    public BigDecimal queryBiologicalDensityByStation(String year, String voyage,Long stationId){
+    public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
-        BigDecimal density = new BigDecimal(0);
-        for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            if(intertidalzonebiologicalQuantitativeList.get(i).getDensity()!=null){
-            density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
-        }}
-        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(intertidalzonebiologicalQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));//0代表无值的情况
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal density = new BigDecimal(0);
+            for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+                if (intertidalzonebiologicalQuantitativeList.get(i).getDensity() != null) {
+                    density = density.add(intertidalzonebiologicalQuantitativeList.get(i).getDensity());
+                }
+            }
+            if (intertidalzonebiologicalQuantitativeList.size() != 0) {
+                density = density.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",density);
         }
-        return density;
+        return result;
     }
 
     /*
@@ -216,17 +243,26 @@ public class IntertidalzonebiologicalQuantitativeServiceImpl extends ServiceImpl
      * @Date: 2020/12/2 13:57
      */
     @Override
-    public BigDecimal queryBiologicalBiomassByStation(String year, String voyage,Long stationId) {
+    public HashMap<String,BigDecimal> queryBiologicalBiomassByStation(String year, String voyage,Long stationId) {
         List<IntertidalzonebiologicalQuantitative> intertidalzonebiologicalQuantitativeList=intertidalzonebiologicalQuantitativeMapper.queryBiologicalType(year, voyage,stationId);
-        BigDecimal biomass = new BigDecimal(0);
-        for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
-            if(intertidalzonebiologicalQuantitativeList.get(i).getBiomass()!=null){
-            biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
-        }}
-        if(intertidalzonebiologicalQuantitativeList.size()!=0) {
-            biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()),2, RoundingMode.HALF_UP);
+        HashMap<String,BigDecimal> result=new HashMap<>();
+        if(intertidalzonebiologicalQuantitativeList.size()==0){
+            result.put("result",new BigDecimal(0));//0代表无值的情况
+            result.put("density",new BigDecimal(0));
+        }else {
+            BigDecimal biomass = new BigDecimal(0);
+            for (int i = 0; i < intertidalzonebiologicalQuantitativeList.size(); i++) {
+                if (intertidalzonebiologicalQuantitativeList.get(i).getBiomass() != null) {
+                    biomass = biomass.add(intertidalzonebiologicalQuantitativeList.get(i).getBiomass());
+                }
+            }
+            if (intertidalzonebiologicalQuantitativeList.size() != 0) {
+                biomass = biomass.divide(new BigDecimal(intertidalzonebiologicalQuantitativeList.size()), 2, RoundingMode.HALF_UP);
+            }
+            result.put("result",new BigDecimal(1));
+            result.put("density",biomass);
         }
-        return biomass;
+        return result;
     }
 
     /*

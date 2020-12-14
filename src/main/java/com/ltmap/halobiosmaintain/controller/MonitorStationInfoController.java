@@ -98,8 +98,8 @@ public class MonitorStationInfoController {
      */
     @ApiOperation(value ="生物种类统计信息展示")
     @PostMapping("/statisticTypeOneMap")
-    public Response<HashMap<String,BigDecimal>> statisticTypeOneMap(String year, String voyage,String statisticType){
-        HashMap<String,BigDecimal> result=new HashMap<String, BigDecimal>();
+    public Response<HashMap<String,Object>> statisticTypeOneMap(String year, String voyage,String statisticType){
+        HashMap<String,Object> result=new HashMap<String, Object>();
         //站位信息
         List<MonitorStationInfo> monitorStationInfoList = monitorStationInfoService.queryStationInfo(year, voyage);
         result.put("stationCount", new BigDecimal(monitorStationInfoList.size()));
@@ -159,33 +159,65 @@ public class MonitorStationInfoController {
         if(statisticType.equals("density")){
             //大型底栖动物
             //大型底栖动物定量
-            BigDecimal macrobenthosQuantitativeDensity=macrobenthosQuantitativeService.queryBiologicalDensity(year,voyage);
+            HashMap<String,BigDecimal> macrobenthosQuantitativeDensityMap=macrobenthosQuantitativeService.queryBiologicalDensity(year,voyage);
             //大型底栖动物定性
-            BigDecimal macrobenthosQualitativeDensity=macrobenthosQualitativeService.queryBiologicalDensity(year,voyage);
-            macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-            macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-            result.put("macrobenthosCount",macrobenthosQuantitativeDensity);
+            HashMap<String,BigDecimal> macrobenthosQualitativeDensityMap=macrobenthosQualitativeService.queryBiologicalDensity(year,voyage);
+
+            BigDecimal density1=new BigDecimal(0);
+            density1=macrobenthosQuantitativeDensityMap.get("density").add(macrobenthosQualitativeDensityMap.get("density"));
+            if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                density1=density1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+            }
+            if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("macrobenthosCount",null);
+            }
+            else{
+                result.put("macrobenthosCount",density1);
+            }
 
             //潮间带生物
-            BigDecimal intertidalzonebiologicalQuantitativeDensity=intertidalzonebiologicalQuantitativeService.queryBiologicalDensity(year,voyage);
-            result.put("intertidalzonebiologicalCount",intertidalzonebiologicalQuantitativeDensity);
+            HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensityMap=intertidalzonebiologicalQuantitativeService.queryBiologicalDensity(year,voyage);
+            if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("intertidalzonebiologicalCount",null);
+            }
+            else{
+                result.put("intertidalzonebiologicalCount",intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+            }
 
             //浮游动物
             //大型浮游动物一型网
-            BigDecimal largezooplanktonInetDensity=largezooplanktonInetService.queryBiologicalDensity(year,voyage);
-            result.put("largezooplanktonCount",largezooplanktonInetDensity);
+            HashMap<String,BigDecimal> largezooplanktonInetDensityMap=largezooplanktonInetService.queryBiologicalDensity(year,voyage);
+            if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("largezooplanktonCount",null);
+            }
+            else{
+                result.put("largezooplanktonCount",largezooplanktonInetDensityMap.get("density"));
+            }
             //小型浮游动物二型网smallzooplanktonIinetService
-            BigDecimal smallzooplanktonIinetDensity=smallzooplanktonIinetService.queryBiologicalDensity(year,voyage);
-            result.put("smallzooplanktonCount",smallzooplanktonIinetDensity);
+            HashMap<String,BigDecimal> smallzooplanktonIinetDensityMap=smallzooplanktonIinetService.queryBiologicalDensity(year,voyage);
+            if(smallzooplanktonIinetDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("smallzooplanktonCount",null);
+            }
+            else{
+                result.put("smallzooplanktonCount",smallzooplanktonIinetDensityMap.get("density"));
+            }
 
             //鱼卵仔鱼
             //鱼卵定量
-            BigDecimal fisheggQuantitativeDensity= fisheggQuantitativeService.queryBiologicalDensity(year,voyage);
+            HashMap<String,BigDecimal> fisheggQuantitativeDensityMap= fisheggQuantitativeService.queryBiologicalDensity(year,voyage);
             //仔鱼定量
-            BigDecimal smallfishQuantitativeDensity= smallfishQuantitativeService.queryBiologicalDensity(year,voyage);
-            fisheggQuantitativeDensity=fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-            fisheggQuantitativeDensity=fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-            result.put("fisheggSmallCount",fisheggQuantitativeDensity);
+            HashMap<String,BigDecimal> smallfishQuantitativeDensityMap= smallfishQuantitativeService.queryBiologicalDensity(year,voyage);
+            BigDecimal density2=new BigDecimal(0);
+            density2=fisheggQuantitativeDensityMap.get("density").add(smallfishQuantitativeDensityMap.get("density"));
+            if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                density2=density2.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+            }
+            if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("fisheggSmallCount",null);
+            }
+            else{
+                result.put("fisheggSmallCount",density2);
+            }
 
             //游泳动物
             result.put("swimminganimalCount", null);
@@ -196,20 +228,39 @@ public class MonitorStationInfoController {
         if(statisticType.equals("biomass")){
             //大型底栖动物
             //大型底栖动物定量
-            BigDecimal macrobenthosQuantitativeBiomass= macrobenthosQuantitativeService.queryBiologicalBiomass(year,voyage);
+            HashMap<String,BigDecimal> macrobenthosQuantitativeBiomassMap= macrobenthosQuantitativeService.queryBiologicalBiomass(year,voyage);
             //大型底栖动物定性
-            BigDecimal macrobenthosQualitativeBiomass=macrobenthosQualitativeService.queryBiologicalBiomass(year,voyage);
-            macrobenthosQuantitativeBiomass=macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-            macrobenthosQuantitativeBiomass=macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-            result.put("macrobenthosCount",macrobenthosQuantitativeBiomass);
+            HashMap<String,BigDecimal> macrobenthosQualitativeBiomassMap=macrobenthosQualitativeService.queryBiologicalBiomass(year,voyage);
+            BigDecimal biomass1=new BigDecimal(0);
+            biomass1=macrobenthosQuantitativeBiomassMap.get("density").add(macrobenthosQualitativeBiomassMap.get("density"));
+            if(macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(1))){
+                biomass1=biomass1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+            }
+            if(macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(0))){
+                result.put("macrobenthosCount",null);
+            }
+            else{
+                result.put("macrobenthosCount",biomass1);
+            }
+
 
             //潮间带生物
-            BigDecimal intertidalzonebiologicalQuantitativeDensity=intertidalzonebiologicalQuantitativeService.queryBiologicalBiomass(year,voyage);
-            result.put("intertidalzonebiologicalCount",intertidalzonebiologicalQuantitativeDensity);
+            HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensityMap=intertidalzonebiologicalQuantitativeService.queryBiologicalBiomass(year,voyage);
+            if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("intertidalzonebiologicalCount",null);
+            }
+            else{
+                result.put("intertidalzonebiologicalCount",intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+            }
 
             //浮游动物
-            BigDecimal largezooplanktonInetDensity=largezooplanktonInetService.queryBiologicalBiomass(year,voyage);
-            result.put("zooplanktonCount",largezooplanktonInetDensity);
+            HashMap<String,BigDecimal>  largezooplanktonInetDensityMap=largezooplanktonInetService.queryBiologicalBiomass(year,voyage);
+            if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                result.put("zooplanktonCount",null);
+            }
+            else{
+                result.put("zooplanktonCount",largezooplanktonInetDensityMap.get("density"));
+            }
 
             //鱼卵仔鱼
             result.put("fisheggSmallCount",null);
@@ -289,45 +340,76 @@ public class MonitorStationInfoController {
 
     @ApiOperation(value ="站位统计信息展示")
     @PostMapping("/statisticStationOneMap")
-    public Response<HashMap<Long,BigDecimal>> statisticStationOneMap(String year, String voyage,String statisticType,String bioType){
-        HashMap<Long,BigDecimal> result=new HashMap<Long, BigDecimal>();
+    public Response<HashMap<Long,Object>> statisticStationOneMap(String year, String voyage,String statisticType,String bioType){
+        HashMap<Long,Object> result=new HashMap<Long, Object>();
         List<MonitorStationInfo> monitorStationInfoList=monitorStationInfoService.queryStationInfo(year,voyage);
         if(statisticType.equals("density")){
             for (int i = 0; i <monitorStationInfoList.size() ; i++) {
                 //大型底栖动物
                 if(bioType.equals("macrobenthos")){
                     //大型底栖动物定量
-                    BigDecimal macrobenthosQuantitativeDensity= macrobenthosQuantitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
+                    HashMap<String,BigDecimal> macrobenthosQuantitativeDensityMap= macrobenthosQuantitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
                     //大型底栖动物定性
-                    BigDecimal macrobenthosQualitativeDensity=macrobenthosQualitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
-                    macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-                    macrobenthosQuantitativeDensity=macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(monitorStationInfoList.get(i).getStationId(),macrobenthosQuantitativeDensity);
+                    HashMap<String,BigDecimal> macrobenthosQualitativeDensityMap=macrobenthosQualitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
+                    BigDecimal density1=new BigDecimal(0);
+                    density1=macrobenthosQuantitativeDensityMap.get("density").add(macrobenthosQualitativeDensityMap.get("density"));
+                    if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                        density1=density1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    }
+                    if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),density1);
+                    }
                 }
                 //鱼卵仔鱼
                 if(bioType.equals("fisheggSmall")) {
                     //鱼卵定量
-                    BigDecimal fisheggQuantitativeDensity = fisheggQuantitativeService.queryBiologicalDensityByStation(year, voyage, monitorStationInfoList.get(i).getStationId());
+                    HashMap<String,BigDecimal> fisheggQuantitativeDensityMap = fisheggQuantitativeService.queryBiologicalDensityByStation(year, voyage, monitorStationInfoList.get(i).getStationId());
                     //仔鱼定量
-                    BigDecimal smallfishQuantitativeDensity = smallfishQuantitativeService.queryBiologicalDensityByStation(year, voyage, monitorStationInfoList.get(i).getStationId());
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(monitorStationInfoList.get(i).getStationId(),fisheggQuantitativeDensity);
+                    HashMap<String,BigDecimal> smallfishQuantitativeDensityMap = smallfishQuantitativeService.queryBiologicalDensityByStation(year, voyage, monitorStationInfoList.get(i).getStationId());
+                    BigDecimal density1=new BigDecimal(0);
+                    density1=fisheggQuantitativeDensityMap.get("density").add(smallfishQuantitativeDensityMap.get("density"));
+                    if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                        density1=density1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    }
+                    if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),density1);
+                    }
                 }
                 //潮间带生物
                 if(bioType.equals("intertidalzonebiological")){
-                    BigDecimal intertidalzonebiologicalQuantitativeDensity=intertidalzonebiologicalQuantitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
-                    result.put(monitorStationInfoList.get(i).getStationId(),intertidalzonebiologicalQuantitativeDensity);
+                    HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensityMap=intertidalzonebiologicalQuantitativeService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
+                    if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+                    }
                 }
                 //大型浮游动物一型网
                 if(bioType.equals("largezooplankton")){
-                    BigDecimal largezooplanktonInetDensity=largezooplanktonInetService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
-                    result.put(monitorStationInfoList.get(i).getStationId(),largezooplanktonInetDensity);
+                    HashMap<String,BigDecimal>  largezooplanktonInetDensityMap=largezooplanktonInetService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
+                    if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),largezooplanktonInetDensityMap.get("density"));
+                    }
                 }
                 //小型浮游动物二型网
                 if(bioType.equals("smallzooplankton")){
-                    BigDecimal smallzooplanktonIinetDensity=smallzooplanktonIinetService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
-                    result.put(monitorStationInfoList.get(i).getStationId(),smallzooplanktonIinetDensity);
+                    HashMap<String,BigDecimal> smallzooplanktonIinetDensityMap=smallzooplanktonIinetService.queryBiologicalDensityByStation(year,voyage,monitorStationInfoList.get(i).getStationId());
+                    if(smallzooplanktonIinetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),smallzooplanktonIinetDensityMap.get("density"));
+                    }
                 }
             }
         }
@@ -336,12 +418,20 @@ public class MonitorStationInfoController {
                 //大型底栖动物
                 if (bioType.equals("macrobenthos")) {
                     //大型底栖动物定量
-                    BigDecimal macrobenthosQuantitativeBiomass = macrobenthosQuantitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
+                    HashMap<String,BigDecimal>  macrobenthosQuantitativeBiomassMap = macrobenthosQuantitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
                     //大型底栖动物定性
-                    BigDecimal macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(monitorStationInfoList.get(i).getStationId(), macrobenthosQuantitativeBiomass);
+                    HashMap<String,BigDecimal>  macrobenthosQualitativeBiomassMap = macrobenthosQualitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
+                    BigDecimal biomass1=new BigDecimal(0);
+                    biomass1=macrobenthosQuantitativeBiomassMap.get("density").add(macrobenthosQualitativeBiomassMap.get("density"));
+                    if (macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(1)) && macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(1))) {
+                        biomass1 = biomass1.divide(new BigDecimal(2), 2, RoundingMode.HALF_UP);
+                    }
+                    if (macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(0)) && macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(0))) {
+                        result.put(monitorStationInfoList.get(i).getStationId(), null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),biomass1);
+                    }
                 }
                 //鱼卵仔鱼
 
@@ -349,15 +439,25 @@ public class MonitorStationInfoController {
 
                 //潮间带生物
                 if (bioType.equals("intertidalzonebiological")) {
-                    BigDecimal intertidalzonebiologicalQuantitativeDensity = intertidalzonebiologicalQuantitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
-                    result.put(monitorStationInfoList.get(i).getStationId(), intertidalzonebiologicalQuantitativeDensity);
+                    HashMap<String,BigDecimal>  intertidalzonebiologicalQuantitativeDensityMap = intertidalzonebiologicalQuantitativeService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
+                    if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+                    }
                 }
                 //浮游植物
 
                 //浮游动物
                 if (bioType.equals("zooplankton")) {
-                    BigDecimal largezooplanktonInetDensity = largezooplanktonInetService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
-                    result.put(monitorStationInfoList.get(i).getStationId(), largezooplanktonInetDensity);
+                    HashMap<String,BigDecimal>  largezooplanktonInetDensityMap = largezooplanktonInetService.queryBiologicalBiomassByStation(year, voyage,monitorStationInfoList.get(i).getStationId());
+                    if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(monitorStationInfoList.get(i).getStationId(),null);
+                    }
+                    else{
+                        result.put(monitorStationInfoList.get(i).getStationId(),largezooplanktonInetDensityMap.get("density"));
+                    }
                 }
             }
         }
@@ -381,32 +481,66 @@ public class MonitorStationInfoController {
                 //大型底栖动物定性
                 HashMap<String, BigDecimal> macrobenthosQualitativeDensityMap = macrobenthosQualitativeService.queryBiologicalDensityOneYear(year, voyage);
                 HashMap<String, BigDecimal> valuemacroMap = new HashMap<>();
-                //最大值
-                BigDecimal max1 = macrobenthosQuantitativeDensityMap.get("max");
-                BigDecimal max2 = macrobenthosQualitativeDensityMap.get("max");
-                BigDecimal max = max1;
-                if (max1.compareTo(max2) > -1) {//max1大于等于max2
 
-                }
-                if (max1.compareTo(max2) < 1) {//max1小于等于max2
-                    max = max2;
-                }
-                valuemacroMap.put("max", max);
-                //最小值
-                BigDecimal min1 = macrobenthosQuantitativeDensityMap.get("min");
-                BigDecimal min2 = macrobenthosQualitativeDensityMap.get("min");
-                BigDecimal min = min1;
-                if (min1.compareTo(min2) > -1) {//max1大于等于max2
-                    min = min2;
-                }
-                valuemacroMap.put("min", min);
-                //平均值
-                BigDecimal ave1 = macrobenthosQuantitativeDensityMap.get("ave");
-                BigDecimal ave2 = macrobenthosQualitativeDensityMap.get("ave");
-                ave1 = ave1.add(ave2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                    //最大值
+                    BigDecimal max1 = macrobenthosQuantitativeDensityMap.get("max");
+                    BigDecimal max2 = macrobenthosQualitativeDensityMap.get("max");
+                    BigDecimal max = max1;
+                    if (max1.compareTo(max2) > -1) {//max1大于等于max2
 
-                valuemacroMap.put("ave", ave1);
-                resultMap.put("value", valuemacroMap);
+                    }
+                    if (max1.compareTo(max2) < 1) {//max1小于等于max2
+                        max = max2;
+                    }
+                    valuemacroMap.put("max", max);
+                    //最小值
+                    BigDecimal min1 = macrobenthosQuantitativeDensityMap.get("min");
+                    BigDecimal min2 = macrobenthosQualitativeDensityMap.get("min");
+                    BigDecimal min = min1;
+                    if (min1.compareTo(min2) > -1) {//max1大于等于max2
+                        min = min2;
+                    }
+                    valuemacroMap.put("min", min);
+                    //平均值
+                    BigDecimal ave1 = macrobenthosQuantitativeDensityMap.get("ave");
+                    BigDecimal ave2 = macrobenthosQualitativeDensityMap.get("ave");
+                    ave1 = ave1.add(ave2).divide(new BigDecimal(2), 2, RoundingMode.HALF_UP);
+
+                    valuemacroMap.put("ave", ave1);
+                }
+                if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(0))) {
+                    //最大值
+                    BigDecimal max1 = macrobenthosQuantitativeDensityMap.get("max");
+                    valuemacroMap.put("max", max1);
+                    //最小值
+                    BigDecimal min1 = macrobenthosQuantitativeDensityMap.get("min");
+                    valuemacroMap.put("min", min1);
+                    //平均值
+                    BigDecimal ave1 = macrobenthosQuantitativeDensityMap.get("ave");
+                    valuemacroMap.put("ave", ave1);
+                }
+                if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(1))) {
+                    //最大值
+                    BigDecimal max2 = macrobenthosQualitativeDensityMap.get("max");
+                    valuemacroMap.put("max", max2);
+                    //最小值
+                    BigDecimal min2 = macrobenthosQualitativeDensityMap.get("min");
+                    valuemacroMap.put("min", min2);
+                    //平均值
+                    BigDecimal ave2 = macrobenthosQualitativeDensityMap.get("ave");
+                    valuemacroMap.put("ave", ave2);
+                }
+                if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(0))) {
+                    //最大值
+                    valuemacroMap.put("max", null);
+                    //最小值
+                    valuemacroMap.put("min", null);
+                    //平均值
+                    valuemacroMap.put("ave", null);
+                }
+
+                    resultMap.put("value", valuemacroMap);
             }
             //鱼卵仔鱼
             if(bioType.equals("fisheggSmall")) {
@@ -415,31 +549,67 @@ public class MonitorStationInfoController {
                 //仔鱼定量
                 HashMap<String, BigDecimal> smallfishQuantitativeDensityMap = smallfishQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
                 HashMap<String, BigDecimal> valuefishMap = new HashMap<>();
-                //最大值
-                BigDecimal maxfish1 = fisheggQuantitativeDensityMap.get("max");
-                BigDecimal maxfish2 = smallfishQuantitativeDensityMap.get("max");
-                BigDecimal maxfish = maxfish1;
-                if (maxfish1.compareTo(maxfish2) > -1) {//max1大于等于max2
+                if (fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(1)) && smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(1))) {
 
-                }
-                if (maxfish1.compareTo(maxfish2) < 1) {//max1小于等于max2
-                    maxfish = maxfish2;
-                }
-                valuefishMap.put("max", maxfish);
-                //最小值
-                BigDecimal minfish1 = fisheggQuantitativeDensityMap.get("min");
-                BigDecimal minfish2 = smallfishQuantitativeDensityMap.get("min");
-                BigDecimal minfish = minfish1;
-                if (minfish1.compareTo(minfish2) > -1) {//max1大于等于max2
-                    minfish = minfish2;
-                }
-                valuefishMap.put("min", minfish);
-                //平均值
-                BigDecimal avefish1 = fisheggQuantitativeDensityMap.get("ave");
-                BigDecimal avefish2 = smallfishQuantitativeDensityMap.get("ave");
-                avefish1 = avefish1.add(avefish2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    //最大值
+                    BigDecimal maxfish1 = fisheggQuantitativeDensityMap.get("max");
+                    BigDecimal maxfish2 = smallfishQuantitativeDensityMap.get("max");
+                    BigDecimal maxfish = maxfish1;
+                    if (maxfish1.compareTo(maxfish2) > -1) {//max1大于等于max2
 
-                valuefishMap.put("ave", avefish1);
+                    }
+                    if (maxfish1.compareTo(maxfish2) < 1) {//max1小于等于max2
+                        maxfish = maxfish2;
+                    }
+                    valuefishMap.put("max", maxfish);
+                    //最小值
+                    BigDecimal minfish1 = fisheggQuantitativeDensityMap.get("min");
+                    BigDecimal minfish2 = smallfishQuantitativeDensityMap.get("min");
+                    BigDecimal minfish = minfish1;
+                    if (minfish1.compareTo(minfish2) > -1) {//max1大于等于max2
+                        minfish = minfish2;
+                    }
+                    valuefishMap.put("min", minfish);
+                    //平均值
+                    BigDecimal avefish1 = fisheggQuantitativeDensityMap.get("ave");
+                    BigDecimal avefish2 = smallfishQuantitativeDensityMap.get("ave");
+                    avefish1 = avefish1.add(avefish2).divide(new BigDecimal(2), 2, RoundingMode.HALF_UP);
+
+                    valuefishMap.put("ave", avefish1);
+                }
+                if (fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(1)) && smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(0))) {
+
+                    //最大值
+                    BigDecimal maxfish1 = fisheggQuantitativeDensityMap.get("max");
+                    valuefishMap.put("max", maxfish1);
+                    //最小值
+                    BigDecimal minfish1 = fisheggQuantitativeDensityMap.get("min");
+                    valuefishMap.put("min", minfish1);
+                    //平均值
+                    BigDecimal avefish1 = fisheggQuantitativeDensityMap.get("ave");
+                    valuefishMap.put("ave", avefish1);
+                }
+                if (fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(0)) && smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(1))) {
+
+                    //最大值
+                    BigDecimal maxfish2 = smallfishQuantitativeDensityMap.get("max");
+                    valuefishMap.put("max", maxfish2);
+                    //最小值
+                    BigDecimal minfish2 = smallfishQuantitativeDensityMap.get("min");
+                    valuefishMap.put("min", minfish2);
+                    //平均值
+                    BigDecimal avefish2 = smallfishQuantitativeDensityMap.get("ave");
+                    valuefishMap.put("ave", avefish2);
+                }
+                if (fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(0)) && smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(0))) {
+
+                    //最大值
+                    valuefishMap.put("max", null);
+                    //最小值
+                    valuefishMap.put("min", null);
+                    //平均值
+                    valuefishMap.put("ave", null);
+                }
                 resultMap.put("value", valuefishMap);
             }
             //游泳动物
@@ -448,7 +618,6 @@ public class MonitorStationInfoController {
             if (bioType.equals("intertidalzonebiological")) {
                 HashMap<String, BigDecimal> intertidalzonebiologicalQuantitativeDensity = intertidalzonebiologicalQuantitativeService.queryBiologicalDensityOneYear(year, voyage);
                 HashMap<String, BigDecimal> valueinterMap = new HashMap<>();
-
                 valueinterMap.put("max", intertidalzonebiologicalQuantitativeDensity.get("max"));
                 valueinterMap.put("min", intertidalzonebiologicalQuantitativeDensity.get("min"));
                 valueinterMap.put("ave", intertidalzonebiologicalQuantitativeDensity.get("ave"));
@@ -487,31 +656,67 @@ public class MonitorStationInfoController {
                 HashMap<String, BigDecimal> macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomassOneYear(year, voyage);
                 HashMap<String, BigDecimal> valuemacroMap = new HashMap<>();
 
-                //最大值
-                BigDecimal max1 = macrobenthosQuantitativeBiomass.get("max");
-                BigDecimal max2 = macrobenthosQualitativeBiomass.get("max");
-                BigDecimal max = max1;
-                if (max1.compareTo(max2) > -1) {//max1大于等于max2
+                if (macrobenthosQuantitativeBiomass.get("result").equals(new BigDecimal(1)) && macrobenthosQualitativeBiomass.get("result").equals(new BigDecimal(1))) {
 
-                }
-                if (max1.compareTo(max2) < 1) {//max1小于等于max2
-                    max = max2;
-                }
-                valuemacroMap.put("max", max);
-                //最小值
-                BigDecimal min1 = macrobenthosQuantitativeBiomass.get("min");
-                BigDecimal min2 = macrobenthosQualitativeBiomass.get("min");
-                BigDecimal min = min1;
-                if (min1.compareTo(min2) > -1) {//max1大于等于max2
-                    min = min2;
-                }
-                valuemacroMap.put("min", min);
-                //平均值
-                BigDecimal ave1 = macrobenthosQuantitativeBiomass.get("ave");
-                BigDecimal ave2 = macrobenthosQualitativeBiomass.get("ave");
-                ave1 = ave1.add(ave2).divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    //最大值
+                    BigDecimal max1 = macrobenthosQuantitativeBiomass.get("max");
+                    BigDecimal max2 = macrobenthosQualitativeBiomass.get("max");
+                    BigDecimal max = max1;
+                    if (max1.compareTo(max2) > -1) {//max1大于等于max2
 
-                valuemacroMap.put("ave", ave1);
+                    }
+                    if (max1.compareTo(max2) < 1) {//max1小于等于max2
+                        max = max2;
+                    }
+                    valuemacroMap.put("max", max);
+                    //最小值
+                    BigDecimal min1 = macrobenthosQuantitativeBiomass.get("min");
+                    BigDecimal min2 = macrobenthosQualitativeBiomass.get("min");
+                    BigDecimal min = min1;
+                    if (min1.compareTo(min2) > -1) {//max1大于等于max2
+                        min = min2;
+                    }
+                    valuemacroMap.put("min", min);
+                    //平均值
+                    BigDecimal ave1 = macrobenthosQuantitativeBiomass.get("ave");
+                    BigDecimal ave2 = macrobenthosQualitativeBiomass.get("ave");
+                    ave1 = ave1.add(ave2).divide(new BigDecimal(2), 2, RoundingMode.HALF_UP);
+
+                    valuemacroMap.put("ave", ave1);
+                }
+                if (macrobenthosQuantitativeBiomass.get("result").equals(new BigDecimal(1)) && macrobenthosQualitativeBiomass.get("result").equals(new BigDecimal(0))) {
+
+                    //最大值
+                    BigDecimal max1 = macrobenthosQuantitativeBiomass.get("max");
+                    valuemacroMap.put("max", max1);
+                    //最小值
+                    BigDecimal min1 = macrobenthosQuantitativeBiomass.get("min");
+                    valuemacroMap.put("min", min1);
+                    //平均值
+                    BigDecimal ave1 = macrobenthosQuantitativeBiomass.get("ave");
+                    valuemacroMap.put("ave", ave1);
+                }
+                if (macrobenthosQuantitativeBiomass.get("result").equals(new BigDecimal(0)) && macrobenthosQualitativeBiomass.get("result").equals(new BigDecimal(1))) {
+
+                    //最大值
+                    BigDecimal max2 = macrobenthosQualitativeBiomass.get("max");
+                    valuemacroMap.put("max", max2);
+                    //最小值
+                    BigDecimal min2 = macrobenthosQualitativeBiomass.get("min");
+                    valuemacroMap.put("min", min2);
+                    //平均值
+                    BigDecimal ave2 = macrobenthosQualitativeBiomass.get("ave");
+                    valuemacroMap.put("ave", ave2);
+                }
+                if (macrobenthosQuantitativeBiomass.get("result").equals(new BigDecimal(0)) && macrobenthosQualitativeBiomass.get("result").equals(new BigDecimal(0))) {
+
+                    //最大值
+                    valuemacroMap.put("max", null);
+                    //最小值
+                    valuemacroMap.put("min", null);
+                    //平均值
+                    valuemacroMap.put("ave", null);
+                }
                 resultMap.put("value", valuemacroMap);
             }
             //鱼卵仔鱼
@@ -654,32 +859,61 @@ public class MonitorStationInfoController {
             if (bioType.equals("macrobenthos")) {
                 for (int i = 0; i < yearList.size(); i++) {
                     //大型底栖动物定量
-                    BigDecimal macrobenthosQuantitativeDensity = macrobenthosQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
+                    HashMap<String,BigDecimal> macrobenthosQuantitativeDensityMap = macrobenthosQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
                     //大型底栖动物定性
-                    BigDecimal macrobenthosQualitativeDensity = macrobenthosQualitativeService.queryBiologicalDensity(yearList.get(i), null);
-                    macrobenthosQuantitativeDensity = macrobenthosQuantitativeDensity.add(macrobenthosQualitativeDensity);
-                    macrobenthosQuantitativeDensity = macrobenthosQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(yearList.get(i), macrobenthosQuantitativeDensity);
+                    HashMap<String,BigDecimal> macrobenthosQualitativeDensityMap = macrobenthosQualitativeService.queryBiologicalDensity(yearList.get(i), null);
+                    BigDecimal density1=new BigDecimal(0);
+                    density1=macrobenthosQuantitativeDensityMap.get("density").add(macrobenthosQualitativeDensityMap.get("density"));
+                    if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                        density1=density1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    }
+                    if(macrobenthosQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&macrobenthosQualitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),density1);
+                    }
                 }
                 resultMap.put("macrobenthosCount", result);
             }
             //潮间带生物
             if(bioType.equals("intertidalzonebiological")) {
                 for (int i = 0; i < yearList.size(); i++) {
-                    BigDecimal intertidalzonebiologicalQuantitativeDensity = intertidalzonebiologicalQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
-                    result.put(yearList.get(i), intertidalzonebiologicalQuantitativeDensity);
+                    HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensityMap= intertidalzonebiologicalQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
+                    if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+                    }
                 }
                 resultMap.put("intertidalzonebiologicalCount", result);
             }
-            //浮游动物
-            if(bioType.equals("smallzooplankton")) {
+            //大型浮游动物一型网
+            if(bioType.equals("largezooplanktonCount")) {
                 for (int i = 0; i < yearList.size(); i++) {
                     //大型浮游动物一型网
-                    BigDecimal largezooplanktonInetDensity = largezooplanktonInetService.queryBiologicalDensity(yearList.get(i), null);
-                    result.put("largezooplanktonCount", largezooplanktonInetDensity);
-                    //小型浮游动物二型网smallzooplanktonIinetService
-                    BigDecimal smallzooplanktonIinetDensity = smallzooplanktonIinetService.queryBiologicalDensity(yearList.get(i), null);
-                    result.put(yearList.get(i), smallzooplanktonIinetDensity);
+                    HashMap<String,BigDecimal>  largezooplanktonInetDensityMap = largezooplanktonInetService.queryBiologicalDensity(yearList.get(i), null);
+                    if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),largezooplanktonInetDensityMap.get("density"));
+                    }
+                }
+                resultMap.put("largezooplanktonCount", result);
+            }
+            //小型浮游动物二型网
+            if(bioType.equals("smallzooplanktonCount")) {
+                for (int i = 0; i < yearList.size(); i++) {
+                    //小型浮游动物二型网
+                    HashMap<String,BigDecimal>  smallzooplanktonIinetDensityMap = smallzooplanktonIinetService.queryBiologicalDensity(yearList.get(i), null);
+                    if(smallzooplanktonIinetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),smallzooplanktonIinetDensityMap.get("density"));
+                    }
                 }
                 resultMap.put("smallzooplanktonCount", result);
             }
@@ -687,12 +921,20 @@ public class MonitorStationInfoController {
             if(bioType.equals("fisheggSmall")) {
                 for (int i = 0; i < yearList.size(); i++) {
                     //鱼卵定量
-                    BigDecimal fisheggQuantitativeDensity = fisheggQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
+                    HashMap<String,BigDecimal>  fisheggQuantitativeDensityMap = fisheggQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
                     //仔鱼定量
-                    BigDecimal smallfishQuantitativeDensity = smallfishQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.add(smallfishQuantitativeDensity);
-                    fisheggQuantitativeDensity = fisheggQuantitativeDensity.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(yearList.get(i), fisheggQuantitativeDensity);
+                    HashMap<String,BigDecimal>  smallfishQuantitativeDensityMap = smallfishQuantitativeService.queryBiologicalDensity(yearList.get(i), null);
+                    BigDecimal density1=new BigDecimal(0);
+                    density1=fisheggQuantitativeDensityMap.get("density").add(smallfishQuantitativeDensityMap.get("density"));
+                    if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(1))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(1))){
+                        density1=density1.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
+                    }
+                    if(fisheggQuantitativeDensityMap.get("result").equals(new BigDecimal(0))&&smallfishQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),density1);
+                    }
                 }
                 resultMap.put("fisheggSmallCount", result);
             }
@@ -710,28 +952,46 @@ public class MonitorStationInfoController {
             if(bioType.equals("macrobenthos")) {
                 for (int i = 0; i < yearList.size(); i++) {
                     //大型底栖动物定量
-                    BigDecimal macrobenthosQuantitativeBiomass = macrobenthosQuantitativeService.queryBiologicalBiomass(yearList.get(i), null);
+                    HashMap<String,BigDecimal>  macrobenthosQuantitativeBiomassMap = macrobenthosQuantitativeService.queryBiologicalBiomass(yearList.get(i), null);
                     //大型底栖动物定性
-                    BigDecimal macrobenthosQualitativeBiomass = macrobenthosQualitativeService.queryBiologicalBiomass(yearList.get(i), null);
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.add(macrobenthosQualitativeBiomass);
-                    macrobenthosQuantitativeBiomass = macrobenthosQuantitativeBiomass.divide(new BigDecimal(2),2, RoundingMode.HALF_UP);
-                    result.put(yearList.get(i), macrobenthosQuantitativeBiomass);
+                    HashMap<String,BigDecimal>  macrobenthosQualitativeBiomassMap = macrobenthosQualitativeService.queryBiologicalBiomass(yearList.get(i), null);
+                    BigDecimal biomass1=new BigDecimal(0);
+                    biomass1=macrobenthosQuantitativeBiomassMap.get("density").add(macrobenthosQualitativeBiomassMap.get("density"));
+                    if (macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(1)) && macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(1))) {
+                        biomass1 = biomass1.divide(new BigDecimal(2), 2, RoundingMode.HALF_UP);
+                    }
+                    if (macrobenthosQuantitativeBiomassMap.get("result").equals(new BigDecimal(0)) && macrobenthosQualitativeBiomassMap.get("result").equals(new BigDecimal(0))) {
+                        result.put(yearList.get(i), null);
+                    }
+                    else{
+                        result.put(yearList.get(i),biomass1);
+                    }
                 }
                 resultMap.put("macrobenthosCount", result);
             }
             //潮间带生物
             if(bioType.equals("intertidalzonebiological")) {
                 for (int i = 0; i < yearList.size(); i++) {
-                    BigDecimal intertidalzonebiologicalQuantitativeDensity = intertidalzonebiologicalQuantitativeService.queryBiologicalBiomass(yearList.get(i), null);
-                    result.put(yearList.get(i), intertidalzonebiologicalQuantitativeDensity);
+                    HashMap<String,BigDecimal> intertidalzonebiologicalQuantitativeDensityMap = intertidalzonebiologicalQuantitativeService.queryBiologicalBiomass(yearList.get(i), null);
+                    if(intertidalzonebiologicalQuantitativeDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),intertidalzonebiologicalQuantitativeDensityMap.get("density"));
+                    }
                 }
                 resultMap.put("intertidalzonebiologicalCount", result);
             }
             //浮游动物
             if(bioType.equals("zooplankton")) {
                 for (int i = 0; i < yearList.size(); i++) {
-                    BigDecimal largezooplanktonInetDensity = largezooplanktonInetService.queryBiologicalBiomass(yearList.get(i), null);
-                    result.put(yearList.get(i), largezooplanktonInetDensity);
+                    HashMap<String,BigDecimal> largezooplanktonInetDensityMap = largezooplanktonInetService.queryBiologicalBiomass(yearList.get(i), null);
+                    if(largezooplanktonInetDensityMap.get("result").equals(new BigDecimal(0))){
+                        result.put(yearList.get(i),null);
+                    }
+                    else{
+                        result.put(yearList.get(i),largezooplanktonInetDensityMap.get("density"));
+                    }
                 }
                 resultMap.put("zooplanktonCount", result);
             }
