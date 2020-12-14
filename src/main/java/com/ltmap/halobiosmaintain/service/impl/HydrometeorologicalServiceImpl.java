@@ -57,9 +57,9 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
         HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
         HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
         if(Objects.equals(hydrometeorologicals.size(),0)){
-            valueMap0.put("max",new BigDecimal(0));
-            valueMap0.put("min",new BigDecimal(0));
-            valueMap0.put("ave", new BigDecimal(0));
+            valueMap0.put("max",null);
+            valueMap0.put("min",null);
+            valueMap0.put("ave", null);
             resultMap.put("value", valueMap0);
             return resultMap;
         } else {
@@ -68,9 +68,9 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     HashMap<String, BigDecimal> tempvalueMap = new HashMap<>();
                     hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getWatertemperature()!=null).collect(Collectors.toList());
                     if(Objects.equals(hydrometeorologicals.size(),0)){
-                        valueMap0.put("max",new BigDecimal(0));
-                        valueMap0.put("min",new BigDecimal(0));
-                        valueMap0.put("ave", new BigDecimal(0));
+                        valueMap0.put("max",null);
+                        valueMap0.put("min",null);
+                        valueMap0.put("ave", null);
                         resultMap.put("value", valueMap0);
                         return resultMap;
                     }
@@ -89,9 +89,9 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     HashMap<String, BigDecimal> pellucidityvalueMap = new HashMap<>();
                     hydrometeorologicals = hydrometeorologicals.stream().filter(x -> x.getPellucidity()!=null).collect(Collectors.toList());
                     if(Objects.equals(hydrometeorologicals.size(),0)){
-                        valueMap0.put("max",new BigDecimal(0));
-                        valueMap0.put("min",new BigDecimal(0));
-                        valueMap0.put("ave", new BigDecimal(0));
+                        valueMap0.put("max",null);
+                        valueMap0.put("min",null);
+                        valueMap0.put("ave", null);
                         resultMap.put("value", valueMap0);
                         return resultMap;
                     }
