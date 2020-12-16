@@ -83,11 +83,10 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
      * @param allMapList
      * @param code
      * @param response
-     * @param fileFolder
      * @return
      */
     @Override
-    public String errorExport(List<Map<String,Object>> allMapList, String code, HttpServletResponse response, String fileFolder) {
+    public String errorExport(List<Map<String,Object>> allMapList, String code, HttpServletResponse response) {
         Map<String,Object> errorMap = new HashMap<>();
         String getCode = null;
         boolean result;
@@ -97,10 +96,10 @@ public class ExcelDataImportServiceImpl implements ExcelDataImportService {
             errorMap = (Map<String, Object>)allMapList.get(i);
             result = (boolean)errorMap.get("result");
             if(result) continue;
-            code = String.valueOf(errorMap.get("code"));//code = (int)errorMap.get("code")+"";
+            String codeFromMap = String.valueOf(errorMap.get("code"));//code = (int)errorMap.get("code")+"";
             errorCode = (int)errorMap.get("errorCode");
-            if(!result && code.equals(code) && errorCode == 3) {
-                fileName = FileTestDataUtil.createExcel(errorMap, response, fileFolder);
+            if(!result && code.equals(codeFromMap) && errorCode == 3) {
+                fileName = FileTestDataUtil.createExcel(errorMap, response);
             }
         }
         return fileName;

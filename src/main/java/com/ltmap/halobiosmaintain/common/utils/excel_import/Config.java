@@ -17,7 +17,6 @@ public class Config {
     private String excelRules;
     private String excelUpLoad;
     private String excelJson;
-    private String excelExport;
 
     public String getExcelRules() {
         return excelRules;
@@ -42,12 +41,5 @@ public class Config {
     }
     public void setExcelJson(String excelJson) {
         this.excelJson = excelJson;
-    }
-
-    public String getExcelExport() {
-        return excelExport;
-    }
-    public void setExcelExport(String excelExport) {
-        this.excelExport = excelExport;
     }
 }

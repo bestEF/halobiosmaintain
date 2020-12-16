@@ -95,5 +95,3 @@ config:
   excelUpLoad: /config/ExcelUpLoad/
   # Json缓存目录
   excelJson: /config/excelJson/
-  # Excel导出缓存路径（自定义）
-  excelExport: /export/Excel

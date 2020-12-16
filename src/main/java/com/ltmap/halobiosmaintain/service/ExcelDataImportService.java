@@ -51,5 +51,5 @@ public interface ExcelDataImportService {
      * @param fileFolder
      * @return
      */
-    String errorExport(List<Map<String, Object>> allMapList, String code, HttpServletResponse response, String fileFolder);
+    String errorExport(List<Map<String, Object>> allMapList, String code, HttpServletResponse response);
 }

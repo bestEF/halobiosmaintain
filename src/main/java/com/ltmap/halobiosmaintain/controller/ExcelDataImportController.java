@@ -138,14 +138,7 @@ public class ExcelDataImportController {
         String userId= ShiroUtils.getUserId();
         if(userId==null) return "";
         List<Map<String, Object>> allMapList = fileTestDataUtil.jsonFile2allMapList(userId);
-        String fileFolder = "";
-        File directory = new File("");
-        try {
-            fileFolder = directory.getCanonicalPath()+config.getExcelExport();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return excelDataImportService.errorExport(allMapList, code, response,fileFolder);
+        return excelDataImportService.errorExport(allMapList, code, response);
     }
 
     /**

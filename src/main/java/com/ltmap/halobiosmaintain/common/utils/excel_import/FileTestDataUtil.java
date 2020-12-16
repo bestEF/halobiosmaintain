@@ -95,7 +95,7 @@ public class FileTestDataUtil {
      * @param response
      */
     @SuppressWarnings("unchecked")
-    public static String createExcel(Map<String,Object> errorMap, HttpServletResponse response, String fileFolder) {
+    public static String createExcel(Map<String,Object> errorMap, HttpServletResponse response) {
         int r;//行
         int c;//列
         String errorMsg = null;//错误提示信息
@@ -236,7 +236,8 @@ public class FileTestDataUtil {
                 }
                 fOut = response.getOutputStream();
                 workbook.write(fOut);
-            }else {  //Excel2007
+            }
+            else {  //Excel2007
                 //从存储路径得到工作表
                 XSSFWorkbook workbook = (XSSFWorkbook)getWorkBook(absolutePath, isExcel2003);
                 // 产生工作表对象
@@ -389,18 +390,8 @@ public class FileTestDataUtil {
 
                     }
                 }
-                // fOut = response.getOutputStream();
-                File file =new File(fileFolder);
-                //当文件夹不存在时，mkdirs会自动创建多层目录，区别于mkdir．(mkdir如果父目录不存在则会抛出异常)
-                if (!file.exists() && !file.isDirectory()) {
-                    file.mkdirs();
-                }
-                file.delete();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
-                OutputStream stream=null;
-                Date date = new Date();
-                stream = new FileOutputStream(new File(file, fileName));
-                workbook.write(stream);
+                fOut=response.getOutputStream();
+                workbook.write(fOut);
                 return fileName;
             }
         } catch (UnsupportedEncodingException e1) {
