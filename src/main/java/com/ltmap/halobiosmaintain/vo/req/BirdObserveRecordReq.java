@@ -136,22 +136,22 @@ public class BirdObserveRecordReq implements Serializable {
     /**
      * 起点经度
      */
-    private BigDecimal startLon;
+    private String startLon;
 
     /**
      * 起点纬度
      */
-    private BigDecimal startLat;
+    private String startLat;
 
     /**
      * 终点经度
      */
-    private BigDecimal endLon;
+    private String endLon;
 
     /**
      * 终点纬度
      */
-    private BigDecimal endLat;
+    private String endLat;
 
     /**
      * 总种数

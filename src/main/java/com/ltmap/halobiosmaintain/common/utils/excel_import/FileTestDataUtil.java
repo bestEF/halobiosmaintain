@@ -1294,12 +1294,9 @@ public class FileTestDataUtil {
         //对种特殊表头value值 按xml规则校验，并写入对象
         specialHandlingBirdObserve(sheet,headMap,entityName,birdObserveRecordReq,totalRows);
 
-        //取
-        Row excelheadRow1 = sheet.getRow(r);
-        int excelLastCellNum = excelheadRow1.getLastCellNum();
-
         // 循环row的列，按xml规则校验，并写入对象
-        for (int c = 0; c < excelLastCellNum; c++) {
+        // 8是鸟类表格最后一列
+        for (int c = 0; c < 8; c++) {
             Cell cell = row.getCell(c);
             String headTitle = headMap.get(19+c).toString();
             /**按规则验证cell格式**/
@@ -1603,7 +1600,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setStartLon(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setStartLon(cellValue);
                         }
 
                         cell = row.getCell(c + 1);
@@ -1613,7 +1610,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setStartLat(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setStartLat(cellValue);
                         }
                     }else if(c==4){
                         Cell cell = row.getCell(c);
@@ -1624,7 +1621,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setEndLon(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setEndLon(cellValue);
                         }
 
                         cell = row.getCell(c + 1);
@@ -1634,7 +1631,7 @@ public class FileTestDataUtil {
                             cell.setCellType(Cell.CELL_TYPE_STRING);
                             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
                             String cellValue = cell.getStringCellValue();
-                            birdObserveRecordReq.setEndLat(new BigDecimal(cellValue));
+                            birdObserveRecordReq.setEndLat(cellValue);
                         }
                     }else if(c==7){
                         Cell cell = row.getCell(c);

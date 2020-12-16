@@ -98,22 +98,22 @@ public class BirdObserve extends Model<BirdObserve> {
     /**
      * 起点经度
      */
-    private BigDecimal startLon;
+    private String startLon;
 
     /**
      * 起点纬度
      */
-    private BigDecimal startLat;
+    private String startLat;
 
     /**
      * 终点经度
      */
-    private BigDecimal endLon;
+    private String endLon;
 
     /**
      * 终点纬度
      */
-    private BigDecimal endLat;
+    private String endLat;
 
     /**
      * 总种数
@@ -260,35 +260,35 @@ public class BirdObserve extends Model<BirdObserve> {
         this.endTime = endTime;
     }
 
-    public BigDecimal getStartLon() {
+    public String getStartLon() {
         return startLon;
     }
 
-    public void setStartLon(BigDecimal startLon) {
+    public void setStartLon(String startLon) {
         this.startLon = startLon;
     }
 
-    public BigDecimal getStartLat() {
+    public String getStartLat() {
         return startLat;
     }
 
-    public void setStartLat(BigDecimal startLat) {
+    public void setStartLat(String startLat) {
         this.startLat = startLat;
     }
 
-    public BigDecimal getEndLon() {
+    public String getEndLon() {
         return endLon;
     }
 
-    public void setEndLon(BigDecimal endLon) {
+    public void setEndLon(String endLon) {
         this.endLon = endLon;
     }
 
-    public BigDecimal getEndLat() {
+    public String getEndLat() {
         return endLat;
     }
 
-    public void setEndLat(BigDecimal endLat) {
+    public void setEndLat(String endLat) {
         this.endLat = endLat;
     }
 
