@@ -16,7 +16,7 @@ spring:
     time-zone: GMT+8
   datasource:
     druid:
-      url: jdbc:mysql://47.105.120.29:3306/halobiosmaintain2?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://localhost:3306/halobiosmaintain?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&serverTimezone=Asia/Shanghai
       username: root
       password: root
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -90,8 +90,10 @@ excel-template:
 #excel校验相关配置
 config:
   # Excel规则配置文件
-  excelRules: /Config/ExcelRules/
+  excelRules: /config/ExcelRules/
   # Excel上传文件缓存路径（自定义）
-  excelUpLoad: /Config/ExcelUpLoad/
+  excelUpLoad: /config/ExcelUpLoad/
   # Json缓存目录
-  excelJson: /Config/excelJson/
+  excelJson: /config/excelJson/
+  # Excel导出缓存路径（自定义）
+  excelExport: /export/Excel

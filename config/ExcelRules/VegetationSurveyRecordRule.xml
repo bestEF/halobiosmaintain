@@ -40,8 +40,8 @@
         <column name="样方面积" code="5" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能横线"></rule>
+                <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="海拔/m" code="6" type="String">
@@ -54,8 +54,8 @@
         <column name="经纬度" code="7" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能横线"></rule>
+                <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="生境类型" code="8" type="String">
@@ -145,16 +145,16 @@
                 <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
             </rules>
         </column>
-        <column name="高度" code="21" type="String">
+        <column name="高度（cm）" code="21" type="String">
             <rules>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="绳长长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="胸径（cm）" code="22" type="String">
             <rules>
-                <rule name="checkNumeric" message="请输入数字"></rule>
-                <rule name="length" length="50" message="滤水量长度超出单元格限制"></rule>
+                <rule name="allowLine" allowLine="false" message="不能为横线"></rule>
+                <rule name="length" length="50" message="发育阶段长度超出单元格限制"></rule>
             </rules>
         </column>
         <column name="受威胁因素2" code="23" type="String">

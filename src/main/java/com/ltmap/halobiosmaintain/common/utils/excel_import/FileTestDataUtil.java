@@ -910,12 +910,9 @@ public class FileTestDataUtil {
         //对种特殊表头value值 按xml规则校验，并写入对象
         specialHandlingVegetationSurveyRecord(sheet,headMap,entityName,vegetationSurveyRecordReq,totalRows);
 
-        //取
-        Row excelheadRow1 = sheet.getRow(r);
-        int excelLastCellNum = excelheadRow1.getLastCellNum();
-
         // 循环row的列，按xml规则校验，并写入对象
-        for (int c = 0; c < excelLastCellNum; c++) {
+        // 10是鸟类最后一列
+        for (int c = 0; c < 10; c++) {
 
             if(c==8){
                 continue;
@@ -973,14 +970,14 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        vegetationSurveyRecordReq.setHeight(new BigDecimal(cellValue));
+                        vegetationSurveyRecordReq.setHeight(cellValue);
                     }
                 }else if(16+c==22){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        vegetationSurveyRecordReq.setChestDiameter(new BigDecimal(cellValue));
+                        vegetationSurveyRecordReq.setChestDiameter(cellValue);
                     }
                 }else if(16+c==23){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -1151,7 +1148,7 @@ public class FileTestDataUtil {
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
             String cellValue = cell.getStringCellValue();
-            vegetationSurveyRecordReq.setArea(new BigDecimal(cellValue));
+            vegetationSurveyRecordReq.setArea(cellValue);
         }
 
         //取第6+1列
@@ -1174,7 +1171,7 @@ public class FileTestDataUtil {
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
             String cellValue = cell.getStringCellValue();
-            vegetationSurveyRecordReq.setLon(new BigDecimal(cellValue));
+            vegetationSurveyRecordReq.setLon(cellValue);
         }
         //取第9+1列
         cell = row1.getCell(9);
@@ -1185,7 +1182,7 @@ public class FileTestDataUtil {
             cell.setCellType(Cell.CELL_TYPE_STRING);
             if (cell.getStringCellValue().equals("——")) cell.setCellValue("");
             String cellValue = cell.getStringCellValue();
-            vegetationSurveyRecordReq.setLat(new BigDecimal(cellValue));
+            vegetationSurveyRecordReq.setLat(cellValue);
         }
 
 

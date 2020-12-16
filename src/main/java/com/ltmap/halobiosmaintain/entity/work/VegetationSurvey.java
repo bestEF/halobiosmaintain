@@ -62,7 +62,7 @@ public class VegetationSurvey extends Model<VegetationSurvey> {
     /**
      * 样方面积
      */
-    private BigDecimal area;
+    private String area;
 
     /**
      * 海拔
@@ -72,12 +72,12 @@ public class VegetationSurvey extends Model<VegetationSurvey> {
     /**
      * 经度
      */
-    private BigDecimal lon;
+    private String lon;
 
     /**
      * 纬度
      */
-    private BigDecimal lat;
+    private String lat;
 
     /**
      * 生境类型
@@ -183,14 +183,6 @@ public class VegetationSurvey extends Model<VegetationSurvey> {
         this.num = num;
     }
 
-    public BigDecimal getArea() {
-        return area;
-    }
-
-    public void setArea(BigDecimal area) {
-        this.area = area;
-    }
-
     public String getHigh() {
         return high;
     }
@@ -199,19 +191,27 @@ public class VegetationSurvey extends Model<VegetationSurvey> {
         this.high = high;
     }
 
-    public BigDecimal getLon() {
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(BigDecimal lon) {
+    public void setLon(String lon) {
         this.lon = lon;
     }
 
-    public BigDecimal getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(BigDecimal lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 

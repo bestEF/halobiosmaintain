@@ -66,12 +66,12 @@ public class VegetationSurveyRecord extends Model<VegetationSurveyRecord> {
     /**
      * 高度
      */
-    private BigDecimal height;
+    private String height;
 
     /**
      * 胸径
      */
-    private BigDecimal chestDiameter;
+    private String chestDiameter;
 
     /**
      * 受威胁因素
@@ -155,19 +155,19 @@ public class VegetationSurveyRecord extends Model<VegetationSurveyRecord> {
         this.coverage = coverage;
     }
 
-    public BigDecimal getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(BigDecimal height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
-    public BigDecimal getChestDiameter() {
+    public String getChestDiameter() {
         return chestDiameter;
     }
 
-    public void setChestDiameter(BigDecimal chestDiameter) {
+    public void setChestDiameter(String chestDiameter) {
         this.chestDiameter = chestDiameter;
     }
 

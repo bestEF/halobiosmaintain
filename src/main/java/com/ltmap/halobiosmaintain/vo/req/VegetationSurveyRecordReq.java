@@ -56,12 +56,12 @@ public class VegetationSurveyRecordReq implements Serializable {
     /**
      * 高度
      */
-    private BigDecimal height;
+    private String height;
 
     /**
      * 胸径
      */
-    private BigDecimal chestDiameter;
+    private String chestDiameter;
 
     /**
      * 受威胁因素
@@ -104,7 +104,7 @@ public class VegetationSurveyRecordReq implements Serializable {
     /**
      * 样方面积
      */
-    private BigDecimal area;
+    private String area;
 
     /**
      * 海拔
@@ -114,12 +114,12 @@ public class VegetationSurveyRecordReq implements Serializable {
     /**
      * 经度
      */
-    private BigDecimal lon;
+    private String lon;
 
     /**
      * 纬度
      */
-    private BigDecimal lat;
+    private String lat;
 
     /**
      * 生境类型
