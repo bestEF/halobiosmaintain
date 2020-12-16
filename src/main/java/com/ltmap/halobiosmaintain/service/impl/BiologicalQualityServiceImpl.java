@@ -58,9 +58,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
         HashMap<String,HashMap<String,BigDecimal>> resultMap=new HashMap<>();
         HashMap<String, BigDecimal> valueMap0 = new HashMap<>();
         if(biologicalQualities.size()==0){
-            valueMap0.put("max",new BigDecimal(0));
-            valueMap0.put("min",new BigDecimal(0));
-            valueMap0.put("ave",new BigDecimal(0));
+            valueMap0.put("max",null);
+            valueMap0.put("min",null);
+            valueMap0.put("ave",null);
             resultMap.put("value",valueMap0);
             return resultMap;
         }
@@ -69,9 +69,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> cDvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -90,9 +90,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> codvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getSixsixsix()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -111,9 +111,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> crvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -132,9 +132,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> cuvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -153,9 +153,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> gsyvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getDdt()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -174,9 +174,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> hgvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getThg()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -195,9 +195,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> pbvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -216,9 +216,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> sylvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getPcbs()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -237,9 +237,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> tnvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getSyt()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -258,9 +258,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> tpvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getFdcjq()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -280,9 +280,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> yxsydvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getLms()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -301,9 +301,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> aSSvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getKss()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -322,9 +322,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> znvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -343,9 +343,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> dspvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getDsp()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -364,9 +364,9 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 HashMap<String, BigDecimal> pspvalueMap = new HashMap<>();
                 biologicalQualities = biologicalQualities.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
                 if(biologicalQualities.size()==0){
-                    valueMap0.put("max",new BigDecimal(0));
-                    valueMap0.put("min",new BigDecimal(0));
-                    valueMap0.put("ave",new BigDecimal(0));
+                    valueMap0.put("max",null);
+                    valueMap0.put("min",null);
+                    valueMap0.put("ave",null);
                     resultMap.put("value",valueMap0);
                     return resultMap;
                 }
@@ -381,6 +381,12 @@ public class BiologicalQualityServiceImpl extends ServiceImpl<BiologicalQualityM
                 pspvalueMap.put("ave", pspave);
                 resultMap.put("value",pspvalueMap);
                 break;
+            default:
+                valueMap0.put("max",null);
+                valueMap0.put("min",null);
+                valueMap0.put("ave",null);
+                resultMap.put("value",valueMap0);
+                return resultMap;
         }
         return resultMap;
     }

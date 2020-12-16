@@ -137,8 +137,17 @@ public class MonitorStationInfoController {
         //小型浮游动物二型网
         List<SmallzooplanktonIinet> smallzooplanktonIinetList = smallzooplanktonIinetService.queryBiologicalType(year, voyage);
         //按统计条件汇总生物种类总量
+        List<String> typeList=new ArrayList<>();
+        for (int i = 0; i < largezooplanktonInetList.size(); i++) {
+            typeList.add(largezooplanktonInetList.get(i).getCategory());
+        }
+        for (int i = 0; i < smallzooplanktonIinetList.size(); i++) {
+            typeList.add(smallzooplanktonIinetList.get(i).getCategory());
+        }
+        List<String> listDataTypeWithoutDuplicates= typeList.stream().distinct().filter(x->x!=null).collect(Collectors.toList());//去重
+
         result.put("biologicCount", new BigDecimal(phytoplanktonList.size()
-                + largezooplanktonInetList.size() + smallzooplanktonIinetList.size()));
+                + listDataTypeWithoutDuplicates.size()));
 
         if(statisticType.equals("bioType")) {
 
@@ -147,7 +156,7 @@ public class MonitorStationInfoController {
             //潮间带生物
             result.put("intertidalzonebiologicalCount", null);
             //浮游动物
-            result.put("zooplanktonCount", new BigDecimal(largezooplanktonInetList.size() + smallzooplanktonIinetList.size()));
+            result.put("zooplanktonCount", new BigDecimal(listDataTypeWithoutDuplicates.size()));
             //鱼卵仔鱼
             result.put("fisheggSmallCount", null);
             //游泳动物
