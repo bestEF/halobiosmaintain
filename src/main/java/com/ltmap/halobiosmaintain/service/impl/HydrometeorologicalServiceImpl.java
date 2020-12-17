@@ -79,7 +79,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     //求最小值
                     BigDecimal tempmin = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).min((x1, x2) -> x1.compareTo(x2)).get();
                     //求平均值
-                    BigDecimal tempave = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()), 2, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal tempave = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()),10, BigDecimal.ROUND_HALF_UP);
                     tempvalueMap.put("max", tempmax);
                     tempvalueMap.put("min", tempmin);
                     tempvalueMap.put("ave", tempave);
@@ -100,7 +100,7 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     //求最小值
                     BigDecimal pelluciditymin = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).min((x1, x2) -> x1.compareTo(x2)).get();
                     //求平均值
-                    BigDecimal pellucidityave = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()), 2, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal pellucidityave = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()),10, BigDecimal.ROUND_HALF_UP);
                     pellucidityvalueMap.put("max", pelluciditymax);
                     pellucidityvalueMap.put("min", pelluciditymin);
                     pellucidityvalueMap.put("ave", pellucidityave);

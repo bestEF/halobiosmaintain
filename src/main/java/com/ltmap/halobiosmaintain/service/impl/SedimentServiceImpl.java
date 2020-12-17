@@ -79,7 +79,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal cDmin = sediments.stream().map(Sediment::getCd).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal cDave = sediments.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal cDave = sediments.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 10, BigDecimal.ROUND_HALF_UP);
                 cDvalueMap.put("max", cDmax);
                 cDvalueMap.put("min", cDmin);
                 cDvalueMap.put("ave", cDave);
@@ -100,7 +100,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal codmin = sediments.stream().map(Sediment::getLhw).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal codave = sediments.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal codave = sediments.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 codvalueMap.put("max", codmax);
                 codvalueMap.put("min", codmin);
                 codvalueMap.put("ave", codave);
@@ -121,7 +121,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal crmin = sediments.stream().map(Sediment::getTcr).min((x1, x2) -> x1.compareTo(x2)).get();
                 //Sediment
-                BigDecimal crave = sediments.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal crave = sediments.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 crvalueMap.put("max", crmax);
                 crvalueMap.put("min", crmin);
                 crvalueMap.put("ave", crave);
@@ -142,7 +142,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal cumin = sediments.stream().map(Sediment::getCu).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal cuave = sediments.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal cuave = sediments.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 cuvalueMap.put("max", cumax);
                 cuvalueMap.put("min", cumin);
                 cuvalueMap.put("ave", cuave);
@@ -163,7 +163,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal gsymin = sediments.stream().map(Sediment::getYjt).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal gsyave = sediments.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal gsyave = sediments.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 gsyvalueMap.put("max", gsymax);
                 gsyvalueMap.put("min", gsymin);
                 gsyvalueMap.put("ave", gsyave);
@@ -184,7 +184,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal hgmin = sediments.stream().map(Sediment::getHg).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal hgave = sediments.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal hgave = sediments.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 hgvalueMap.put("max", hgmax);
                 hgvalueMap.put("min", hgmin);
                 hgvalueMap.put("ave", hgave);
@@ -205,7 +205,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal pbmin = sediments.stream().map(Sediment::getPb).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal pbave = sediments.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal pbave = sediments.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 pbvalueMap.put("max", pbmax);
                 pbvalueMap.put("min", pbmin);
                 pbvalueMap.put("ave", pbave);
@@ -226,7 +226,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal sylmin = sediments.stream().map(Sediment::getSyl).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal sylave = sediments.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal sylave = sediments.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 sylvalueMap.put("max", sylmax);
                 sylvalueMap.put("min", sylmin);
                 sylvalueMap.put("ave", sylave);
@@ -247,7 +247,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal tnmin = sediments.stream().map(Sediment::getTn).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal tnave = sediments.stream().map(Sediment::getTn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal tnave = sediments.stream().map(Sediment::getTn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 tnvalueMap.put("max", tnmax);
                 tnvalueMap.put("min", tnmin);
                 tnvalueMap.put("ave", tnave);
@@ -268,7 +268,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal tpmin = sediments.stream().map(Sediment::getTp).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal tpave = sediments.stream().map(Sediment::getTp).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal tpave = sediments.stream().map(Sediment::getTp).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 tpvalueMap.put("max", tpmax);
                 tpvalueMap.put("min", tpmin);
                 tpvalueMap.put("ave", tpave);
@@ -290,7 +290,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal yxsydmin = sediments.stream().map(Sediment::getEh).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal yxsydave = sediments.stream().map(Sediment::getEh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal yxsydave = sediments.stream().map(Sediment::getEh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 yxsydvalueMap.put("max", yxsydmax);
                 yxsydvalueMap.put("min", yxsydmin);
                 yxsydvalueMap.put("ave", yxsydave);
@@ -311,7 +311,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal aSSmin = sediments.stream().map(Sediment::getAss).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal aSSave = sediments.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal aSSave = sediments.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 aSSvalueMap.put("max", aSSmax);
                 aSSvalueMap.put("min", aSSmin);
                 aSSvalueMap.put("ave", aSSave);
@@ -332,7 +332,7 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
                 //求最小值
                 BigDecimal znmin = sediments.stream().map(Sediment::getZn).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal znave = sediments.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()), 2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal znave = sediments.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments.size()),10, BigDecimal.ROUND_HALF_UP);
                 znvalueMap.put("max", znmax);
                 znvalueMap.put("min", znmin);
                 znvalueMap.put("ave", znave);
@@ -376,61 +376,61 @@ public class SedimentServiceImpl extends ServiceImpl<SedimentMapper, Sediment> i
             sediments1 = sediments1.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
             BigDecimal hg=new BigDecimal(0);
             if(sediments1.size()!=0){
-                hg = sediments1.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                hg = sediments1.stream().map(Sediment::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //镉
             sediments1 = sediments1.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
             BigDecimal cd=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 cd = sediments1.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 cd = sediments1.stream().map(Sediment::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //铬
             sediments1 = sediments1.stream().filter(x -> x.getTcr()!=null).collect(Collectors.toList());
             BigDecimal cr=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 cr = sediments1.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 cr = sediments1.stream().map(Sediment::getTcr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //铅
             sediments1 = sediments1.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
             BigDecimal pb=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 pb = sediments1.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 pb = sediments1.stream().map(Sediment::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //砷
             sediments1 = sediments1.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
             BigDecimal ass=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 ass = sediments1.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 ass = sediments1.stream().map(Sediment::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //铜
             sediments1 = sediments1.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
             BigDecimal cu=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 cu = sediments1.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 cu = sediments1.stream().map(Sediment::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //锌
             sediments1 = sediments1.stream().filter(x -> x.getZn()!=null).collect(Collectors.toList());
             BigDecimal zn=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 zn = sediments1.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 zn = sediments1.stream().map(Sediment::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //有机碳
             sediments1 = sediments1.stream().filter(x -> x.getYjt()!=null).collect(Collectors.toList());
             BigDecimal yjt=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 yjt = sediments1.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 yjt = sediments1.stream().map(Sediment::getYjt).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //硫化物
             sediments1 = sediments1.stream().filter(x -> x.getLhw()!=null).collect(Collectors.toList());
             BigDecimal lhw=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 lhw = sediments1.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 lhw = sediments1.stream().map(Sediment::getLhw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //石油类
             sediments1 = sediments1.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
             BigDecimal syl=new BigDecimal(0);
             if(sediments1.size()!=0) {
-                 syl = sediments1.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()), 2, BigDecimal.ROUND_HALF_UP);
+                 syl = sediments1.stream().map(Sediment::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(sediments1.size()),10, BigDecimal.ROUND_HALF_UP);
             }
             //按海水水质标准计算等级
             //汞
