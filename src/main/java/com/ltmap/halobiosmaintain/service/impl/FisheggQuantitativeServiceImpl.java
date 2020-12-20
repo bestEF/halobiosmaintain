@@ -86,6 +86,8 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        fisheggQuantitativeList=fisheggQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(fisheggQuantitativeList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -151,6 +153,8 @@ public class FisheggQuantitativeServiceImpl extends ServiceImpl<FisheggQuantitat
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<FisheggQuantitative> fisheggQuantitativeList=fisheggQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
+        fisheggQuantitativeList=fisheggQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(fisheggQuantitativeList.size()==0){
             result.put("result",new BigDecimal(0));

@@ -91,6 +91,8 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
     @Override
     public  HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
+        smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(smallzooplanktonIinetList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -154,6 +156,8 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,stationId);
+        smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(smallzooplanktonIinetList.size()==0){
             result.put("result",new BigDecimal(0));//0代表无值的情况

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -80,6 +82,8 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     BigDecimal tempmin = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).min((x1, x2) -> x1.compareTo(x2)).get();
                     //求平均值
                     BigDecimal tempave = hydrometeorologicals.stream().map(Hydrometeorological::getWatertemperature).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()),10, BigDecimal.ROUND_HALF_UP);
+                    tempave = tempave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                     tempvalueMap.put("max", tempmax);
                     tempvalueMap.put("min", tempmin);
                     tempvalueMap.put("ave", tempave);
@@ -101,6 +105,8 @@ public class HydrometeorologicalServiceImpl extends ServiceImpl<Hydrometeorologi
                     BigDecimal pelluciditymin = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).min((x1, x2) -> x1.compareTo(x2)).get();
                     //求平均值
                     BigDecimal pellucidityave = hydrometeorologicals.stream().map(Hydrometeorological::getPellucidity).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(hydrometeorologicals.size()),10, BigDecimal.ROUND_HALF_UP);
+                    pellucidityave = pellucidityave.round(new MathContext(2, RoundingMode.HALF_UP));
+
                     pellucidityvalueMap.put("max", pelluciditymax);
                     pellucidityvalueMap.put("min", pelluciditymin);
                     pellucidityvalueMap.put("ave", pellucidityave);

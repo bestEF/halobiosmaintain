@@ -88,6 +88,8 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,null);
+        smallfishQuantitativeList=smallfishQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(smallfishQuantitativeList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -152,6 +154,8 @@ public class SmallfishQuantitativeServiceImpl extends ServiceImpl<SmallfishQuant
     @Override
     public HashMap<String,BigDecimal>  queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<SmallfishQuantitative> smallfishQuantitativeList=smallfishQuantitativeMapper.queryBiologicalType(year,voyage,stationId);
+        smallfishQuantitativeList=smallfishQuantitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(smallfishQuantitativeList.size()==0){
             result.put("result",new BigDecimal(0));

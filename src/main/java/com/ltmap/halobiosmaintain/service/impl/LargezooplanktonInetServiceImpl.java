@@ -88,6 +88,8 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(largezooplanktonInetList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -149,6 +151,8 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     @Override
     public  HashMap<String,BigDecimal> queryBiologicalBiomass(String year, String voyage) {
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getTotalBiomass()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(largezooplanktonInetList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -213,6 +217,8 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     @Override
     public  HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,stationId);
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(largezooplanktonInetList.size()==0){
             result.put("result",new BigDecimal(0));//0代表无值的情况

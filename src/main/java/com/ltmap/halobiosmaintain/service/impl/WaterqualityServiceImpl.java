@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,6 +86,7 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal aDmin = waterqualities.stream().map(Waterquality::getaD).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal aDave = waterqualities.stream().map(Waterquality::getaD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                aDave = aDave.round(new MathContext(3, RoundingMode.HALF_UP));
                 aDvalueMap.put("max", aDmax);
                 aDvalueMap.put("min", aDmin);
                 aDvalueMap.put("ave", aDave);
@@ -106,6 +109,7 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal aSSmin = waterqualities.stream().map(Waterquality::getAss).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal aSSave = waterqualities.stream().map(Waterquality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                aSSave = aSSave.round(new MathContext(3, RoundingMode.HALF_UP));
                 aSSvalueMap.put("max", aSSmax);
                 aSSvalueMap.put("min", aSSmin);
                 aSSvalueMap.put("ave", aSSave);
@@ -128,6 +132,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal cDmin = waterqualities.stream().map(Waterquality::getCd).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal cDave = waterqualities.stream().map(Waterquality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                cDave = cDave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 cDvalueMap.put("max", cDmax);
                 cDvalueMap.put("min", cDmin);
                 cDvalueMap.put("ave", cDave);
@@ -150,6 +156,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal codmin = waterqualities.stream().map(Waterquality::getCod).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal codave = waterqualities.stream().map(Waterquality::getCod).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                codave = codave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 codvalueMap.put("max", codmax);
                 codvalueMap.put("min", codmin);
                 codvalueMap.put("ave", codave);
@@ -172,6 +180,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal crmin = waterqualities.stream().map(Waterquality::getCr).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal crave = waterqualities.stream().map(Waterquality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                crave = crave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 crvalueMap.put("max", crmax);
                 crvalueMap.put("min", crmin);
                 crvalueMap.put("ave", crave);
@@ -194,6 +204,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal cumin = waterqualities.stream().map(Waterquality::getCu).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal cuave = waterqualities.stream().map(Waterquality::getCu).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                cuave = cuave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 cuvalueMap.put("max", cumax);
                 cuvalueMap.put("min", cumin);
                 cuvalueMap.put("ave", cuave);
@@ -216,6 +228,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal gsymin = waterqualities.stream().map(Waterquality::getGsy).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal gsyave = waterqualities.stream().map(Waterquality::getGsy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                gsyave = gsyave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 gsyvalueMap.put("max", gsymax);
                 gsyvalueMap.put("min", gsymin);
                 gsyvalueMap.put("ave", gsyave);
@@ -238,6 +252,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal hgmin = waterqualities.stream().map(Waterquality::getHg).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal hgave = waterqualities.stream().map(Waterquality::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                hgave = hgave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 hgvalueMap.put("max", hgmax);
                 hgvalueMap.put("min", hgmin);
                 hgvalueMap.put("ave", hgave);
@@ -260,6 +276,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal dorjymin = waterqualities.stream().map(Waterquality::getDorjy).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal dorjyave = waterqualities.stream().map(Waterquality::getDorjy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                dorjyave = dorjyave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 dorjyvalueMap.put("max", dorjymax);
                 dorjyvalueMap.put("min", dorjymin);
                 dorjyvalueMap.put("ave", dorjyave);
@@ -282,6 +300,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal hxlsymin = waterqualities.stream().map(Waterquality::getHxlsy).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal hxlsyave = waterqualities.stream().map(Waterquality::getHxlsy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                hxlsyave = hxlsyave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 hxlsyvalueMap.put("max", hxlsymax);
                 hxlsyvalueMap.put("min", hxlsymin);
                 hxlsyvalueMap.put("ave", hxlsyave);
@@ -304,6 +324,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal pbmin = waterqualities.stream().map(Waterquality::getPb).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal pbave = waterqualities.stream().map(Waterquality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                pbave = pbave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 pbvalueMap.put("max", pbmax);
                 pbvalueMap.put("min", pbmin);
                 pbvalueMap.put("ave", pbave);
@@ -326,6 +348,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal phmin = waterqualities.stream().map(Waterquality::getPh).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal phave = waterqualities.stream().map(Waterquality::getPh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                phave = phave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 phvalueMap.put("max", phmax);
                 phvalueMap.put("min", phmin);
                 phvalueMap.put("ave", phave);
@@ -348,6 +372,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal sylmin = waterqualities.stream().map(Waterquality::getSyl).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal sylave = waterqualities.stream().map(Waterquality::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                sylave = sylave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 sylvalueMap.put("max", sylmax);
                 sylvalueMap.put("min", sylmin);
                 sylvalueMap.put("ave", sylave);
@@ -370,6 +396,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal tnmin = waterqualities.stream().map(Waterquality::getTn).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal tnave = waterqualities.stream().map(Waterquality::getTn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                tnave = tnave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 tnvalueMap.put("max", tnmax);
                 tnvalueMap.put("min", tnmin);
                 tnvalueMap.put("ave", tnave);
@@ -392,6 +420,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal tocmin = waterqualities.stream().map(Waterquality::getToc).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal tocave = waterqualities.stream().map(Waterquality::getToc).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                tocave = tocave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 tocvalueMap.put("max", tocmax);
                 tocvalueMap.put("min", tocmin);
                 tocvalueMap.put("ave", tocave);
@@ -414,6 +444,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal tpmin = waterqualities.stream().map(Waterquality::getTp).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal tpave = waterqualities.stream().map(Waterquality::getTp).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                tpave = tpave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 tpvalueMap.put("max", tpmax);
                 tpvalueMap.put("min", tpmin);
                 tpvalueMap.put("ave", tpave);
@@ -435,7 +467,7 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 //求最小值
                 BigDecimal xfwmin = waterqualities.stream().map(Waterquality::getXfw).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal xfwave = waterqualities.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                BigDecimal xfwave = waterqualities.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 3, BigDecimal.ROUND_HALF_UP);
                 xfwvalueMap.put("max", xfwmax);
                 xfwvalueMap.put("min", xfwmin);
                 xfwvalueMap.put("ave", xfwave);
@@ -458,6 +490,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal xsydmin = waterqualities.stream().map(Waterquality::getXsyD).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal xsydave = waterqualities.stream().map(Waterquality::getXsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                xsydave = xsydave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 xsydvalueMap.put("max", xsydmax);
                 xsydvalueMap.put("min", xsydmin);
                 xsydvalueMap.put("ave", xsydave);
@@ -479,7 +513,7 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 //求最小值
                 BigDecimal ydmin = waterqualities.stream().map(Waterquality::getYd).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
-                BigDecimal ydave = waterqualities.stream().map(Waterquality::getYd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                BigDecimal ydave = waterqualities.stream().map(Waterquality::getYd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 3, BigDecimal.ROUND_HALF_UP);
                 ydvalueMap.put("max", ydmax);
                 ydvalueMap.put("min", ydmin);
                 ydvalueMap.put("ave", ydave);
@@ -502,6 +536,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal yjlmin = waterqualities.stream().map(Waterquality::getYjl).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal yjlave = waterqualities.stream().map(Waterquality::getYjl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                yjlave = yjlave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 yjlvalueMap.put("max", yjlmax);
                 yjlvalueMap.put("min", yjlmin);
                 yjlvalueMap.put("ave", yjlave);
@@ -524,6 +560,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal ylsamin = waterqualities.stream().map(Waterquality::getYlsA).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal ylsaave = waterqualities.stream().map(Waterquality::getYlsA).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                ylsaave = ylsaave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 ylsavalueMap.put("max", ylsamax);
                 ylsavalueMap.put("min", ylsamin);
                 ylsavalueMap.put("ave", ylsaave);
@@ -546,6 +584,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal yxsydmin = waterqualities.stream().map(Waterquality::getYxsyD).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal yxsydave = waterqualities.stream().map(Waterquality::getYxsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                yxsydave = yxsydave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 yxsydvalueMap.put("max", yxsydmax);
                 yxsydvalueMap.put("min", yxsydmin);
                 yxsydvalueMap.put("ave", yxsydave);
@@ -568,6 +608,8 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
                 BigDecimal znmin = waterqualities.stream().map(Waterquality::getZn).min((x1, x2) -> x1.compareTo(x2)).get();
                 //求平均值
                 BigDecimal znave = waterqualities.stream().map(Waterquality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities.size()), 10, BigDecimal.ROUND_HALF_UP);
+                znave = znave.round(new MathContext(3, RoundingMode.HALF_UP));
+
                 znvalueMap.put("max", znmax);
                 znvalueMap.put("min", znmin);
                 znvalueMap.put("ave", znave);
@@ -623,81 +665,106 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             waterqualities1 = waterqualities1.stream().filter(x -> x.getXfw()!=null).collect(Collectors.toList());
             BigDecimal xfw=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
-                 xfw = waterqualities1.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                 xfw = waterqualities1.stream().map(Waterquality::getXfw).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 3, BigDecimal.ROUND_HALF_UP);
             }
             //ph
             waterqualities1 = waterqualities1.stream().filter(x -> x.getPh()!=null).collect(Collectors.toList());
             BigDecimal ph=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  ph = waterqualities1.stream().map(Waterquality::getPh).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                ph = ph.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //溶解氧
             waterqualities1 = waterqualities1.stream().filter(x -> x.getDorjy()!=null).collect(Collectors.toList());
             BigDecimal dorjy=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  dorjy = waterqualities1.stream().map(Waterquality::getDorjy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                dorjy = dorjy.round(new MathContext(3, RoundingMode.HALF_UP));
             }
             //化学需氧量
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCod()!=null).collect(Collectors.toList());
             BigDecimal cod=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  cod = waterqualities1.stream().map(Waterquality::getCod).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                cod = cod.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //氨氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getaD()!=null).collect(Collectors.toList());
             BigDecimal ad=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  ad = waterqualities1.stream().map(Waterquality::getaD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                ad = ad.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //硝酸盐氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getXsyD()!=null).collect(Collectors.toList());
             BigDecimal xsyd=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  xsyd = waterqualities1.stream().map(Waterquality::getXsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                xsyd = xsyd.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //亚硝酸盐氮
             waterqualities1 = waterqualities1.stream().filter(x -> x.getYxsyD()!=null).collect(Collectors.toList());
             BigDecimal yxsyd=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  yxsyd = waterqualities1.stream().map(Waterquality::getYxsyD).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                yxsyd = yxsyd.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //无机氮=氨氮+硝酸盐氮+亚硝酸盐氮
             BigDecimal wjd=ad.add(xsyd).add(yxsyd);
+            wjd = wjd.round(new MathContext(3, RoundingMode.HALF_UP));
+
             //活性磷酸盐
             waterqualities1 = waterqualities1.stream().filter(x -> x.getHxlsy()!=null).collect(Collectors.toList());
             BigDecimal hxlsy=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  hxlsy = waterqualities1.stream().map(Waterquality::getHxlsy).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                hxlsy = hxlsy.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //汞
             waterqualities1 = waterqualities1.stream().filter(x -> x.getHg()!=null).collect(Collectors.toList());
             BigDecimal hg=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  hg = waterqualities1.stream().map(Waterquality::getHg).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                hg = hg.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //镉
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCd()!=null).collect(Collectors.toList());
             BigDecimal cd=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  cd = waterqualities1.stream().map(Waterquality::getCd).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                cd = cd.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //铬
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCr()!=null).collect(Collectors.toList());
             BigDecimal cr=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  cr = waterqualities1.stream().map(Waterquality::getCr).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                cr = cr.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //铅
             waterqualities1 = waterqualities1.stream().filter(x -> x.getPb()!=null).collect(Collectors.toList());
             BigDecimal pb=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  pb = waterqualities1.stream().map(Waterquality::getPb).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                pb = pb.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //砷
             waterqualities1 = waterqualities1.stream().filter(x -> x.getAss()!=null).collect(Collectors.toList());
             BigDecimal ass=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  ass = waterqualities1.stream().map(Waterquality::getAss).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                ass = ass.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //铜
             waterqualities1 = waterqualities1.stream().filter(x -> x.getCu()!=null).collect(Collectors.toList());
@@ -710,12 +777,16 @@ public class WaterqualityServiceImpl extends ServiceImpl<WaterqualityMapper, Wat
             BigDecimal zn=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  zn = waterqualities1.stream().map(Waterquality::getZn).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                zn = zn.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //石油类
             waterqualities1 = waterqualities1.stream().filter(x -> x.getSyl()!=null).collect(Collectors.toList());
             BigDecimal syl=new BigDecimal(0);
             if(waterqualities1.size()!=0) {
                  syl = waterqualities1.stream().map(Waterquality::getSyl).reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(waterqualities1.size()), 10, BigDecimal.ROUND_HALF_UP);
+                syl = syl.round(new MathContext(3, RoundingMode.HALF_UP));
+
             }
             //按海水水质标准计算等级
             //悬浮物

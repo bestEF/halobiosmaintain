@@ -88,6 +88,8 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensity(String year, String voyage) {
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
+        macrobenthosQualitativeList=macrobenthosQualitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(macrobenthosQualitativeList.size()==0){
             result.put("result",new BigDecimal(0));
@@ -154,6 +156,7 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
     public HashMap<String,BigDecimal> queryBiologicalBiomass(String year, String voyage) {
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,null);
         HashMap<String,BigDecimal> result=new HashMap<>();
+        macrobenthosQualitativeList=macrobenthosQualitativeList.stream().filter(x->x.getBiomass()!=null).collect(Collectors.toList());
         if(macrobenthosQualitativeList.size()==0){
             result.put("result",new BigDecimal(0));
             result.put("density",new BigDecimal(0));
@@ -220,6 +223,8 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
     @Override
     public HashMap<String,BigDecimal> queryBiologicalDensityByStation(String year, String voyage,Long stationId){
         List<MacrobenthosQualitative> macrobenthosQualitativeList = macrobenthosQualitativeMapper.queryBiologicalType(year, voyage,stationId);
+        macrobenthosQualitativeList=macrobenthosQualitativeList.stream().filter(x->x.getDensity()!=null).collect(Collectors.toList());
+
         HashMap<String,BigDecimal> result=new HashMap<>();
         if(macrobenthosQualitativeList.size()==0){
             result.put("result",new BigDecimal(0));
