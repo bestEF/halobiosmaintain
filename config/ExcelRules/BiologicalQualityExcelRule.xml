@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <excel>
-    <entity name="生物质量" code="BiologicalQualityExcelRule" >
+    <entity name="Sheet1" code="BiologicalQualityExcelRule" >
         <column name="监测区域：" code="0" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
