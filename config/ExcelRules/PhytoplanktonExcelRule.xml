@@ -55,6 +55,7 @@
         <column name="计划经度" code="7" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
+                <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
@@ -62,6 +63,7 @@
         <column name="计划纬度" code="8" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
+                <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="采样经度超出单元格限制"></rule>
             </rules>
@@ -69,6 +71,7 @@
         <column name="实测经度" code="9" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
+                <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="实测经度超出单元格限制"></rule>
             </rules>
@@ -76,6 +79,7 @@
         <column name="实测纬度" code="10" type="String">
             <rules>
                 <rule name="nullable" nullable="false" message="不能为空"></rule>
+                <rule name="checkNumeric" message="请输入数字"></rule>
                 <rule name="allowLine" allowLine="false" message="不能横线"></rule>
                 <rule name="length" length="50" message="实测纬度超出单元格限制"></rule>
             </rules>

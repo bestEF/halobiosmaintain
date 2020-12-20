@@ -19,6 +19,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1742,14 +1744,14 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setDorjy(new BigDecimal(cellValue));
+                        waterqualityReq.setDorjy(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 } else if(c+Constant.officialDataStartSign==16){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setCod(new BigDecimal(cellValue));
+                        waterqualityReq.setCod(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 } else if(c+Constant.officialDataStartSign==17){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -1770,14 +1772,14 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setHxlsy(new BigDecimal(cellValue));
+                        waterqualityReq.setHxlsy(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 } else if(c+Constant.officialDataStartSign==20){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setYxsyD(new BigDecimal(cellValue));
+                        waterqualityReq.setYxsyD(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==21){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
@@ -1791,112 +1793,112 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setAD(new BigDecimal(cellValue));
+                        waterqualityReq.setAD(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==23){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setGsy(new BigDecimal(cellValue));
+                        waterqualityReq.setGsy(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==24){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setYlsA(new BigDecimal(cellValue));
+                        waterqualityReq.setYlsA(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==25){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setSyl(new BigDecimal(cellValue));
+                        waterqualityReq.setSyl(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==26){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setPh(new BigDecimal(cellValue));
+                        waterqualityReq.setPh(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==27){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setYjl(new BigDecimal(cellValue));
+                        waterqualityReq.setYjl(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==28){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setToc(new BigDecimal(cellValue));
+                        waterqualityReq.setToc(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==29){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setTp(new BigDecimal(cellValue));
+                        waterqualityReq.setTp(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==30){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setTn(new BigDecimal(cellValue));
+                        waterqualityReq.setTn(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==31){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setAss(new BigDecimal(cellValue));
+                        waterqualityReq.setAss(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==32){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setHg(new BigDecimal(cellValue));
+                        waterqualityReq.setHg(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==33){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setCu(new BigDecimal(cellValue));
+                        waterqualityReq.setCu(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==34){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setPb(new BigDecimal(cellValue));
+                        waterqualityReq.setPb(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==35){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setCd(new BigDecimal(cellValue));
+                        waterqualityReq.setCd(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==36){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setZn(new BigDecimal(cellValue));
+                        waterqualityReq.setZn(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }else if(c+Constant.officialDataStartSign==37){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        waterqualityReq.setCr(new BigDecimal(cellValue));
+                        waterqualityReq.setCr(new BigDecimal(cellValue,new MathContext(3, RoundingMode.HALF_UP)));
                     }
                 }
             }
@@ -7107,7 +7109,7 @@ public class FileTestDataUtil {
                     if(cell.getStringCellValue().equals("——")) cell.setCellValue("");
                     String cellValue = cell.getStringCellValue();
                     if(StringUtils.isNotBlank(cellValue)) {
-                        biologicalQualityReq.setBiologicalChineseName(cellValue);
+                        biologicalQualityReq.setBiologicalLatinName(cellValue);
                     }
                 } else if(c+Constant.officialDataStartSpecialSign==15){
                     cell.setCellType(Cell.CELL_TYPE_STRING);
