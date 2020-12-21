@@ -384,11 +384,11 @@ public class FileTestDataUtil {
 
                                 //输入批注信息
                                 comment.setString(new XSSFRichTextString(errorMsg));
-                            }else{
-                                comment=cell.getCellComment();
+
+                                //将批注添加到单元格对象中
+                                cell.setCellComment(comment);
                             }
-                            //将批注添加到单元格对象中
-                            cell.setCellComment(comment);
+
                         }catch (Exception e){
                             e.printStackTrace();
                         }
