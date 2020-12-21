@@ -8,6 +8,7 @@ import com.ltmap.halobiosmaintain.controller.ExcelDataImportController;
 import com.ltmap.halobiosmaintain.service.IMonitorDataReportService;
 import com.ltmap.halobiosmaintain.vo.req.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
@@ -913,6 +914,11 @@ public class FileTestDataUtil {
 
             Cell cell = row.getCell(c);
 
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle="";
             if(c==9){
                 headTitle = headMap.get(16+c-1).toString();
@@ -1288,6 +1294,12 @@ public class FileTestDataUtil {
         // 8是鸟类表格最后一列
         for (int c = 0; c < 8; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(19+c).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -1662,6 +1674,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -2148,6 +2166,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -2508,6 +2532,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -2861,6 +2891,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -3228,6 +3264,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -3595,6 +3637,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -4038,6 +4086,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -4454,6 +4508,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -4813,6 +4873,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -5201,6 +5267,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -5575,6 +5647,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -5935,6 +6013,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -6321,6 +6405,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -6660,6 +6750,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -7027,6 +7123,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -7475,6 +7577,12 @@ public class FileTestDataUtil {
         // 循环row的列，按xml规则校验，并写入对象
         for (int c = 0; c < excelLastCellNum; c++) {
             Cell cell = row.getCell(c);
+
+            //如果当前cell为null则继续
+            if(ObjectUtils.isEmpty(cell)){
+                continue;
+            }
+
             String headTitle = headMap.get(c+Constant.constantTableHeadCount).toString();
             /**按规则验证cell格式**/
             validaterst = validateCellData(r+1,c+1,cell,entityName,headTitle);
@@ -7907,6 +8015,7 @@ public class FileTestDataUtil {
                         //原本只要excel在填写时格式正确 就不需要try里面的内容 加上try是为了防止excel内出现：以文本形式存储的数字的情况
                         try {
                             Double doubleValue = Double.valueOf(cellValue);
+                            BigDecimal bigDecimal = new BigDecimal(cellValue);
                             break;
                         }catch (NumberFormatException e){
                             if(!errorString.toString().contains(err3)) errorString.append(err3);
@@ -8053,6 +8162,7 @@ public class FileTestDataUtil {
         int totalCells = row.getLastCellNum();
         totalCells++;
         for(int i = 0; i < totalCells; i++){
+
             Cell cell = row.getCell(i, Row.RETURN_BLANK_AS_NULL);
             if(cell==null || ("")==cell.toString()) {
                 blank++;
