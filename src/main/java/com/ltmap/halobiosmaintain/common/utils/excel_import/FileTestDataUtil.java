@@ -231,10 +231,12 @@ public class FileTestDataUtil {
                         //(int dx1, int dy1, int dx2, int dy2, short col1, int row1, short col2, int row2)
                         //前四个参数是坐标点,后四个参数是编辑和显示批注时的大小.
                         HSSFComment comment = p.createComment(new HSSFClientAnchor(0,0,0,0,(short)3,3,(short)5,5));
-                        //输入批注信息
-                        comment.setString(new HSSFRichTextString(errorMsg));
-                        //将批注添加到单元格对象中
-                        cell.setCellComment(comment);
+                        if(ObjectUtils.isEmpty(cell.getCellComment())){
+                            //输入批注信息
+                            comment.setString(new HSSFRichTextString(errorMsg));
+                            //将批注添加到单元格对象中
+                            cell.setCellComment(comment);
+                        }
                     }
                 }
                 fOut = response.getOutputStream();
