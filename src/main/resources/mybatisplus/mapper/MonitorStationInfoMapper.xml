@@ -33,5 +33,21 @@
         </where>
     </select>
 
+    <select id="queryStationInfoByDataType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.* from monitor_station_info a
+        left join monitor_data_report b on a.report_id=b.report_id
+        <where>
+            <if test="year!=null and year!=''">
+                <![CDATA[and b.year =#{year} ]]>
+            </if>
+            <if test="voyage!=null and voyage!=''">
+                <![CDATA[and b.voyage =#{voyage} ]]>
+            </if>
+            <if test="dateType!=null and dateType!=''">
+                <![CDATA[and a.data_type like concat('%',#{dateType},'%') and a.data_type not like '%沉积物粒度%' ]]>
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

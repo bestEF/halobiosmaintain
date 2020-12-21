@@ -53,6 +53,7 @@ public class PhytoplanktonServiceImpl extends ServiceImpl<PhytoplanktonMapper, P
     public List<Phytoplankton> queryBiologicalType(String year, String voyage){
         List<Phytoplankton> phytoplanktonList=phytoplanktonMapper.queryBiologicalType(year,voyage);
         //去重
+        phytoplanktonList=phytoplanktonList.stream().filter(x->x.getCategory()!=null).collect(Collectors.toList());
         List<Phytoplankton> phytoplanktonListNew= ListDistinctUtils.distinctPhytoplanktonByMap(phytoplanktonList);
         return phytoplanktonListNew;
     }

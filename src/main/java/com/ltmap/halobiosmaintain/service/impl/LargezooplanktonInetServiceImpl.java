@@ -54,6 +54,8 @@ public class LargezooplanktonInetServiceImpl extends ServiceImpl<Largezooplankto
     public List<LargezooplanktonInet> queryBiologicalType(String year, String voyage){
         List<LargezooplanktonInet> largezooplanktonInetList=largezooplanktonInetMapper.queryBiologicalType(year,voyage,null);
         //去重
+        largezooplanktonInetList=largezooplanktonInetList.stream().filter(x->x.getCategory()!=null).collect(Collectors.toList());
+
         List<LargezooplanktonInet> largezooplanktonInetListNew= ListDistinctUtils.distinctLargezooplanktonInetByMap(largezooplanktonInetList);
         return largezooplanktonInetListNew;
     }

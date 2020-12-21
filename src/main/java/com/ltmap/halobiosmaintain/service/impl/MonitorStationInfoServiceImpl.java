@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.base.Strings;
+import com.ltmap.halobiosmaintain.entity.work.MonitorDataReport;
 import com.ltmap.halobiosmaintain.entity.work.MonitorStationInfo;
+import com.ltmap.halobiosmaintain.mapper.work.MonitorDataReportMapper;
 import com.ltmap.halobiosmaintain.mapper.work.MonitorStationInfoMapper;
 import com.ltmap.halobiosmaintain.service.IMonitorStationInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,6 +30,8 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
     @Resource
     private MonitorStationInfoMapper monitorStationInfoMapper;
 
+    @Resource
+    private MonitorDataReportMapper monitorDataReportMapper;
     /**
      * 保存站位信息
      * @param monitorStationInfo
@@ -104,6 +108,9 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
         List<MonitorStationInfo> result=new ArrayList<>();
         HashMap<String,String> map=new HashMap();
 
+
+
+
         for (int i = 0; i < monitorStationInfos.size(); i++) {
             MonitorStationInfo monitorStationInfo= monitorStationInfos.get(i);
             if(map.containsKey(monitorStationInfo.getStationName())){
@@ -143,6 +150,9 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
         }
         for (int i = 0; i < result.size(); i++) {
             result.get(i).setDataType(map.get(result.get(i).getStationName()));
+            //设置站位对应的任务名称，即监测区域信息
+            MonitorDataReport monitorDataReport= monitorDataReportMapper.selectById(result.get(i).getReportId());
+            result.get(i).setByzd1(monitorDataReport.getMonitoringArea());
         }
 
         return result;
@@ -150,10 +160,7 @@ public class MonitorStationInfoServiceImpl extends ServiceImpl<MonitorStationInf
 
     @Override
     public List<MonitorStationInfo> queryStationInfobyDataType(String year,String voyage,String dataType){
-        LambdaQueryWrapper<MonitorStationInfo> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        lambdaQueryWrapper.like(!Strings.isNullOrEmpty(dataType),MonitorStationInfo::getDataType,dataType)
-        .notLike(MonitorStationInfo::getDataType,"沉积物粒度");
-        return monitorStationInfoMapper.selectList(lambdaQueryWrapper);
+        return monitorStationInfoMapper.queryStationInfoByDataType(year,voyage,dataType);
     }
 
     /**

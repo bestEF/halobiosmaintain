@@ -103,8 +103,7 @@ public class MacrobenthosQualitativeServiceImpl extends ServiceImpl<Macrobenthos
             }
             if (macrobenthosQualitativeList.size() != 0) {
                 density = density.divide(new BigDecimal(macrobenthosQualitativeList.size()), 2, RoundingMode.HALF_UP);
-            }
-            result.put("result",new BigDecimal(1));
+            }            result.put("result",new BigDecimal(1));
             result.put("density",density);
         }
         return result;

@@ -57,6 +57,8 @@ public class SmallzooplanktonIinetServiceImpl extends ServiceImpl<Smallzooplankt
     public List<SmallzooplanktonIinet> queryBiologicalType(String year, String voyage){
         List<SmallzooplanktonIinet> smallzooplanktonIinetList=smallzooplanktonIinetMapper.queryBiologicalType(year,voyage,null);
         //去重
+        smallzooplanktonIinetList=smallzooplanktonIinetList.stream().filter(x->x.getCategory()!=null).collect(Collectors.toList());
+
         List<SmallzooplanktonIinet> smallzooplanktonIinetListNew= ListDistinctUtils.distinctSmallzooplanktonIinetByMap(smallzooplanktonIinetList);
         return smallzooplanktonIinetListNew;
     }

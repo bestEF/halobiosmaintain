@@ -17,4 +17,7 @@ import java.util.List;
 public interface MonitorStationInfoMapper extends BaseMapper<MonitorStationInfo> {
 
     List<MonitorStationInfo> queryStationInfo(@Param("year") String year, @Param("voyage") String voyage );
+
+    List<MonitorStationInfo> queryStationInfoByDataType(@Param("year") String year, @Param("voyage") String voyage,@Param("dateType") String dateType );
+
 }
